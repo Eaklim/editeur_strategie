@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1082</width>
+    <height>664</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>2</horstretch>
+    <verstretch>2</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>14</pointsize>
+    <stylestrategy>NoAntialias</stylestrategy>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <widget class="QSplitter" name="splitterHoriz">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="MyQTableView" name="tableView">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <family>Liberation Sans</family>
+         <pointsize>10</pointsize>
+         <stylestrategy>PreferAntialias</stylestrategy>
+        </font>
+       </property>
+       <property name="acceptDrops">
+        <bool>false</bool>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOn</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAsNeeded</enum>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QAbstractScrollArea::AdjustIgnored</enum>
+       </property>
+       <attribute name="horizontalHeaderCascadingSectionResizes">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderMinimumSectionSize">
+        <number>0</number>
+       </attribute>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>0</number>
+       </attribute>
+       <attribute name="horizontalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderStretchLastSection">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderCascadingSectionResizes">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderMinimumSectionSize">
+        <number>20</number>
+       </attribute>
+       <attribute name="verticalHeaderDefaultSectionSize">
+        <number>23</number>
+       </attribute>
+       <attribute name="verticalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderStretchLastSection">
+        <bool>false</bool>
+       </attribute>
+      </widget>
+      <widget class="QSplitter" name="splitterVerti">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <widget class="MyQGraphicsView" name="graphicsView">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>2</horstretch>
+          <verstretch>2</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="mouseTracking">
+         <bool>true</bool>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustIgnored</enum>
+        </property>
+        <property name="interactive">
+         <bool>true</bool>
+        </property>
+        <property name="transformationAnchor">
+         <enum>QGraphicsView::AnchorViewCenter</enum>
+        </property>
+       </widget>
+       <widget class="QWidget" name="widget" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QLabel" name="label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QLabel" name="label_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QLabel" name="label_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Thêta</string>
+             </property>
+            </widget>
+           </item>
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QLabel" name="label_6">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Offset</string>
+             </property>
+            </widget>
+           </item>
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QLabel" name="label_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Debut</string>
+             </property>
+            </widget>
+           </item>
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QLabel" name="label_5">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Fin</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLCDNumber" name="lcdPosX">
+             <property name="font">
+              <font>
+               <family>Source Code Pro</family>
+               <pointsize>20</pointsize>
+               <italic>false</italic>
+               <bold>false</bold>
+               <stylestrategy>PreferAntialias</stylestrategy>
+               <kerning>false</kerning>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(170, 255, 255);
+font: 87 20pt &quot;Source Code Pro&quot;;
+font: rgb(0, 0, 0);</string>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLCDNumber" name="lcdPosY">
+             <property name="font">
+              <font>
+               <family>Source Code Pro</family>
+               <pointsize>20</pointsize>
+               <italic>false</italic>
+               <bold>false</bold>
+               <stylestrategy>PreferAntialias</stylestrategy>
+               <kerning>false</kerning>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(170, 255, 255);
+font: 87 20pt &quot;Source Code Pro&quot;;
+font: rgb(0, 0, 0);</string>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLCDNumber" name="lcdPosT">
+             <property name="font">
+              <font>
+               <family>Source Code Pro</family>
+               <pointsize>20</pointsize>
+               <italic>false</italic>
+               <bold>false</bold>
+               <stylestrategy>PreferAntialias</stylestrategy>
+               <kerning>false</kerning>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(170, 255, 255);
+font: 87 20pt &quot;Source Code Pro&quot;;
+font: rgb(0, 0, 0);</string>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLCDNumber" name="lcdPosArcOffset">
+             <property name="font">
+              <font>
+               <family>Source Code Pro</family>
+               <pointsize>20</pointsize>
+               <italic>false</italic>
+               <bold>false</bold>
+               <stylestrategy>PreferAntialias</stylestrategy>
+               <kerning>false</kerning>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(170, 255, 255);
+font: 87 20pt &quot;Source Code Pro&quot;;
+font: rgb(0, 0, 0);</string>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLCDNumber" name="lcdPosArcDebut">
+             <property name="font">
+              <font>
+               <family>Source Code Pro</family>
+               <pointsize>20</pointsize>
+               <italic>false</italic>
+               <bold>false</bold>
+               <stylestrategy>PreferAntialias</stylestrategy>
+               <kerning>false</kerning>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(170, 255, 255);
+font: 87 20pt &quot;Source Code Pro&quot;;
+font: rgb(0, 0, 0);</string>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLCDNumber" name="lcdPosArcFin">
+             <property name="font">
+              <font>
+               <family>Source Code Pro</family>
+               <pointsize>20</pointsize>
+               <italic>false</italic>
+               <bold>false</bold>
+               <stylestrategy>PreferAntialias</stylestrategy>
+               <kerning>false</kerning>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(170, 255, 255);
+font: 87 20pt &quot;Source Code Pro&quot;;
+font: rgb(0, 0, 0);</string>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QTextBrowser" name="textBrowser"/>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0,0,0,0">
+           <item row="1" column="5">
+            <widget class="QSpinBox" name="secondTheta">
+             <property name="minimum">
+              <number>-360</number>
+             </property>
+             <property name="maximum">
+              <number>360</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QSpinBox" name="Blocage_ligne">
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>250</number>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_9">
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>pourcentage</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QCheckBox" name="checkBox_blocage">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <italic>false</italic>
+               <bold>false</bold>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Blocage</string>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>16</width>
+               <height>16</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="6">
+            <widget class="QCheckBox" name="checkBox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <italic>false</italic>
+               <bold>false</bold>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Sites de fouille</string>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>16</width>
+               <height>16</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_8">
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="6">
+            <widget class="QPushButton" name="pushButton">
+             <property name="text">
+              <string>Robot 2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="Blocage_pourcentage">
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="value">
+              <number>50</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_7">
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string>numéro ligne</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <widget class="QLabel" name="label_11">
+             <property name="text">
+              <string>Theta</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="4">
+            <widget class="QSpinBox" name="secondY">
+             <property name="maximum">
+              <number>3000</number>
+             </property>
+             <property name="value">
+              <number>200</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QSpinBox" name="secondX">
+             <property name="maximum">
+              <number>3000</number>
+             </property>
+             <property name="value">
+              <number>900</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QPushButton" name="CreateRowButton">
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Create Row</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="InsertRowButton">
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Insert Row</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="DeleteRowButton">
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Delete Row</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="ExportFileButton">
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Export File</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="ImportFileButton">
+             <property name="font">
+              <font>
+               <family>Liberation Sans</family>
+               <pointsize>12</pointsize>
+               <stylestrategy>PreferAntialias</stylestrategy>
+              </font>
+             </property>
+             <property name="text">
+              <string>Import File</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MyQTableView</class>
+   <extends>QTableView</extends>
+   <header location="global">myqtableview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MyQGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">myqgraphicsview.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>tableView</tabstop>
+  <tabstop>graphicsView</tabstop>
+  <tabstop>textBrowser</tabstop>
+  <tabstop>secondTheta</tabstop>
+  <tabstop>Blocage_ligne</tabstop>
+  <tabstop>checkBox_blocage</tabstop>
+  <tabstop>checkBox</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>Blocage_pourcentage</tabstop>
+  <tabstop>secondY</tabstop>
+  <tabstop>secondX</tabstop>
+  <tabstop>CreateRowButton</tabstop>
+  <tabstop>InsertRowButton</tabstop>
+  <tabstop>DeleteRowButton</tabstop>
+  <tabstop>ExportFileButton</tabstop>
+  <tabstop>ImportFileButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
