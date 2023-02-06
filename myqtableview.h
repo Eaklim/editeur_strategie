@@ -16,7 +16,7 @@ protected:
     virtual void resizeEvent(QResizeEvent * event) {
         // calcul de la mise à l'échelle de la table (largeur zone affichage / largeur mini)
         double ratio = event->size().width() / 505.0;
-        // si le ratio est < 1.0, on garde les dimansions => scrollbar horizontale
+        // si le ratio est < 1.0, on garde les dimensions => scrollbar horizontale
         if (ratio < 1.0) ratio = 1.0;
 
         // calcul de la largeur de chaque colonne et l'espace total occupé
@@ -25,6 +25,7 @@ protected:
         w = 15*ratio;
         total += w;
         setColumnWidth(0,w);
+
         w = 70*ratio;
         total += w;
         setColumnWidth(1,w);
@@ -34,16 +35,19 @@ protected:
         setColumnWidth(4,w);
         total += w;
         setColumnWidth(5,w);
+
         w = 45*ratio;
         total += w;
         setColumnWidth(6,w);
         total += w;
         setColumnWidth(7,w);
+
         w = 10*ratio;
         total += w;
         setColumnWidth(8,w);
         total += w;
         setColumnWidth(9,w);
+
         w = 15*ratio;
         total += w;
         setColumnWidth(10,w);
@@ -54,8 +58,13 @@ protected:
         w = event->size().width()-total;
         if (w<70) w = 70;
         setColumnWidth(2,w);
+
+        //met tout les heards à la même taille sur son emplacement
+        //this->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
         // la ligne ci-dessous fait la même chose mais l'utilisateur ne peut plus faire son réglage de largeur des colonnes
 //        horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
+
     }
 };
 

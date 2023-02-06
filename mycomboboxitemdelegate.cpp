@@ -18,7 +18,7 @@ QWidget *MyComboBoxDelegate::createEditor(QWidget *parent, const QStyleOptionVie
     const QAbstractItemModel *model = index.model();
     QComboBox *cb = new QComboBox(parent);
 
-    if(index.column() == 1)
+    if(index.column() == 1) // si on est sur la colonne une, on ajoute ou définit des variables qui seront stockés dans dataCol1
     {
         cb->addItems(mainWindow->dataCol1);
 
@@ -155,14 +155,14 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
             cb->setCurrentText(model->data(index).toString());
         }
 
-        else if(model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Etage_gateau"))
-        {
-            cb->addItem(QString("Etage 0"));
-            cb->addItem(QString("Etage 1"));
-            cb->addItem(QString("Etage 2"));
-            cb->addItem(QString("Etage 3"));
-            cb->setCurrentText(model->data(index).toString());
-        }
+        //else if(model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Etage_gateau"))
+        //{
+        //    cb->addItem(QString("Etage 0"));
+        //    cb->addItem(QString("Etage 1"));
+        //    cb->addItem(QString("Etage 2"));
+        //    cb->addItem(QString("Etage 3"));
+        //    cb->setCurrentText(model->data(index).toString());
+        //}
 
         else if((model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Attrape_cerise"))
                 ||(model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Tir_cerise")))
@@ -201,20 +201,20 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
         }
     }
 
-    if(index.column() == 6)
-    {
-        if(model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Vert") || model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Bleu"))
-        {
-            cb->addItem(QString("Case 1"));
-            cb->addItem(QString("Case 2"));
-            cb->addItem(QString("Case 3"));
-            cb->addItem(QString("Case 4"));
-            cb->addItem(QString("Case 5"));
-            cb->setCurrentText(model->data(index).toString());
-        }
-    }
+    //if(index.column() == 6)
+    //{
+    //    if(model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Vert") || model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Bleu"))
+    //    {
+    //        cb->addItem(QString("Case 1"));
+    //        cb->addItem(QString("Case 2"));
+    //        cb->addItem(QString("Case 3"));
+    //        cb->addItem(QString("Case 4"));
+    //        cb->addItem(QString("Case 5"));
+    //        cb->setCurrentText(model->data(index).toString());
+    //    }
+    //}
 
-    if(index.column() == 8)
+    if(index.column() == 6)
     {
         if(!model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Debut Match"))
         {
@@ -224,7 +224,7 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
         }
     }
 
-    if(index.column() == 9)
+    if(index.column() == 7)
     {
         if(!model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Debut Match"))
         {
@@ -235,15 +235,6 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
             cb->addItem(QString("Clothoïde"));
             cb->setCurrentText(model->data(index).toString());
         }
-        //if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Recalage"))
-        //{
-        //    cb->addItem(QString("Attendre"));
-        //    cb->addItem(QString("Saut(Position)"));
-        //    cb->addItem(QString("Saut(Délais)"));
-        //    cb->addItem(QString("Enchainement"));
-        //    cb->addItem(QString("Clothoïde"));
-        //    cb->setCurrentText(model->data(index).toString());
-        //}
     }
 
     if(index.column() == 10 or index.column() == 11)

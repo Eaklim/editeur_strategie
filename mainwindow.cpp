@@ -121,7 +121,7 @@ void setTableHeaders_deploiement(QTableView *tableView, QAbstractItemDelegate *c
     tableView->model()->setHeaderData(3, Qt::Horizontal, QObject::tr("Angle"),Qt::DisplayRole);
     tableView->model()->setHeaderData(4, Qt::Horizontal, QObject::tr("Abs:x"),Qt::DisplayRole);
     tableView->model()->setHeaderData(5, Qt::Horizontal, QObject::tr("Ord:y"),Qt::DisplayRole);
-    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr("Case"),Qt::DisplayRole);
+    //tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr("Case"),Qt::DisplayRole);
    //tableView->model()->setHeaderData(8, Qt::Horizontal, QObject::tr("Précis?"),Qt::DisplayRole);
    //tableView->model()->setHeaderData(9, Qt::Horizontal, QObject::tr("Enchainement"),Qt::DisplayRole);
     tableView->setItemDelegateForColumn(2, cbd);
@@ -136,8 +136,8 @@ void setTableHeaders_ligne_droite(QTableView *tableView, QAbstractItemDelegate *
     tableView->model()->setHeaderData(4, Qt::Horizontal, QObject::tr(" "), Qt::DisplayRole);
     tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr(" "),Qt::DisplayRole);
     tableView->model()->setHeaderData(5, Qt::Horizontal, QObject::tr(" "), Qt::DisplayRole);
-    tableView->model()->setHeaderData(8, Qt::Horizontal, QObject::tr("Précis?"), Qt::DisplayRole);
-    tableView->model()->setHeaderData(9, Qt::Horizontal, QObject::tr("Enchainmnt"), Qt::DisplayRole);
+    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr("Précis?"), Qt::DisplayRole);
+    tableView->model()->setHeaderData(7, Qt::Horizontal, QObject::tr("Enchainmnt"), Qt::DisplayRole);
     tableView->setItemDelegateForColumn(8, cbd);
     tableView->setItemDelegateForColumn(9, cbd);
 }
@@ -279,9 +279,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->graphicsView->setMouseTracking(true);
     QWidget::connect (ui->graphicsView, SIGNAL(sendMousePoint(QPointF)),this, SLOT(setMousePoint(QPointF)));
-
 }
-
 
 
 void MainWindow::initVisu()
@@ -311,9 +309,19 @@ void MainWindow::initVisu()
 
     QPixmap robot(":/Images/Cake2023/ROB2020.png");
 
+   //QPixmap p; // load pixmap
+   //// get label dimensions
+   //int w = LARGEUR_ROBOT->width();
+   //int h = label->height();
+
+    // set a scaled pixmap to a w x h window keeping its aspect ratio
+
+
     robot1 = scene->addPixmap(robot);
     robot1->setOffset(-robot1->boundingRect().center().x() + GLOBALOFFSETX + 20,
                       -robot1->boundingRect().center().y() + GLOBALOFFSETY + 45);
+    robot1->setPixmap(robot.scaled(LARGEUR_ROBOT,LONGUEUR_ROBOT,Qt::KeepAspectRatio));
+
     robot1->setPos(0,0); //Le robot est positionné
     robot1->setRotation(90);
     robotdep = scene->addPixmap(robot);
@@ -624,7 +632,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
                 equipe = 0;
             }
 
-            else if(ui->tableView->model()->data(testindex).toString() == "Bleu")// VIOLET??????? L'equipe violet?
+            else if(ui->tableView->model()->data(testindex).toString() == "Bleu")
             {
                 testindex = ui->tableView->model()->index(table_ligne,4);
                 PosXrob = ui->tableView->model()->data(testindex).toDouble();
@@ -1152,6 +1160,22 @@ void MainWindow::updateVisu(const QModelIndex &index)
 //**********************************| année 2023| *********************************************************************
 
 
+            //QRect ellipse_gateau(0, 0, 54, 54);
+            //
+            //// Check the value of a or b
+            //if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau")
+            //    &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="Avant")) {
+            //    // Add the ellipse to the front
+            //    pos_gateau[0] = scene->addEllipse(ellipse_gateau, redline);
+            //    pos_gateau[0]->setPos(QPointF(LONGUEUR_ROBOT / 2, LARGEUR_ROBOT / 2));
+            //}             if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau")
+            //                 &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="Arriere")) {
+            //    // Add the ellipse to the back
+            //    pos_gateau[0] = scene->addEllipse(ellipse_gateau, redline);
+            //    pos_gateau[0]->setPos(QPointF(LONGUEUR_ROBOT / 2, LARGEUR_ROBOT / 2));
+            //}
+
+            break;
 //**********************************************************************************************************************
 
 

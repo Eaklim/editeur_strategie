@@ -28,10 +28,10 @@
 
 #define LONGUEUR_TABLE 3000
 #define LARGEUR_TABLE 2000
-#define LONGUEUR_ROBOT 185
-#define LARGEUR_ROBOT 270
+#define LONGUEUR_ROBOT 240
+#define LARGEUR_ROBOT 240
 #define LARGEUR_VENTOUSE 150
-#define DIAG_ROBOT1 327.3
+#define DIAG_ROBOT1 339
 
 #define OFF 0
 #define ON 1
@@ -97,7 +97,7 @@ private:
     int chasseNeigeFlag[2]{false,false};
     QGraphicsPixmapItem *ptrEchantillon[30],*ptrCarre[10];
     QGraphicsRectItem *brasMesure[2];
-    QGraphicsEllipseItem *ventouse[17];
+    QGraphicsEllipseItem *ventouse[17], *pos_gateau[17];
     QGraphicsLineItem *collisionLine[6],*ventouseVerticale[2], *brasDistrib[2];
     QPointF switchPosVentouse(int i , int PosRotrob);
 

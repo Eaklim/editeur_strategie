@@ -18,40 +18,40 @@ int MyModel::columnCount(const QModelIndex & /*parent*/) const
 }
 
 //-----------------------------------------------------------------
-QVariant MyModel::data(const QModelIndex &index, int role) const // va permettre de bloquer les case (il le mettre en gris et on ne peut pas intéragir)
+QVariant MyModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole && checkIndex(index))
             return m_gridData[index.row()][index.column()];
-    if(role == Qt::BackgroundRole && checkIndex(index)){ //pour precis et attendre
-        if(index.column() == 7)
+    if(role == Qt::BackgroundRole && checkIndex(index)){
+        if(index.column() == 8 || index.column() == 9)
             return QVariant(QBrush(Qt::gray));
         const QAbstractItemModel *model = index.model();
         if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Debut Match")){
-            if(index.column() == 7 || index.column() == 8 || index.column() == 9)
+            if(index.column() == 6 || index.column() == 7)
                 return QVariant(QBrush(Qt::gray));
         }
         if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Ligne Droite")){
-            if(index.column() == 3 || index.column() == 4 || index.column() == 5  || index.column() == 6)
+            if(index.column() == 3 || index.column() == 4 || index.column() == 5 )
                 return QVariant(QBrush(Qt::gray));
         }
         if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Rotation")){
-            if(index.column() == 4 || index.column() == 5  || index.column() == 6)
+            if(index.column() == 4 || index.column() == 5 )
                 return QVariant(QBrush(Qt::gray));
         }
         if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Courbe")){
-            if(index.column() == 5 || index.column() == 6 )
+            if(index.column() == 5 )
                 return QVariant(QBrush(Qt::gray));
         }
         if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Action")){
-            if(index.column() == 4 || index.column() == 5  || index.column() == 6)
+            if(index.column() == 4 || index.column() == 5 )
                 return QVariant(QBrush(Qt::gray));
         }
         if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Recalage")){
-            if(index.column() == 6)
+            if(index.column() == 8 )
                 return QVariant(QBrush(Qt::gray));
         }
         if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("XYT")){
-            if( index.column() == 6)
+            if(index.column() == 8 )
                 return QVariant(QBrush(Qt::gray));
         }
     }
@@ -80,38 +80,38 @@ bool MyModel::setData(const QModelIndex &index, const QVariant &value, int role)
 
 //-----------------------------------------------------------------
 
-Qt::ItemFlags MyModel::flags(const QModelIndex &index) const //permet de bloquer la case
+Qt::ItemFlags MyModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = Qt::NoItemFlags;
     const QAbstractItemModel *model = index.model();
-    if(index.column() == 7)
+    if(index.column() == 8 || index.column() == 9)
         return flags;
     if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Debut Match")){
-        if(index.column() == 7 || index.column() == 8 || index.column() == 9)
+        if(index.column() == 6 || index.column() == 7)
              return flags;
     }
     if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Ligne Droite")){
-        if(index.column() == 3 || index.column() == 4 || index.column() == 5 || index.column() == 6 )
+        if(index.column() == 3 || index.column() == 4 || index.column() == 5 )
              return flags;
     }
     if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Rotation")){
-        if(index.column() == 4 || index.column() == 5 || index.column() == 6 )
+        if(index.column() == 4 || index.column() == 5 )
              return flags;
     }
     if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Courbe")){
-        if(index.column() == 5  || index.column() == 6 )
+        if(index.column() == 5 )
              return flags;
     }
     if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Action")){
-        if(index.column() == 4 || index.column() == 5  || index.column() == 6 )
+        if(index.column() == 4 || index.column() == 5 )
              return flags;
     }
     if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Recalage")){
-        if(index.column() == 8  || index.column() == 6 )
+        if(index.column() == 8 )
              return flags;
     }
     if(model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("XYT")){
-        if(index.column() == 8  || index.column() == 6 )
+        if(index.column() == 8 )
              return flags;
     }
     return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
