@@ -1160,20 +1160,31 @@ void MainWindow::updateVisu(const QModelIndex &index)
 //**********************************| année 2023| *********************************************************************
 
 
-            //QRect ellipse_gateau(0, 0, 54, 54);
-            //
-            //// Check the value of a or b
-            //if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau")
-            //    &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="Avant")) {
-            //    // Add the ellipse to the front
-            //    pos_gateau[0] = scene->addEllipse(ellipse_gateau, redline);
-            //    pos_gateau[0]->setPos(QPointF(LONGUEUR_ROBOT / 2, LARGEUR_ROBOT / 2));
-            //}             if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau")
-            //                 &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="Arriere")) {
-            //    // Add the ellipse to the back
-            //    pos_gateau[0] = scene->addEllipse(ellipse_gateau, redline);
-            //    pos_gateau[0]->setPos(QPointF(LONGUEUR_ROBOT / 2, LARGEUR_ROBOT / 2));
-            //}
+                      // Check the value of a or b
+            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau"))
+                      {
+                qDebug()<<"ICI";
+                      QRect ellipse_gateau(0, 0, 54, 54);
+                          // Add the ellipse to the front
+                      if (((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Avant"))
+                      {
+                          qDebug()<<"ICIZE FUZHFZIOHFZIVHVZOFZIJ";
+                          pos_gateau = scene->addEllipse(ellipse_gateau, redline);
+                          pos_gateau->setParentItem(robot1);
+                          pos_gateau->setPos(100,0); //QPointF(LONGUEUR_ROBOT / 2, LARGEUR_ROBOT / 2));
+                          pos_gateau->topLevelItem();
+                      }
+                      if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arriere"))
+                      {
+                          qDebug()<<"ICItoo";
+                          // Add the ellipse to the back
+                          pos_gateau = scene->addEllipse(ellipse_gateau, redline);
+                          pos_gateau->setParentItem(robot1);
+                          pos_gateau->setPos(100,0); //QPointF(LONGUEUR_ROBOT / 2, LARGEUR_ROBOT / 2));
+                          pos_gateau->topLevelItem();
+                      }
+             }
+
 
             break;
 //**********************************************************************************************************************

@@ -97,7 +97,7 @@ private:
     int chasseNeigeFlag[2]{false,false};
     QGraphicsPixmapItem *ptrEchantillon[30],*ptrCarre[10];
     QGraphicsRectItem *brasMesure[2];
-    QGraphicsEllipseItem *ventouse[17], *pos_gateau[17];
+    QGraphicsEllipseItem *ventouse[17], *pos_gateau, ventouseFront, ventouseBack ;
     QGraphicsLineItem *collisionLine[6],*ventouseVerticale[2], *brasDistrib[2];
     QPointF switchPosVentouse(int i , int PosRotrob);
 
