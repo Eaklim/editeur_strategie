@@ -294,14 +294,14 @@ void MainWindow::initVisu()
     ui->splitterVerti->setSizes(size);
 
     scene = new QGraphicsScene;
-    scene->setSceneRect(-165,-165,3000,2000);//???????????
+    scene->setSceneRect(0,0,3000,2000);//???????????
     ui->graphicsView->setScene(scene);
     //Intégration des images pour la scene
     QImage tapis(":/Images/Cake2023/table2023.png");
     QPixmap scaledTapis = QPixmap::fromImage(tapis.scaled(3000, 2000, Qt::KeepAspectRatio)); //conserver le bon mise en forme
 
     image = scene->addPixmap(scaledTapis);
-    image->setOffset(-165,-165);
+    image->setOffset(0,0);
 
     QPixmap robot(":/Images/Cake2023/ROB2020.png");
 
