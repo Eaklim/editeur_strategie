@@ -155,14 +155,14 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
             cb->setCurrentText(model->data(index).toString());
         }
 
-        //else if(model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Etage_gateau"))
-        //{
-        //    cb->addItem(QString("Etage 0"));
-        //    cb->addItem(QString("Etage 1"));
-        //    cb->addItem(QString("Etage 2"));
-        //    cb->addItem(QString("Etage 3"));
-        //    cb->setCurrentText(model->data(index).toString());
-        //}
+        else if(model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Etage_gateau"))
+        {
+            cb->addItem(QString("Etage 0"));
+            cb->addItem(QString("Etage 1"));
+            cb->addItem(QString("Etage 2"));
+            cb->addItem(QString("Etage 3"));
+            cb->setCurrentText(model->data(index).toString());
+        }
 
         else if((model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Attrape_cerise"))
                 ||(model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Tir_cerise")))

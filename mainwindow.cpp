@@ -138,8 +138,9 @@ void setTableHeaders_ligne_droite(QTableView *tableView, QAbstractItemDelegate *
     tableView->model()->setHeaderData(5, Qt::Horizontal, QObject::tr(" "), Qt::DisplayRole);
     tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr("Précis?"), Qt::DisplayRole);
     tableView->model()->setHeaderData(7, Qt::Horizontal, QObject::tr("Enchainmnt"), Qt::DisplayRole);
-    tableView->setItemDelegateForColumn(8, cbd);
-    tableView->setItemDelegateForColumn(9, cbd);
+    //tableView->setItemDelegateForColumn(7, cbd);
+    tableView->setItemDelegateForColumn(6, cbd);
+    tableView->setItemDelegateForColumn(7, cbd);
 }
 
 void setTableHeaders_rotation(QTableView *tableView, QAbstractItemDelegate *cbd) {
@@ -147,12 +148,11 @@ void setTableHeaders_rotation(QTableView *tableView, QAbstractItemDelegate *cbd)
     tableView->model()->setHeaderData(3, Qt::Horizontal, QObject::tr("Relatif"),Qt::DisplayRole);
     tableView->model()->setHeaderData(4, Qt::Horizontal, QObject::tr(" "),Qt::DisplayRole);
     tableView->model()->setHeaderData(5, Qt::Horizontal, QObject::tr(" "),Qt::DisplayRole);
-    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr(" "),Qt::DisplayRole);
-    tableView->model()->setHeaderData(8, Qt::Horizontal, QObject::tr("Précis?"),Qt::DisplayRole);
-    tableView->model()->setHeaderData(9, Qt::Horizontal, QObject::tr("Enchainement"),Qt::DisplayRole);
+    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr("Précis?"),Qt::DisplayRole);
+    tableView->model()->setHeaderData(7, Qt::Horizontal, QObject::tr("Enchainement"),Qt::DisplayRole);
     tableView->setItemDelegateForColumn(3,cbd);
-    tableView->setItemDelegateForColumn(8,cbd);
-    tableView->setItemDelegateForColumn(9,cbd);
+    tableView->setItemDelegateForColumn(6,cbd);
+    tableView->setItemDelegateForColumn(7,cbd);
 }
 
 void setTableHeaders_courbe(QTableView *tableView, QAbstractItemDelegate *cbd) {
@@ -160,25 +160,23 @@ void setTableHeaders_courbe(QTableView *tableView, QAbstractItemDelegate *cbd) {
     tableView->model()->setHeaderData(3, Qt::Horizontal, QObject::tr("Angle"),Qt::DisplayRole);
     tableView->model()->setHeaderData(4, Qt::Horizontal, QObject::tr("Sens"),Qt::DisplayRole);
     tableView->model()->setHeaderData(5, Qt::Horizontal, QObject::tr(" "),Qt::DisplayRole);
-    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr(" "),Qt::DisplayRole);
-    tableView->model()->setHeaderData(8, Qt::Horizontal, QObject::tr("Précis?"),Qt::DisplayRole);
-    tableView->model()->setHeaderData(9, Qt::Horizontal, QObject::tr("Enchainement"),Qt::DisplayRole);
+    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr("Précis?"),Qt::DisplayRole);
+    tableView->model()->setHeaderData(7, Qt::Horizontal, QObject::tr("Enchainement"),Qt::DisplayRole);
     tableView->setItemDelegateForColumn(4,cbd);
-    tableView->setItemDelegateForColumn(8,cbd);
-    tableView->setItemDelegateForColumn(9,cbd);
+    tableView->setItemDelegateForColumn(6,cbd);
+    tableView->setItemDelegateForColumn(7,cbd);
 }
 void setTableHeaders_action(QTableView *tableView, QAbstractItemDelegate *cbd) {
     tableView->model()->setHeaderData(2, Qt::Horizontal, QObject::tr("Action"),Qt::DisplayRole);
     tableView->model()->setHeaderData(3, Qt::Horizontal, QObject::tr("Par1"),Qt::DisplayRole);
     tableView->model()->setHeaderData(4, Qt::Horizontal, QObject::tr("Par2"),Qt::DisplayRole);
     tableView->model()->setHeaderData(5, Qt::Horizontal, QObject::tr("Par3"),Qt::DisplayRole);
-    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr(" "),Qt::DisplayRole);
-    tableView->model()->setHeaderData(8, Qt::Horizontal, QObject::tr("Précis?"),Qt::DisplayRole);
-    tableView->model()->setHeaderData(9, Qt::Horizontal, QObject::tr("Enchainmnt"),Qt::DisplayRole);
+    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr("Précis?"),Qt::DisplayRole);
+    tableView->model()->setHeaderData(7, Qt::Horizontal, QObject::tr("Enchainmnt"),Qt::DisplayRole);
     tableView->setItemDelegateForColumn(2,cbd); //change la fonction de la fenêtre, le delegate indique qu'il change en combobox
     tableView->setItemDelegateForColumn(3,cbd);
-    tableView->setItemDelegateForColumn(8,cbd);
-    tableView->setItemDelegateForColumn(9,cbd);
+    tableView->setItemDelegateForColumn(6,cbd);
+    tableView->setItemDelegateForColumn(7,cbd);
 }
 
 void setTableHeaders_recalage(QTableView *tableView, QAbstractItemDelegate *cbd) {
@@ -186,15 +184,14 @@ void setTableHeaders_recalage(QTableView *tableView, QAbstractItemDelegate *cbd)
     tableView->model()->setHeaderData(3, Qt::Horizontal, QObject::tr("Type"),Qt::DisplayRole);
     tableView->model()->setHeaderData(4, Qt::Horizontal, QObject::tr("Axe"),Qt::DisplayRole);
     tableView->model()->setHeaderData(5, Qt::Horizontal, QObject::tr("Para"),Qt::DisplayRole);
-    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr(" "),Qt::DisplayRole);
-    tableView->model()->setHeaderData(8, Qt::Horizontal, QObject::tr("Précis?"),Qt::DisplayRole);
-    tableView->model()->setHeaderData(9, Qt::Horizontal, QObject::tr("Enchainmnt"),Qt::DisplayRole);
+    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr("Précis?"),Qt::DisplayRole);
+    tableView->model()->setHeaderData(7, Qt::Horizontal, QObject::tr("Enchainmnt"),Qt::DisplayRole);
     tableView->setItemDelegateForColumn(2,cbd);
     tableView->setItemDelegateForColumn(3,cbd);
     tableView->setItemDelegateForColumn(4,cbd);
     tableView->setItemDelegateForColumn(5,cbd);
-    tableView->setItemDelegateForColumn(8,cbd);
-    tableView->setItemDelegateForColumn(9,cbd);
+    tableView->setItemDelegateForColumn(6,cbd);
+    tableView->setItemDelegateForColumn(7,cbd);
 }
 
 void setTableHeaders_XYT(QTableView *tableView, QAbstractItemDelegate *cbd) {
@@ -202,12 +199,11 @@ void setTableHeaders_XYT(QTableView *tableView, QAbstractItemDelegate *cbd) {
     tableView->model()->setHeaderData(3, Qt::Horizontal, QObject::tr("Abs:x"),Qt::DisplayRole);
     tableView->model()->setHeaderData(4, Qt::Horizontal, QObject::tr("Ord:y"),Qt::DisplayRole);
     tableView->model()->setHeaderData(5, Qt::Horizontal, QObject::tr("Angle"),Qt::DisplayRole);
-    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr(" "),Qt::DisplayRole);
-    tableView->model()->setHeaderData(8, Qt::Horizontal, QObject::tr("Précis?"),Qt::DisplayRole);
-    tableView->model()->setHeaderData(9, Qt::Horizontal, QObject::tr("Enchainmnt"),Qt::DisplayRole);
+    tableView->model()->setHeaderData(6, Qt::Horizontal, QObject::tr("Précis?"),Qt::DisplayRole);
+    tableView->model()->setHeaderData(7, Qt::Horizontal, QObject::tr("Enchainmnt"),Qt::DisplayRole);
     tableView->setItemDelegateForColumn(2,cbd);
-    tableView->setItemDelegateForColumn(8,cbd);
-    tableView->setItemDelegateForColumn(9,cbd);
+    tableView->setItemDelegateForColumn(6,cbd);
+    tableView->setItemDelegateForColumn(7,cbd);
 
     tableView->update();
 }
@@ -2176,9 +2172,6 @@ void MainWindow::on_ImportFileButton_clicked()
             liste = text.split(",");
             //i = liste[0].toInt();
             qDebug() << liste;
-//            ui->tableView->model()->setData(ui->tableView->model()->index(index,0),liste[0].toInt()+i);
-//            ui->tableView->model()->setData(ui->tableView->model()->index(index,10),liste[11].toInt()+i);
-//            ui->tableView->model()->setData(ui->tableView->model()->index(index,11),liste[12].toInt()+i);
             ui->tableView->model()->setData(ui->tableView->model()->index(index,0),liste[0].toInt()+i);
             ui->tableView->model()->setData(ui->tableView->model()->index(index,10),liste[11].toInt()+i);
             ui->tableView->model()->setData(ui->tableView->model()->index(index,11),liste[12].toInt()+i);
@@ -2200,6 +2193,8 @@ void MainWindow::on_ImportFileButton_clicked()
                     ui->tableView->model()->setData(ui->tableView->model()->index(index,2),liste[3]);
                 else
                     ui->tableView->model()->setData(ui->tableView->model()->index(index,2),(-(liste[3].toInt())));
+
+
             }
             else if(liste[1] == "T") //Rotation
             {
@@ -2221,6 +2216,16 @@ void MainWindow::on_ImportFileButton_clicked()
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,1),dataCol1[4]);
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,2),dataAction[getAction(liste[3].toInt())]);
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,3),liste[4]);
+                if(liste[4] == "Y") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Oui");
+                else ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Non");
+                if(liste[4] == "F") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Avant");
+                else ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Arrière");
+                if(liste[4] == "E0") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 0");
+                else if (liste[4] == "E1") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 1");
+                else if (liste[4] == "E2") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 2");
+                else if (liste[4] == "E3") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 3");
+                if(liste[4] == "L") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Gauche");
+                else ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Droite");
             }
             else if(liste[1] == "R") //Recalage
             {
@@ -2539,28 +2544,49 @@ case 182: //Pose_statuette
 toReturn = 14 ;
 break;
 
-//case 300: //Prise_gateau
-//toReturn = 15 ;
-//break;
-//case 301: //Pose_gateau
-//toReturn = 16 ;
-//break;
-//case 310: //Pose_cerise_gateau
-//toReturn = 17 ;
-//break;
-//case 311: //Pose_cerise_panier
-//toReturn = 18 ;
-//break;
-//case 312: //ramasser_cerise
-//toReturn = 19 ;
-//break;
-//case 320: //parking_plat
-//toReturn = 20 ;
-//break;
-//case 321: //robot_deguiser
-//toReturn = 21 ;
-//break;
+case 0: //Evitement
+toReturn =  15;
+break;
+case 1: //Set odo
+toReturn =  16;
+break;
+case 2: //wait
+toReturn =  17;
+break;
+case 3: //wait other bot
+toReturn =  18;
+break;
+case 4: //check pos adversaire
+toReturn =  19;
+break;
+case 5: //Fin de match
+toReturn =  20;
+break;
+case 9: //Ajouter point
+toReturn =  21;
+break;
 
+case 10: //Prise gateau
+toReturn =  22;
+break;
+case 11: //Relacher gateau
+toReturn =  23;
+break;
+case 20: //Monter gateau
+toReturn =  24;
+break;
+case 30: //pose cérise gateau
+toReturn =  25;
+break;
+case 40: //Attrape cérise
+toReturn =  26;
+break;
+case 41: //Tir cérise
+toReturn =  27;
+break;
+case 50: //déguisement
+toReturn =  28;
+break;
 }
 return toReturn;
 }
