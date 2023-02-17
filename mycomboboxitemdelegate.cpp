@@ -161,6 +161,11 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
             cb->addItem(QString("Etage 1"));
             cb->addItem(QString("Etage 2"));
             cb->addItem(QString("Etage 3"));
+            cb->addItem(QString("Etage 4"));
+            cb->addItem(QString("Etage 5"));
+            cb->addItem(QString("Etage 6"));
+            cb->addItem(QString("Etage 7"));
+            cb->addItem(QString("Etage 8"));
             cb->setCurrentText(model->data(index).toString());
         }
 

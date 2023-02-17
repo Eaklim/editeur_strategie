@@ -41,8 +41,8 @@
 #define BLUE 3
 #define EMPTY 4
 
-#define GLOBALOFFSETX -15
-#define GLOBALOFFSETY -40
+#define GLOBALOFFSETX -500
+#define GLOBALOFFSETY -500
 
 #define ORIGINE_X 0
 #define ORIGINE_Y 0
@@ -82,6 +82,9 @@ private:
     QGraphicsScene *scene;
     QGraphicsPixmapItem *image;
     QGraphicsPixmapItem *robot1, *robotdep, *robot2;
+    QGraphicsPixmapItem *couche_marron1,*couche_marron2,*couche_marron3,*couche_marron4;
+    QGraphicsPixmapItem *couche_rose1,*couche_rose2,*couche_rose3,*couche_rose4;
+    QGraphicsPixmapItem *couche_jaune1,*couche_jaune2,*couche_jaune3,*couche_jaune4;
     QGraphicsLineItem *lineUp;
     QGraphicsLineItem *lineDown;
     QGraphicsLineItem *lineRight;

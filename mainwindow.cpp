@@ -3,6 +3,8 @@
 #include <QList>
 #include<iostream>
 #include <QDebug>
+#include <QtCore>
+#include <QtGui>
 
 #define ROBOTCENTRE robot1->pos().x() + GLOBALOFFSETX - 25,robot1->pos().y() + GLOBALOFFSETY + 15
 #define ROBOTCENTREX robot1->pos().x() + GLOBALOFFSETX - 25
@@ -303,28 +305,38 @@ void MainWindow::initVisu()
     image = scene->addPixmap(scaledTapis);
     image->setOffset(0,0);
 
-    QPixmap robot(":/Images/Cake2023/ROB2020.png");
+//visu du robot***************************************************************************************
+    QPixmap robot(":/Images/Cake2023/ROB2023.png");
 
    //QPixmap p; // load pixmap
    //// get label dimensions
    //int w = LARGEUR_ROBOT->width();
    //int h = label->height();
 
-    // set a scaled pixmap to a w x h window keeping its aspect ratio
 
 
     robot1 = scene->addPixmap(robot);
-    robot1->setOffset(-robot1->boundingRect().center().x() + GLOBALOFFSETX + 20,
-                      -robot1->boundingRect().center().y() + GLOBALOFFSETY + 45);
-    robot1->setPixmap(robot.scaled(LARGEUR_ROBOT,LONGUEUR_ROBOT,Qt::KeepAspectRatio));
-
+    robot1->setPixmap(robot.scaled(LARGEUR_ROBOT,LARGEUR_ROBOT,Qt::KeepAspectRatio));
+    robot1->setOffset(-robot1->boundingRect().center().x(),
+                      -robot1->boundingRect().center().y());
     robot1->setPos(0,0); //Le robot est positionné
     robot1->setRotation(90);
+
     robotdep = scene->addPixmap(robot);
-    robotdep->setOffset(-robotdep->boundingRect().center().x() + GLOBALOFFSETX + 20,
-                        -robotdep->boundingRect().center().y() + GLOBALOFFSETY + 45);
-    robotdep->setPos(0,0); //Le robot est positionné
+    robotdep->setPixmap(robot.scaled(LARGEUR_ROBOT,LARGEUR_ROBOT,Qt::KeepAspectRatio));
+    robotdep->setOffset(-robotdep->boundingRect().center().x(),
+                        -robotdep->boundingRect().center().y());
+    robotdep->setPos(1000,1000); //Le robot est positionné
     robotdep->setRotation(90);
+    robotdep->hide();
+//visu des couches de gateaux**************************************************************************
+
+    //couche de gateau marron
+    QPixmap gateau_marron(":/Images/Cake2023/face_couche_brun.png");
+    couche_marron1 = scene->addPixmap(gateau_marron);
+    robotdep->setPixmap(robot.scaled(120,120,Qt::KeepAspectRatio));
+    couche_marron1->setPos(730,1126);
+
 
 
     //Création des bordures virtuelles
@@ -445,8 +457,6 @@ void MainWindow::tableViewIsClicked(const QModelIndex &index)
     updateHeader(index);
     updateVisu(index);
 }
-
-
 
 void MainWindow::updateHeader(const QModelIndex &index)
 {
@@ -1989,6 +1999,11 @@ void MainWindow::on_ExportFileButton_clicked()
                           else if (ui->tableView->model()->data(testindex).toString() == "Etage 1") textStream << "E1";
                           else if (ui->tableView->model()->data(testindex).toString() == "Etage 2") textStream << "E2";
                           else if (ui->tableView->model()->data(testindex).toString() == "Etage 3") textStream << "E3";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 4") textStream << "E4";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 5") textStream << "E5";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 6") textStream << "E6";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 7") textStream << "E7";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 8") textStream << "E8";
                           else if (ui->tableView->model()->data(testindex).toString() == "Gauche") textStream << "L";
                           else if (ui->tableView->model()->data(testindex).toString() == "Droite") textStream << "R";
                           else textStream << "0";
@@ -2224,6 +2239,11 @@ void MainWindow::on_ImportFileButton_clicked()
                 else if (liste[4] == "E1") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 1");
                 else if (liste[4] == "E2") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 2");
                 else if (liste[4] == "E3") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 3");
+                else if (liste[4] == "E4") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 4");
+                else if (liste[4] == "E5") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 5");
+                else if (liste[4] == "E6") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 6");
+                else if (liste[4] == "E7") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 7");
+                else if (liste[4] == "E8") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 8");
                 if(liste[4] == "L") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Gauche");
                 else ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Droite");
             }
@@ -2595,7 +2615,7 @@ void MainWindow::on_pushButton_clicked()
 {
 
 
-        QPixmap robot(":/Images/Cake2023/ROB2020.png");
+        QPixmap robot(":/Images/Cake2023/ROB2023.png");
 
         switch(robot2Flag){
         case 0 :
@@ -2603,7 +2623,7 @@ void MainWindow::on_pushButton_clicked()
             break;
 
         case 1:
-
+            qDebug("TESSSSSSSSST0000000000000000");
             robot2 =  scene->addPixmap(robot);
 
             robot2->setOffset(GLOBALOFFSETX - robot2->boundingRect().center().x(),GLOBALOFFSETY - robot2->boundingRect().center().y());
@@ -2618,6 +2638,7 @@ void MainWindow::on_pushButton_clicked()
 
         default://case 2:
 
+            qDebug("TESSSSSSSSST");
             scene->removeItem(robot2);
             robot2Flag = 1;
             break;

@@ -138,8 +138,8 @@
         </property>
        </widget>
        <widget class="QWidget" name="widget" native="true">
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item alignment="Qt::AlignHCenter">
             <widget class="QLabel" name="label">
@@ -266,7 +266,7 @@
            </item>
           </layout>
          </item>
-         <item>
+         <item row="1" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
             <widget class="QLCDNumber" name="lcdPosX">
@@ -402,10 +402,10 @@ font: rgb(0, 0, 0);</string>
            </item>
           </layout>
          </item>
-         <item>
+         <item row="2" column="0">
           <widget class="QTextBrowser" name="textBrowser"/>
          </item>
-         <item>
+         <item row="3" column="0">
           <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0,0,0,0">
            <item row="1" column="5">
             <widget class="QSpinBox" name="secondTheta">
@@ -582,7 +582,7 @@ font: rgb(0, 0, 0);</string>
            </item>
           </layout>
          </item>
-         <item>
+         <item row="4" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <widget class="QPushButton" name="CreateRowButton">
@@ -660,6 +660,9 @@ font: rgb(0, 0, 0);</string>
        </widget>
       </widget>
      </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLineEdit" name="lineEdit"/>
     </item>
    </layout>
   </widget>
