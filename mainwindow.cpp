@@ -1920,12 +1920,12 @@ void MainWindow::on_ExportFileButton_clicked()
             angle = ui->tableView->model()->data(testindex).toDouble()*10;
             textStream << angle
                        << ",";
-            testindex = ui->tableView->model()->index(i,6);
-            if(ui->tableView->model()->data(testindex).toString() == "Case 1") textStream << "C1";
-            else if(ui->tableView->model()->data(testindex).toString() == "Case 2") textStream << "C2";
-            else if(ui->tableView->model()->data(testindex).toString() == "Case 3") textStream << "C2";
-            else if(ui->tableView->model()->data(testindex).toString() == "Case 4") textStream << "C2";
-            else if(ui->tableView->model()->data(testindex).toString() == "Case 5") textStream << "C2";
+            //testindex = ui->tableView->model()->index(i,6);
+            //if(ui->tableView->model()->data(testindex).toString() == "Case 1") textStream << "C1";
+            //else if(ui->tableView->model()->data(testindex).toString() == "Case 2") textStream << "C2";
+            //else if(ui->tableView->model()->data(testindex).toString() == "Case 3") textStream << "C2";
+            //else if(ui->tableView->model()->data(testindex).toString() == "Case 4") textStream << "C2";
+            //else if(ui->tableView->model()->data(testindex).toString() == "Case 5") textStream << "C2";
 
             break;
 
