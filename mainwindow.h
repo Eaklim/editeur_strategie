@@ -36,9 +36,9 @@
 #define OFF 0
 #define ON 1
 
-#define GREEN 1
-#define RED 2
-#define BLUE 3
+#define BROWN 1
+#define ROSE 2
+#define YELLOW 3
 #define EMPTY 4
 
 #define GLOBALOFFSETX -500
@@ -138,6 +138,8 @@ public slots:
     void afficherEchantillon(int i);                    //affiche l'échantillon i du tableau de coordonnées
     int collisionVentouse(int i, int rotRob);          // crée quatres lignes qui permettent de savoir si la ventouse est bien placée
     void resetPosEchantillon();                         // remet à zéro les positions des échantillons en reprenant les valeurs de base du tableau coordonnées
+
+
 
 
 protected:

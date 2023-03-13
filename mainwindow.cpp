@@ -64,55 +64,38 @@ double distanceLigneDroite;
 
 QPointF bras[17]{};
 
-const int coordonneesBase[30][6]{ // coordonnées des échantillons {x,y,COULEUR,etat,rotation,bras}
+const int coordonneesBase[30][6]{ // coordonnées des échantillons {x,y,COULEUR,prise avant ,prise arrière,bras}
     // etat : 0-> caché ; 1-> retourné ; 2-> debout
     //0 ->11 échantillon au sol ; 12->17 site de fouilles ;18->29 distributeurs;
     // le dernier paramètre correspond au bras qui a attrapé l'échantillon : 0 -> aucun ; 1 à 6 -> bras du bas ; 11 à 16 -> bras du haut
 
-    {900,555,BLUE,0,0,0}, // au sol côté jaune 00
-    {830,679,GREEN,0,0,0},
-    {900,805,RED,0,0,0},
+    {230,575,ROSE,0,0,0}, // en haut à gauche
+    {230,775,YELLOW,0,0,0},
 
-    {-65,300,GREEN,0,0,0}, // en hauteur côté jaune 03
-    {121,1688,BLUE,0,-45,0},
-    {312,1879,RED,0,-45,0},
+    {230,2425,ROSE,0,0,0}, // en haut à droite
+    {230,2225,YELLOW,0,-45,0},
 
-    {2100,555,BLUE,0,0,0}, // au sol côté violet 06
-    {2170,679,GREEN,0,0,0},
-    {2100,805,RED,0,0,0},
+    {1775,575,ROSE,0,0,0}, // en bas à gauche
+    {1775,775,YELLOW,0,0,0},
 
-    {3065,300,GREEN,0,0,0}, // en hauteur côté violet 09
-    {2879,1688,BLUE,0,0,0},
-    {2688,1879,RED,0,0,0},
+    {1775,2425,ROSE,0,0,0}, // eh bas à droite
+    {1775,2225,YELLOW,0,0,0},
 
-    {0,0,GREEN,1,0,0},//site de fouille côté jaune 12
-    {0,0,RED,1,0,0},
-    {0,0,BLUE,1,0,0},
+    {730,1125,BROWN,0,0,0}, //milieu haut gauche
+    {730,1875,BROWN,0,0,0}, //milieu haut droite
+    {1280,1125,BROWN,0,0,0}, //milieu bas gauche
+    {1280,1875,BROWN,0,0,0}, //milieu bas droite
 
-    {0,0,GREEN,1,0,0},//site de fouille côté violet 15
-    {0,0,RED,1,0,0},
-    {0,0,BLUE,1,0,0},
-
-    {22,1250,RED,2,0,0},//distributeurs bas côté jaune 18
-    {37,1250,GREEN,2,0,0},
-    {52,1250,BLUE,2,0,0},
-
-    {1350,22,RED,2,90,0},//distributeurs haut côté jaune 21
-    {1350,37,GREEN,2,90,0},
-    {1350,52,BLUE,2,90,0},
-
-    {3000-22,1250,RED,2,0,0},//distributeurs bas côté violet 24
-    {2985-22,1250,GREEN,2,0,0},
-    {2970-22,1250,BLUE,2,0,0},
-
-    {1650,22,RED,2,90,0},//distributeurs haut côté violet 27
-    {1650,37,GREEN,2,90,0},
-    {1650,52,BLUE,2,90,0}
 };
 //position actuelle des elements du jeu à faire modifer à chaque action
 int coordonnees[30][6]{
 
+
 };
+
+void setItemImagePositionAsRobot(QGraphicsPixmapItem* item, QGraphicsPixmapItem* robot) {
+    item->setPos(robot->pos());
+}
 
 /**********************************************************************************
 *      Appel de la fonction pour les différent cases du setHeaderComboBox         *
@@ -308,13 +291,6 @@ void MainWindow::initVisu()
 //visu du robot***************************************************************************************
     QPixmap robot(":/Images/Cake2023/ROB2023.png");
 
-   //QPixmap p; // load pixmap
-   //// get label dimensions
-   //int w = LARGEUR_ROBOT->width();
-   //int h = label->height();
-
-
-
     robot1 = scene->addPixmap(robot);
     robot1->setPixmap(robot.scaled(LARGEUR_ROBOT,LARGEUR_ROBOT,Qt::KeepAspectRatio));
     robot1->setOffset(-robot1->boundingRect().center().x(),
@@ -329,14 +305,6 @@ void MainWindow::initVisu()
     robotdep->setPos(1000,1000); //Le robot est positionné
     robotdep->setRotation(90);
     robotdep->hide();
-//visu des couches de gateaux**************************************************************************
-
-    //couche de gateau marron
-    QPixmap gateau_marron(":/Images/Cake2023/face_couche_brun.png");
-    couche_marron1 = scene->addPixmap(gateau_marron);
-    robotdep->setPixmap(robot.scaled(120,120,Qt::KeepAspectRatio));
-    couche_marron1->setPos(730,1126);
-
 
 
     //Création des bordures virtuelles
@@ -361,14 +329,19 @@ void MainWindow::initVisu()
     lineMap3->hide();
 
     ui->graphicsView->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
-
-//    QGraphicsTextItem *itemTextVentouse = new QGraphicsTextItem;
-//    itemTextVentouse->setPos(200, 500);
-//    itemTextVentouse->setPlainText("Hello, world!");
-//    scene->addItem(itemTextVentouse);
-
-
     qDebug() << scene->sceneRect();
+}
+
+QPoint getPosition(QGraphicsPixmapItem* robotItem)
+{
+    // Get the current position of the robot on the scene
+    QPointF pos = robotItem->pos();
+
+    // Create a QPoint object with the x and y values
+    QPoint point(pos.x(), pos.y());
+
+    // Return the QPoint object
+    return point;
 }
 
 void MainWindow::SetView()
@@ -1417,8 +1390,8 @@ void MainWindow::updateVisu(const QModelIndex &index)
                                 if(calcul<R*R) // trajectoire croise le gobelet
                                 {
                                     Ventouse_Action_Gobelet[i][1]=j; // affecte à la ventouse le numero de gobelet
-                                    if(Pen[j]==ellipsered) Ventouse_Couleur_Gobelet[i]=RED;
-                                    else if(Pen[j]==ellipsegreen) Ventouse_Couleur_Gobelet[i]=GREEN;
+                                    if(Pen[j]==ellipsered) Ventouse_Couleur_Gobelet[i]=ROSE;
+                                    else if(Pen[j]==ellipsegreen) Ventouse_Couleur_Gobelet[i]=BROWN;
                                     break; // casse la boucle for
                                 }
                             }
@@ -1445,8 +1418,8 @@ void MainWindow::updateVisu(const QModelIndex &index)
                                 if(calcul<R*R)
                                 {
                                     Ventouse_Action_Gobelet[i][1]=j;
-                                    if(Pen[j]==ellipsered) Ventouse_Couleur_Gobelet[i]=RED;
-                                    else if(Pen[j]==ellipsegreen) Ventouse_Couleur_Gobelet[i]=GREEN;
+                                    if(Pen[j]==ellipsered) Ventouse_Couleur_Gobelet[i]=ROSE;
+                                    else if(Pen[j]==ellipsegreen) Ventouse_Couleur_Gobelet[i]=BROWN ;
                                     break;
                                 }
                             }
@@ -1920,13 +1893,6 @@ void MainWindow::on_ExportFileButton_clicked()
             angle = ui->tableView->model()->data(testindex).toDouble()*10;
             textStream << angle
                        << ",";
-            //testindex = ui->tableView->model()->index(i,6);
-            //if(ui->tableView->model()->data(testindex).toString() == "Case 1") textStream << "C1";
-            //else if(ui->tableView->model()->data(testindex).toString() == "Case 2") textStream << "C2";
-            //else if(ui->tableView->model()->data(testindex).toString() == "Case 3") textStream << "C2";
-            //else if(ui->tableView->model()->data(testindex).toString() == "Case 4") textStream << "C2";
-            //else if(ui->tableView->model()->data(testindex).toString() == "Case 5") textStream << "C2";
-
             break;
 
         case 1: //Ligne Droite
@@ -2008,7 +1974,7 @@ void MainWindow::on_ExportFileButton_clicked()
                           else if (ui->tableView->model()->data(testindex).toString() == "Droite") textStream << "R";
                           else textStream << "0";
                           //                << ","
-                          //                << "0";s
+                          //                << "0";
                           //textStream << ui->tableView->model()->data(testindex).toString() //ajouter du texte
 
             break;
@@ -2319,111 +2285,162 @@ QPixmap MainWindow::determinerCouleur(int i){
     QPixmap pixReturn;
 
     //on vérifie d'abord si l'échantillon doit être face caché
-    if (coordonnees[i][3] == 0){
+    //if (coordonnees[i][3] == 0){
         switch(coordonnees[i][2]){
-        case GREEN :
-            pixReturn.load(":/Images/Cake2023/videV.png");
+        case BROWN :
+            pixReturn.load(":/Images/Cake2023/face_couche_brun.png");
+             qDebug("oooooooooooooooooooooooooooo");
             break;
-        case RED :
-            pixReturn.load(":/Images/Cake2023/videR.png");
+        case ROSE :
+            pixReturn.load(":/Images/Cake2023/face_couche_rose.png");
+            qDebug("111111111111111111111111111111111");
             break;
-        case BLUE  :
-            pixReturn.load(":/Images/Cake2023/videB.png");
+        case YELLOW  :
+            pixReturn.load(":/Images/Cake2023/face_couche_jaune.png");
+            qDebug("2222222222222222222222222222222222");
             break;
-        }
-    }
+       }
+    //}
 
     //puis on vérifie si il est debout
-    else if (coordonnees[i][3] == 2){
-        switch(coordonnees[i][2]){
-        case GREEN :
-            pixReturn.load(":/Images/Cake2023/deboutV.png");
-            break;
-        case RED :
-            pixReturn.load(":/Images/Cake2023/deboutR.png");
-            break;
-        case BLUE  :
-            pixReturn.load(":/Images/Cake2023/deboutB.png");
-            break;
-        }
-    }
+   // else if (coordonnees[i][3] == 2){
+   //     switch(coordonnees[i][2]){
+   //     case GREEN :
+   //         pixReturn.load(":/Images/Cake2023/deboutV.png");
+   //         break;
+   //     case RED :
+   //         pixReturn.load(":/Images/Cake2023/deboutR.png");
+   //         break;
+   //     case BLUE  :
+   //         pixReturn.load(":/Images/Cake2023/deboutB.png");
+   //         break;
+   //     }
+   // }
 
-    //et enfin , si il est retourné
-    else{
-        switch(coordonnees[i][2]){
-        case GREEN :
-            pixReturn.load(":/Images/Cake2023/vert.png");
-            break;
-        case RED :
-            pixReturn.load(":/Images/Cake2023/rouge.png");
-            break;
-        case BLUE  :
-            pixReturn.load(":/Images/Cake2023/bleu.png");
-            break;
-        }
-    }
+   // //et enfin , si il est retourné
+   // else{
+   //     switch(coordonnees[i][2]){
+   //     case GREEN :
+   //         pixReturn.load(":/Images/Cake2023/vert.png");
+   //         break;
+   //     case RED :
+   //         pixReturn.load(":/Images/Cake2023/rouge.png");
+   //         break;
+   //     case BLUE  :
+   //         pixReturn.load(":/Images/Cake2023/bleu.png");
+   //         break;
+   //     }
+   // }
 
     return pixReturn;
+
 }
 
 void MainWindow::afficherEchantillon(int i){
-    //on supprime l'item et on détermine sa nouvelle apparence
-    scene->removeItem(ptrEchantillon[i]);
-    QPixmap pix(determinerCouleur(i));
+//    //on supprime l'item et on détermine sa nouvelle apparence
+//    scene->removeItem(ptrEchantillon[i]);
+//    QPixmap pix(determinerCouleur(i));
+//
+//    //on dessine son numéro dans la table de coordonnées , très utile pour le débug
+//
+//    //si l'echantillon est pris par un bras , on met ses coordonnées égales à celle de la ventouse correspondante
+//    if (coordonnees[i][5] != 0){
+//        QPainter paint(&pix);
+//        QFont font;
+//        QPen pen;
+//        pen.setWidth(5);
+//        pen.setColor(Qt::black);
+//        paint.setPen(pen);
+//        font.setPixelSize(50);
+//        paint.setFont(font);
+//
+//        QString str = QString::number(coordonnees[i][5] - 1);
+//        paint.drawText(pix.rect().center().x() - 20,pix.rect().center().y() + 15,str);
+//
+//
+//
+//        if(coordonnees[i][5] > 10){
+//            coordonnees[i][0] = bras[coordonnees[i][5] - 10].x() - 50*cos(((coordonnees[i][4]) * M_PI)/180);
+//            coordonnees[i][1] = bras[coordonnees[i][5] - 10].y() + 50*sin(((coordonnees[i][4]) * M_PI)/180);
+//            pen.setColor(Qt::cyan);
+//            paint.setPen(pen);
+//            paint.drawEllipse(pix.rect().center() , 54,54);
+//        }
+//        else{
+//            coordonnees[i][0] = bras[coordonnees[i][5]].x();
+//            coordonnees[i][1] = bras[coordonnees[i][5]].y();
+//            pen.setColor(Qt::green);
+//            paint.setPen(pen);
+//            paint.drawEllipse(pix.rect().center() , 54,54);
+//        }
+//
+//    }
+//
+//    //on ajoute l'item aux bonnes coordonnées
+//    /*for(int p=0;p<4;p++){*/                               // est ce que faire une boucle for est une bonne solution???
+//   // ptrEchantillon[i] = scene->addPixmap(pix);
+//   // ptrEchantillon[i]->setPos(coordonnees[i][1],coordonnees[i][0]);
+//    //}
+//
+    for (int i = 0; i < 12; i++) {
+        scene->removeItem(ptrEchantillon[i]);
+        QPixmap pix(determinerCouleur(i));
+        pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
+        ptrEchantillon[i] = scene->addPixmap(pix);
+        ptrEchantillon[i]->setPos(coordonnees[i][1], coordonnees[i][0]);
+        ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x(),
+                                     -ptrEchantillon[i]->boundingRect().center().y());
+}
 
-    //on dessine son numéro dans la table de coordonnées , très utile pour le débug
+      if (coordonnees[i][3] == 1){ //Crée le robot ou il a pris le gateau
+          // Create a new QPixmap object for the object you want to add
+          QPixmap gat(determinerCouleur(i));
+
+          gat = gat.scaled(gat.width() * 0.27, gat.height() * 0.27, Qt::KeepAspectRatio);
+          // Create a new QGraphicsPixmapItem object for the object you want to add
+          QGraphicsPixmapItem* objectItem = scene->addPixmap(gat);
+
+
+          QPoint point = getPosition(robot1);
+
+          // Set the position of the new object relative to the robot
+          int offsetX = -62;  // adjust this value as needed
+          int offsetY = 40;  // adjust this value as needed
+          objectItem->setPos(point.x() + offsetX, point.y() + offsetY);
+      }
+          if (coordonnees[i][4] == 0){ //Crée le robot ou il a pris le gateau
+              // Create a new QPixmap object for the object you want to add
+              QPixmap gat(determinerCouleur(i));
+
+              gat = gat.scaled(gat.width() * 0.27, gat.height() * 0.27, Qt::KeepAspectRatio);
+              // Create a new QGraphicsPixmapItem object for the object you want to add
+              QGraphicsPixmapItem* objectItem = scene->addPixmap(gat);
+
+
+              QPoint point = getPosition(robot1);
+
+              // Set the position of the new object relative to the robot
+              int offsetX = -62;  // adjust this value as needed
+              int offsetY = -165;  // adjust this value as needed
+              objectItem->setPos(point.x() + offsetX, point.y() + offsetY);
 
 
 
-    //si l'echantillon est pris par un bras , on met ses coordonnées égales à celle de la ventouse correspondante
-    if (coordonnees[i][5] != 0){
-        QPainter paint(&pix);
-        QFont font;
-        QPen pen;
-        pen.setWidth(5);
-        pen.setColor(Qt::black);
-        paint.setPen(pen);
-        font.setPixelSize(50);
-        paint.setFont(font);
+  }
 
-        QString str = QString::number(coordonnees[i][5] - 1);
-        paint.drawText(pix.rect().center().x() - 20,pix.rect().center().y() + 15,str);
-
-
-
-        if(coordonnees[i][5] > 10){
-            coordonnees[i][0] = bras[coordonnees[i][5] - 10].x() - 50*cos(((coordonnees[i][4]) * M_PI)/180);
-            coordonnees[i][1] = bras[coordonnees[i][5] - 10].y() + 50*sin(((coordonnees[i][4]) * M_PI)/180);
-            pen.setColor(Qt::cyan);
-            paint.setPen(pen);
-            paint.drawEllipse(pix.rect().center() , 54,54);
-        }
-        else{
-            coordonnees[i][0] = bras[coordonnees[i][5]].x();
-            coordonnees[i][1] = bras[coordonnees[i][5]].y();
-            pen.setColor(Qt::green);
-            paint.setPen(pen);
-            paint.drawEllipse(pix.rect().center() , 54,54);
-        }
-
-    }
-
-    //on ajoute l'item aux bonnes coordonnées
-    ptrEchantillon[i] = scene->addPixmap(pix);
-    ptrEchantillon[i]->setPos(coordonnees[i][0],coordonnees[i][1]);
-
-    //on effectue les différentes transformations nécéssaires
-
-    if (coordonnees[i][5] == 0){
-    ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x() + GLOBALOFFSETX,
-                                 -ptrEchantillon[i]->boundingRect().center().y() + GLOBALOFFSETY);
-    }
-    else ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x() +35,-ptrEchantillon[i]->boundingRect().center().y() + 30);
-    //quand l'échantillon est pris par un bras du bas , pas besoin du global offset puisque sa position est la même que les ventouse qui ont le global offset
-    //il faut toujours l'offset qui permet de les centrer cependant
-
-    ptrEchantillon[i]->setTransformOriginPoint(ptrEchantillon[i]->boundingRect().center());//cela met le point de rotation au centre au lieu d'en haut à droite
-    ptrEchantillon[i]->setRotation(coordonnees[i][4]);
+//
+//    //on effectue les différentes transformations nécéssaires
+//
+////    if (coordonnees[i][5] == 0){
+////    ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x() + GLOBALOFFSETX,
+////                                 -ptrEchantillon[i]->boundingRect().center().y() + GLOBALOFFSETY);
+////    }
+////    else ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x() +35,-ptrEchantillon[i]->boundingRect().center().y() + 30);
+////    //quand l'échantillon est pris par un bras du bas , pas besoin du global offset puisque sa position est la même que les ventouse qui ont le global offset
+////    //il faut toujours l'offset qui permet de les centrer cependant
+////
+////    ptrEchantillon[i]->setTransformOriginPoint(ptrEchantillon[i]->boundingRect().center());//cela met le point de rotation au centre au lieu d'en haut à droite
+////    ptrEchantillon[i]->setRotation(coordonnees[i][4]);
 }
 
 
