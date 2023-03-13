@@ -2392,7 +2392,7 @@ void MainWindow::afficherEchantillon(int i){
                                      -ptrEchantillon[i]->boundingRect().center().y());
 }
 
-      if (coordonnees[i][3] == 1){ //Crée le robot ou il a pris le gateau
+      if (coordonnees[i][3] == 0){ //Crée le robot ou il a pris le gateau par l'avant
           // Create a new QPixmap object for the object you want to add
           QPixmap gat(determinerCouleur(i));
 
@@ -2408,7 +2408,7 @@ void MainWindow::afficherEchantillon(int i){
           int offsetY = 40;  // adjust this value as needed
           objectItem->setPos(point.x() + offsetX, point.y() + offsetY);
       }
-          if (coordonnees[i][4] == 0){ //Crée le robot ou il a pris le gateau
+          if (coordonnees[i][4] == 0){ //Crée le robot ou il a pris le gateau par l'arrière
               // Create a new QPixmap object for the object you want to add
               QPixmap gat(determinerCouleur(i));
 
@@ -2423,8 +2423,6 @@ void MainWindow::afficherEchantillon(int i){
               int offsetX = -62;  // adjust this value as needed
               int offsetY = -165;  // adjust this value as needed
               objectItem->setPos(point.x() + offsetX, point.y() + offsetY);
-
-
 
   }
 
