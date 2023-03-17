@@ -10,5 +10,11 @@
 	<file>Images/Cake2023/ROB2020.png</file>
 	<file>Images/Cake2023/ROB2023.png</file>
 	<file>Images/Cake2023/ROB2020_save.png</file>
+	<file>Images/Cake2023/robot_avant_AvecGateau_marron.png</file>
+	<file>Images/Cake2023/robot_arriere_AvecGateau_marron.png</file>
+	<file>Images/Cake2023/robot_avant_AvecGateau_jaune.png</file>
+	<file>Images/Cake2023/robot_arriere_AvecGateau_jaune.png</file>
+	<file>Images/Cake2023/robot_avant_AvecGateau_rose.png</file>
+	<file>Images/Cake2023/robot_arriere_AvecGateau_rose.png</file>
     </qresource>
 </RCC>

@@ -64,16 +64,13 @@ double distanceLigneDroite;
 
 QPointF bras[17]{};
 
-const int coordonneesBase[30][6]{ // coordonnées des échantillons {x,y,COULEUR,prise avant ,prise arrière,bras}
-    // etat : 0-> caché ; 1-> retourné ; 2-> debout
-    //0 ->11 échantillon au sol ; 12->17 site de fouilles ;18->29 distributeurs;
-    // le dernier paramètre correspond au bras qui a attrapé l'échantillon : 0 -> aucun ; 1 à 6 -> bras du bas ; 11 à 16 -> bras du haut
+int coordonneesBase[30][6]{ // coordonnées des échantillons {x,y,COULEUR,prise avant ,prise arrière, ...}
 
     {230,575,ROSE,0,0,0}, // en haut à gauche
     {230,775,YELLOW,0,0,0},
 
     {230,2425,ROSE,0,0,0}, // en haut à droite
-    {230,2225,YELLOW,0,-45,0},
+    {230,2225,YELLOW,0,0,0},
 
     {1775,575,ROSE,0,0,0}, // en bas à gauche
     {1775,775,YELLOW,0,0,0},
@@ -306,6 +303,16 @@ void MainWindow::initVisu()
     robotdep->setRotation(90);
     robotdep->hide();
 
+//visu des couches de gateaux**************************************************************************
+    for (int i=0; i<12; i++){
+    QPixmap pix(determinerCouleur(i));
+    pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
+    ptrEchantillon[i] = scene->addPixmap(pix);
+    ptrEchantillon[i]->setPos(coordonneesBase[i][1], coordonneesBase[i][0]);
+    ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x(), //met le point ref du gateau à son centre
+                                 -ptrEchantillon[i]->boundingRect().center().y());
+    }
+
 
     //Création des bordures virtuelles
     QPen redline(Qt::red);
@@ -330,6 +337,28 @@ void MainWindow::initVisu()
 
     ui->graphicsView->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
     qDebug() << scene->sceneRect();
+}
+
+QPixmap MainWindow::determinerCouleur(int i){
+    QPixmap pixReturn;
+
+    //on vérifie d'abord si l'échantillon doit être face caché
+    //if (coordonnees[i][3] == 0){
+        switch(coordonneesBase[i][2]){
+        case BROWN :
+            pixReturn.load(":/Images/Cake2023/face_couche_brun.png");
+             qDebug("test couche marron");
+            break;
+        case ROSE :
+            pixReturn.load(":/Images/Cake2023/face_couche_rose.png");
+            qDebug("test couche rose");
+            break;
+        case YELLOW  :
+            pixReturn.load(":/Images/Cake2023/face_couche_jaune.png");
+            qDebug("test couche jaune");
+            break;
+       }
+    return pixReturn;
 }
 
 QPoint getPosition(QGraphicsPixmapItem* robotItem)
@@ -1732,14 +1761,14 @@ void MainWindow::updateVisu(const QModelIndex &index)
         }
 
 
-        table_ligne=futur_i;
-        for(int i = 0; i < 30; ++i){
-            if(coordonnees[i][5] > 10) coordonnees[i][4] = PosRotrob - 90 ;
-            afficherEchantillon(i);
+      table_ligne=futur_i;
+      for(int i = 0; i < 30; ++i){
+          if(coordonnees[i][5] > 10) coordonnees[i][4] = PosRotrob - 90 ;
+          //afficherEchantillon();
 
-        }
-
-
+      }
+        miseAJourEchantillons();
+        afficherEchantillon();
     }
 
     ui->lcdPosX->display(PosXrob);
@@ -2281,165 +2310,104 @@ void MainWindow::on_ImportFileButton_clicked()
 }
 
 
-QPixmap MainWindow::determinerCouleur(int i){
-    QPixmap pixReturn;
-
-    //on vérifie d'abord si l'échantillon doit être face caché
-    //if (coordonnees[i][3] == 0){
-        switch(coordonnees[i][2]){
-        case BROWN :
-            pixReturn.load(":/Images/Cake2023/face_couche_brun.png");
-             qDebug("oooooooooooooooooooooooooooo");
-            break;
-        case ROSE :
-            pixReturn.load(":/Images/Cake2023/face_couche_rose.png");
-            qDebug("111111111111111111111111111111111");
-            break;
-        case YELLOW  :
-            pixReturn.load(":/Images/Cake2023/face_couche_jaune.png");
-            qDebug("2222222222222222222222222222222222");
-            break;
-       }
-    //}
-
-    //puis on vérifie si il est debout
-   // else if (coordonnees[i][3] == 2){
-   //     switch(coordonnees[i][2]){
-   //     case GREEN :
-   //         pixReturn.load(":/Images/Cake2023/deboutV.png");
-   //         break;
-   //     case RED :
-   //         pixReturn.load(":/Images/Cake2023/deboutR.png");
-   //         break;
-   //     case BLUE  :
-   //         pixReturn.load(":/Images/Cake2023/deboutB.png");
-   //         break;
-   //     }
-   // }
-
-   // //et enfin , si il est retourné
-   // else{
-   //     switch(coordonnees[i][2]){
-   //     case GREEN :
-   //         pixReturn.load(":/Images/Cake2023/vert.png");
-   //         break;
-   //     case RED :
-   //         pixReturn.load(":/Images/Cake2023/rouge.png");
-   //         break;
-   //     case BLUE  :
-   //         pixReturn.load(":/Images/Cake2023/bleu.png");
-   //         break;
-   //     }
-   // }
-
-    return pixReturn;
-
-}
-
-void MainWindow::afficherEchantillon(int i){
-//    //on supprime l'item et on détermine sa nouvelle apparence
-//    scene->removeItem(ptrEchantillon[i]);
-//    QPixmap pix(determinerCouleur(i));
-//
-//    //on dessine son numéro dans la table de coordonnées , très utile pour le débug
-//
-//    //si l'echantillon est pris par un bras , on met ses coordonnées égales à celle de la ventouse correspondante
-//    if (coordonnees[i][5] != 0){
-//        QPainter paint(&pix);
-//        QFont font;
-//        QPen pen;
-//        pen.setWidth(5);
-//        pen.setColor(Qt::black);
-//        paint.setPen(pen);
-//        font.setPixelSize(50);
-//        paint.setFont(font);
-//
-//        QString str = QString::number(coordonnees[i][5] - 1);
-//        paint.drawText(pix.rect().center().x() - 20,pix.rect().center().y() + 15,str);
-//
-//
-//
-//        if(coordonnees[i][5] > 10){
-//            coordonnees[i][0] = bras[coordonnees[i][5] - 10].x() - 50*cos(((coordonnees[i][4]) * M_PI)/180);
-//            coordonnees[i][1] = bras[coordonnees[i][5] - 10].y() + 50*sin(((coordonnees[i][4]) * M_PI)/180);
-//            pen.setColor(Qt::cyan);
-//            paint.setPen(pen);
-//            paint.drawEllipse(pix.rect().center() , 54,54);
-//        }
-//        else{
-//            coordonnees[i][0] = bras[coordonnees[i][5]].x();
-//            coordonnees[i][1] = bras[coordonnees[i][5]].y();
-//            pen.setColor(Qt::green);
-//            paint.setPen(pen);
-//            paint.drawEllipse(pix.rect().center() , 54,54);
-//        }
-//
-//    }
-//
-//    //on ajoute l'item aux bonnes coordonnées
-//    /*for(int p=0;p<4;p++){*/                               // est ce que faire une boucle for est une bonne solution???
-//   // ptrEchantillon[i] = scene->addPixmap(pix);
-//   // ptrEchantillon[i]->setPos(coordonnees[i][1],coordonnees[i][0]);
-//    //}
-//
+void MainWindow::miseAJourEchantillons()
+{
+    qDebug("test collision");
+    // Parcourir tous les échantillons
     for (int i = 0; i < 12; i++) {
-        scene->removeItem(ptrEchantillon[i]);
-        QPixmap pix(determinerCouleur(i));
-        pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
-        ptrEchantillon[i] = scene->addPixmap(pix);
-        ptrEchantillon[i]->setPos(coordonnees[i][1], coordonnees[i][0]);
-        ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x(),
-                                     -ptrEchantillon[i]->boundingRect().center().y());
+
+        // Vérifier si le robot se trouve sur l'échantillon de devant
+        if (ptrEchantillon[i]->collidesWithItem(robot1) /*&& robot1->rotation() == 90*/) {
+            // Mettre à jour la valeur de coordonneesBase[i][3]
+            coordonneesBase[i][3] = 1;
+            qDebug("collision");
+        }
+
+
+        // Vérifier si le robot se trouve sur l'échantillon de derrière
+        if (ptrEchantillon[i]->collidesWithItem(robot1) /*&& robot1->rotation() == -90*/) {
+            // Mettre à jour la valeur de coordonneesBase[i][4]
+            coordonneesBase[i][4] = 1;
+            qDebug("collision");
+        }
+    }
 }
 
-      if (coordonnees[i][3] == 0){ //Crée le robot ou il a pris le gateau par l'avant
-          // Create a new QPixmap object for the object you want to add
-          QPixmap gat(determinerCouleur(i));
+void MainWindow::afficherEchantillon(){
 
-          gat = gat.scaled(gat.width() * 0.27, gat.height() * 0.27, Qt::KeepAspectRatio);
-          // Create a new QGraphicsPixmapItem object for the object you want to add
-          QGraphicsPixmapItem* objectItem = scene->addPixmap(gat);
+    for ( int i = 0; i < 12; i++) {
+        QPixmap pix;
+        if (coordonneesBase[i][3] == 1) { // Si la partie avant du robot a pris l'échantillon
+            // Charger l'image avec le robot et la couche de gateau
+            robot1->hide();
+            pix.load(":/Images/Cake2023/robot_avant_AvecGateau_marron.png.png");
+            robot_gat = scene->addPixmap(pix);
+            robot_gat->setPixmap(pix.scaled(LARGEUR_ROBOT,LARGEUR_ROBOT,Qt::KeepAspectRatio));
+            robot_gat->setOffset(-robot_gat->boundingRect().center().x(),
+                                  -robot_gat->boundingRect().center().y());
+            // Effacer la couche de gateau qu'il a prise
+            ptrEchantillon[i]->hide();
+        }
+        else if (coordonneesBase[i][4] == 1) { // Si la partie arrière du robot a pris l'échantillon
+            // Charger l'image avec le robot et la couche de gateau
+            robot1->hide();
+            pix.load(":/Images/Cake2023/robot_arriere_AvecGateau_marron.png.png");
+            robot_gat = scene->addPixmap(pix);
+            robot_gat->setPixmap(pix.scaled(LARGEUR_ROBOT,LARGEUR_ROBOT,Qt::KeepAspectRatio));
+            robot_gat->setOffset(-robot_gat->boundingRect().center().x(),
+                                  -robot_gat->boundingRect().center().y());
+            // Effacer la couche de gateau qu'il a prise
+            ptrEchantillon[i]->hide();
+    }
+   }
 
 
-          QPoint point = getPosition(robot1);
+//    for ( i = 0; i < 12; i++) {
+//        scene->removeItem(ptrEchantillon[i]);
+//        QPixmap pix(determinerCouleur(i));
+//        pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
+//        ptrEchantillon[i] = scene->addPixmap(pix);
+//        ptrEchantillon[i]->setPos(coordonneesBase[i][1], coordonneesBase[i][0]);
+//        ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x(), //met le point ref du gateau à son centre
+//                                     -ptrEchantillon[i]->boundingRect().center().y());
+//}
 
-          // Set the position of the new object relative to the robot
-          int offsetX = -62;  // adjust this value as needed
-          int offsetY = 40;  // adjust this value as needed
-          objectItem->setPos(point.x() + offsetX, point.y() + offsetY);
-      }
-          if (coordonnees[i][4] == 0){ //Crée le robot ou il a pris le gateau par l'arrière
-              // Create a new QPixmap object for the object you want to add
-              QPixmap gat(determinerCouleur(i));
-
-              gat = gat.scaled(gat.width() * 0.27, gat.height() * 0.27, Qt::KeepAspectRatio);
-              // Create a new QGraphicsPixmapItem object for the object you want to add
-              QGraphicsPixmapItem* objectItem = scene->addPixmap(gat);
-
-
-              QPoint point = getPosition(robot1);
-
-              // Set the position of the new object relative to the robot
-              int offsetX = -62;  // adjust this value as needed
-              int offsetY = -165;  // adjust this value as needed
-              objectItem->setPos(point.x() + offsetX, point.y() + offsetY);
-
-  }
-
+//      if (coordonneesBase[i][3] == 1){ //Crée le robot ou il a pris le gateau par l'avant
+//          qDebug("i_3 à 1");
+//          // Create a new QPixmap object for the object you want to add
+//          QPixmap gateau(determinerCouleur(i));
 //
-//    //on effectue les différentes transformations nécéssaires
+//          gateau = gateau.scaled(gateau.width() * 0.27, gateau.height() * 0.27, Qt::KeepAspectRatio);
+//          // Create a new QGraphicsPixmapItem object for the object you want to add
+//          QGraphicsPixmapItem* objectItem = scene->addPixmap(gateau);
 //
-////    if (coordonnees[i][5] == 0){
-////    ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x() + GLOBALOFFSETX,
-////                                 -ptrEchantillon[i]->boundingRect().center().y() + GLOBALOFFSETY);
-////    }
-////    else ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x() +35,-ptrEchantillon[i]->boundingRect().center().y() + 30);
-////    //quand l'échantillon est pris par un bras du bas , pas besoin du global offset puisque sa position est la même que les ventouse qui ont le global offset
-////    //il faut toujours l'offset qui permet de les centrer cependant
-////
-////    ptrEchantillon[i]->setTransformOriginPoint(ptrEchantillon[i]->boundingRect().center());//cela met le point de rotation au centre au lieu d'en haut à droite
-////    ptrEchantillon[i]->setRotation(coordonnees[i][4]);
+//          QPoint point = getPosition(robot1);
+//
+//          // Set the position of the new object relative to the robot
+//          int offsetX = -62;  // adjust this value as needed
+//          int offsetY = 40;  // adjust this value as needed
+//          objectItem->setPos(point.x() + offsetX, point.y() + offsetY);
+//      }
+//    if (coordonneesBase[i][4] == 1){ //Crée le robot ou il a pris le gateau par l'arrière
+//        qDebug("i_4 à 1");
+//              // Create a new QPixmap object for the object you want to add
+//              QPixmap gateau(determinerCouleur(i));
+//
+//              gateau = gateau.scaled(gateau.width() * 0.27, gateau.height() * 0.27, Qt::KeepAspectRatio);
+//              // Create a new QGraphicsPixmapItem object for the object you want to add
+//              QGraphicsPixmapItem* objectItem = scene->addPixmap(gateau);
+//
+//
+//              QPoint point = getPosition(robot1);
+//
+//              // Set the position of the new object relative to the robot
+//              int offsetX = -62;  // adjust this value as needed
+//              int offsetY = -165;  // adjust this value as needed
+//              objectItem->setPos(point.x() + offsetX, point.y() + offsetY);
+//
+//  }
 }
+
 
 
 int MainWindow::collisionVentouse(int i,int rotRob){
@@ -2515,15 +2483,17 @@ collisionLine[i]->hide();
 return toReturn;
 }
 
-void MainWindow::resetPosEchantillon(void){
+void MainWindow::resetPosEchantillon(void)
+{
 
-for(int i = 0; i<30 ; i++){
+    for(int i = 0; i<30 ; i++)
+    {
 
-    for(int j = 0; j< 6 ; j++){
-        coordonnees[i][j] = coordonneesBase[i][j];
+        for(int j = 0; j< 6 ; j++)
+        {
+            coordonnees[i][j] = coordonneesBase[i][j];
+        }
     }
-
-}
 }
 
 int MainWindow::getAction(int chiffre){

@@ -81,7 +81,7 @@ private:
     //attributs commune à chaque année
     QGraphicsScene *scene;
     QGraphicsPixmapItem *image;
-    QGraphicsPixmapItem *robot1, *robotdep, *robot2;
+    QGraphicsPixmapItem *robot1, *robotdep, *robot2, *robot_gat;
     QGraphicsPixmapItem *couche_marron1,*couche_marron2,*couche_marron3,*couche_marron4;
     QGraphicsPixmapItem *couche_rose1,*couche_rose2,*couche_rose3,*couche_rose4;
     QGraphicsPixmapItem *couche_jaune1,*couche_jaune2,*couche_jaune3,*couche_jaune4;
@@ -131,15 +131,20 @@ public slots:
     void initVisu();
     int getAction(int chiffre);                         //Permet de déterminer l'action qui correspond à chiffre. utilisé lors de !!l'importation!! de stratégie.
 
+
     //Initialise la table de jeu et la position initiale du robot
 
     //methode spécifiques à l'année 2022
     QPixmap determinerCouleur(int i);                   // détermine la pixmap à utiliser pour l'échantillon i du tableau coordonnées
-    void afficherEchantillon(int i);                    //affiche l'échantillon i du tableau de coordonnées
+    void afficherEchantillon();                    //affiche l'échantillon i du tableau de coordonnées
     int collisionVentouse(int i, int rotRob);          // crée quatres lignes qui permettent de savoir si la ventouse est bien placée
     void resetPosEchantillon();                         // remet à zéro les positions des échantillons en reprenant les valeurs de base du tableau coordonnées
 
-
+    //méthode de l'année 2023
+    //void checkCakeCollected(QGraphicsPixmapItem* robotItem); //verifie si la position des couches de gateaux sont le meme que celui du robot
+    //void verifierPriseEchantillon();
+    void miseAJourEchantillons();
+    //void afficherEchantillonsMisAJour();
 
 
 protected:
