@@ -103,6 +103,8 @@ private:
     QGraphicsEllipseItem *ventouse[17], *pos_gateau, ventouseFront, ventouseBack ;
     QGraphicsLineItem *collisionLine[6],*ventouseVerticale[2], *brasDistrib[2];
     QPointF switchPosVentouse(int i , int PosRotrob);
+    QGraphicsRectItem* frontZone; // Declare frontZone as a member variable of MainWindow
+    QGraphicsRectItem* backZone; // Declare backZone as a member variable of MainWindow
 
 
 
@@ -143,8 +145,14 @@ public slots:
     //méthode de l'année 2023
     //void checkCakeCollected(QGraphicsPixmapItem* robotItem); //verifie si la position des couches de gateaux sont le meme que celui du robot
     //void verifierPriseEchantillon();
-    void miseAJourEchantillons();
+
+    //void miseAJourEchantillons();
+
     //void afficherEchantillonsMisAJour();
+
+    //void detecterEchantillon();
+    //void detecterEchantillons();
+    void detecterCollisionEchantillon();
 
 
 protected:

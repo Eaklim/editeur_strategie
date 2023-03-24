@@ -260,7 +260,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 
-void MainWindow::initVisu()
+void MainWindow::initVisu()//**********************************************************************
 {
     qDebug() << "init visu";
     ui->setupUi(this); //L'user Interface démarre
@@ -313,6 +313,24 @@ void MainWindow::initVisu()
                                  -ptrEchantillon[i]->boundingRect().center().y());
     }
 
+//    for (int i=0; i<12; i++){
+//        QPixmap pix(determinerCouleur(i));
+//        pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
+
+//        // create a new QGraphicsPixmapItem
+//        QGraphicsPixmapItem* layerItem = scene->addPixmap(pix);
+//        layerItem->setPos(coordonneesBase[i][1], coordonneesBase[i][0]);
+//        layerItem->setOffset(-layerItem->boundingRect().center().x(), -layerItem->boundingRect().center().y());
+
+//        // create a new QGraphicsRectItem to represent the layer's boundary
+//        QRectF layerRect(0, 0, pix.width(), pix.height()); // set the QRectF coordinates to 0,0
+//        QGraphicsRectItem* rectItem = scene->addRect(layerRect);
+//        rectItem->setPen(QPen(Qt::red, 2)); // set the border color and width
+//        rectItem->setPos(coordonneesBase[i][1] - rectItem->boundingRect().width()/2,
+//                          coordonneesBase[i][0] - rectItem->boundingRect().height()/2);
+//        ptrEchantillon[i] = layerItem;
+//    }
+
 
     //Création des bordures virtuelles
     QPen redline(Qt::red);
@@ -338,7 +356,7 @@ void MainWindow::initVisu()
     ui->graphicsView->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
     qDebug() << scene->sceneRect();
 }
-
+//********************************************************************************************************************
 QPixmap MainWindow::determinerCouleur(int i){
     QPixmap pixReturn;
 
@@ -360,19 +378,23 @@ QPixmap MainWindow::determinerCouleur(int i){
        }
     return pixReturn;
 }
+//********************************************************************************************************************
+int detecterCollision(QGraphicsItem* robot, QGraphicsItem* gateau) {
+    QPointF robotPos = robot->pos();
+    QPointF gateauPos = gateau->pos();
+    QLineF line(robotPos, gateauPos);
 
-QPoint getPosition(QGraphicsPixmapItem* robotItem)
-{
-    // Get the current position of the robot on the scene
-    QPointF pos = robotItem->pos();
-
-    // Create a QPoint object with the x and y values
-    QPoint point(pos.x(), pos.y());
-
-    // Return the QPoint object
-    return point;
+    if (line.angle() == 90) {
+        return 1; // collision par l'avant
+    }
+    else if (line.angle() == -90) {
+        return -1; // collision par l'arrière
+    }
+    else {
+        return 0; // pas de collision
+    }
 }
-
+//********************************************************************************************************************
 void MainWindow::SetView()
 {
     ui->graphicsView->fitInView(scene->sceneRect(),Qt::KeepAspectRatio);
@@ -405,6 +427,7 @@ void MainWindow::setHeaderComboBox(int index)
     case 2 : //Rotation
         setTableHeaders_rotation(ui->tableView, cbd);
         break;
+
     case 3 : //Courbe
         setTableHeaders_courbe(ui->tableView, cbd);
         break;
@@ -1767,8 +1790,11 @@ void MainWindow::updateVisu(const QModelIndex &index)
           //afficherEchantillon();
 
       }
-        miseAJourEchantillons();
+        //miseAJourEchantillons();
+        //detecterEchantillons();
+        detecterCollisionEchantillon();
         afficherEchantillon();
+
     }
 
     ui->lcdPosX->display(PosXrob);
@@ -2310,25 +2336,52 @@ void MainWindow::on_ImportFileButton_clicked()
 }
 
 
-void MainWindow::miseAJourEchantillons()
-{
-    qDebug("test collision");
-    // Parcourir tous les échantillons
-    for (int i = 0; i < 12; i++) {
-
-        // Vérifier si le robot se trouve sur l'échantillon de devant
-        if (ptrEchantillon[i]->collidesWithItem(robot1) /*&& robot1->rotation() == 90*/) {
-            // Mettre à jour la valeur de coordonneesBase[i][3]
-            coordonneesBase[i][3] = 1;
-            qDebug("collision");
+void MainWindow::detecterCollisionEchantillon() {
+    // Remove previously added detection zone rectangles from the scene
+    QList<QGraphicsItem*> itemsToRemove = ui->graphicsView->scene()->items();
+    for(QGraphicsItem* item : itemsToRemove) {
+        if (item == frontZone || item == backZone) {
+            ui->graphicsView->scene()->removeItem(item);
+            delete item;
         }
+    }
 
+    // Create new detection zone rectangles at the robot's current position
+    QRectF frontZoneRect = robot1->mapToScene(robot1->boundingRect().center().x() + 25 , robot1->boundingRect().center().y() - 100, 250, 200).boundingRect();
+    QRectF backZoneRect = robot1->mapToScene(robot1->boundingRect().center().x() -280 , robot1->boundingRect().center().y() -100 , 250, 200).boundingRect();
 
-        // Vérifier si le robot se trouve sur l'échantillon de derrière
-        if (ptrEchantillon[i]->collidesWithItem(robot1) /*&& robot1->rotation() == -90*/) {
-            // Mettre à jour la valeur de coordonneesBase[i][4]
+    // Create QGraphicsRectItems for the front and back zones
+    frontZone = new QGraphicsRectItem(frontZoneRect);
+    backZone = new QGraphicsRectItem(backZoneRect);
+
+    // Set the pen and brush for the front and back zones
+    QPen zonePen(Qt::green, 2);
+    QBrush zoneBrush(Qt::transparent);
+    frontZone->setPen(zonePen);
+    frontZone->setBrush(zoneBrush);
+    backZone->setPen(zonePen);
+    backZone->setBrush(zoneBrush);
+
+    // Add the front and back zones to the scene
+    ui->graphicsView->scene()->addItem(frontZone);
+    ui->graphicsView->scene()->addItem(backZone);
+
+    qDebug("test collision");
+    qDebug() << "Front " << frontZoneRect;
+    // Check for collisions between the robot and samples
+    for (int i = 0; i < 12; i++) {
+        if (ptrEchantillon[i]->collidesWithItem(frontZone)) {
+            // Update the value of coordonneesBase[i][3] to 1
+            coordonneesBase[i][3] = 1;
+            qDebug("Collision avec échantillon en face");
+            break;
+        }
+        // Check if the collision is inside the back detection zone
+        else if (ptrEchantillon[i]->collidesWithItem(backZone)) {
+            // Update the value of coordonneesBase[i][4] to 1
             coordonneesBase[i][4] = 1;
-            qDebug("collision");
+            qDebug("Collision avec échantillon derrière");
+            break;
         }
     }
 }
@@ -2339,7 +2392,7 @@ void MainWindow::afficherEchantillon(){
         QPixmap pix;
         if (coordonneesBase[i][3] == 1) { // Si la partie avant du robot a pris l'échantillon
             // Charger l'image avec le robot et la couche de gateau
-            robot1->hide();
+            //robot1->hide();
             pix.load(":/Images/Cake2023/robot_avant_AvecGateau_marron.png.png");
             robot_gat = scene->addPixmap(pix);
             robot_gat->setPixmap(pix.scaled(LARGEUR_ROBOT,LARGEUR_ROBOT,Qt::KeepAspectRatio));
@@ -2350,7 +2403,7 @@ void MainWindow::afficherEchantillon(){
         }
         else if (coordonneesBase[i][4] == 1) { // Si la partie arrière du robot a pris l'échantillon
             // Charger l'image avec le robot et la couche de gateau
-            robot1->hide();
+            //robot1->hide();
             pix.load(":/Images/Cake2023/robot_arriere_AvecGateau_marron.png.png");
             robot_gat = scene->addPixmap(pix);
             robot_gat->setPixmap(pix.scaled(LARGEUR_ROBOT,LARGEUR_ROBOT,Qt::KeepAspectRatio));
@@ -2361,51 +2414,6 @@ void MainWindow::afficherEchantillon(){
     }
    }
 
-
-//    for ( i = 0; i < 12; i++) {
-//        scene->removeItem(ptrEchantillon[i]);
-//        QPixmap pix(determinerCouleur(i));
-//        pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
-//        ptrEchantillon[i] = scene->addPixmap(pix);
-//        ptrEchantillon[i]->setPos(coordonneesBase[i][1], coordonneesBase[i][0]);
-//        ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x(), //met le point ref du gateau à son centre
-//                                     -ptrEchantillon[i]->boundingRect().center().y());
-//}
-
-//      if (coordonneesBase[i][3] == 1){ //Crée le robot ou il a pris le gateau par l'avant
-//          qDebug("i_3 à 1");
-//          // Create a new QPixmap object for the object you want to add
-//          QPixmap gateau(determinerCouleur(i));
-//
-//          gateau = gateau.scaled(gateau.width() * 0.27, gateau.height() * 0.27, Qt::KeepAspectRatio);
-//          // Create a new QGraphicsPixmapItem object for the object you want to add
-//          QGraphicsPixmapItem* objectItem = scene->addPixmap(gateau);
-//
-//          QPoint point = getPosition(robot1);
-//
-//          // Set the position of the new object relative to the robot
-//          int offsetX = -62;  // adjust this value as needed
-//          int offsetY = 40;  // adjust this value as needed
-//          objectItem->setPos(point.x() + offsetX, point.y() + offsetY);
-//      }
-//    if (coordonneesBase[i][4] == 1){ //Crée le robot ou il a pris le gateau par l'arrière
-//        qDebug("i_4 à 1");
-//              // Create a new QPixmap object for the object you want to add
-//              QPixmap gateau(determinerCouleur(i));
-//
-//              gateau = gateau.scaled(gateau.width() * 0.27, gateau.height() * 0.27, Qt::KeepAspectRatio);
-//              // Create a new QGraphicsPixmapItem object for the object you want to add
-//              QGraphicsPixmapItem* objectItem = scene->addPixmap(gateau);
-//
-//
-//              QPoint point = getPosition(robot1);
-//
-//              // Set the position of the new object relative to the robot
-//              int offsetX = -62;  // adjust this value as needed
-//              int offsetY = -165;  // adjust this value as needed
-//              objectItem->setPos(point.x() + offsetX, point.y() + offsetY);
-//
-//  }
 }
 
 
