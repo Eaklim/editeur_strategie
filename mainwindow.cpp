@@ -313,25 +313,6 @@ void MainWindow::initVisu()//***************************************************
                                  -ptrEchantillon[i]->boundingRect().center().y());
     }
 
-//    for (int i=0; i<12; i++){
-//        QPixmap pix(determinerCouleur(i));
-//        pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
-
-//        // create a new QGraphicsPixmapItem
-//        QGraphicsPixmapItem* layerItem = scene->addPixmap(pix);
-//        layerItem->setPos(coordonneesBase[i][1], coordonneesBase[i][0]);
-//        layerItem->setOffset(-layerItem->boundingRect().center().x(), -layerItem->boundingRect().center().y());
-
-//        // create a new QGraphicsRectItem to represent the layer's boundary
-//        QRectF layerRect(0, 0, pix.width(), pix.height()); // set the QRectF coordinates to 0,0
-//        QGraphicsRectItem* rectItem = scene->addRect(layerRect);
-//        rectItem->setPen(QPen(Qt::red, 2)); // set the border color and width
-//        rectItem->setPos(coordonneesBase[i][1] - rectItem->boundingRect().width()/2,
-//                          coordonneesBase[i][0] - rectItem->boundingRect().height()/2);
-//        ptrEchantillon[i] = layerItem;
-//    }
-
-
     //Création des bordures virtuelles
     QPen redline(Qt::red);
     QPen blackline(Qt::black);
@@ -378,22 +359,7 @@ QPixmap MainWindow::determinerCouleur(int i){
        }
     return pixReturn;
 }
-//********************************************************************************************************************
-int detecterCollision(QGraphicsItem* robot, QGraphicsItem* gateau) {
-    QPointF robotPos = robot->pos();
-    QPointF gateauPos = gateau->pos();
-    QLineF line(robotPos, gateauPos);
 
-    if (line.angle() == 90) {
-        return 1; // collision par l'avant
-    }
-    else if (line.angle() == -90) {
-        return -1; // collision par l'arrière
-    }
-    else {
-        return 0; // pas de collision
-    }
-}
 //********************************************************************************************************************
 void MainWindow::SetView()
 {
@@ -2386,37 +2352,47 @@ void MainWindow::detecterCollisionEchantillon() {
     }
 }
 
+
+
 //void MainWindow::afficherEchantillon(){
-//
+
+
 //    for (int i = 0; i < 12; i++) {
-//            QPixmap pix;
-//            if (coordonneesBase[i][3] == 1) { // If the robot has picked up the sample with the front end
-//                ptrEchantillon[i]->setPos(robot1->pos()); // Set the position of the sample to the same as the front of the robot
-//                ptrEchantillon[i]->setOffset(robot1->boundingRect().center().x() + 40,
-//                                              robot1->boundingRect().center().y() - 60); // Update the offset to appear in front of the robot
-//            }
-//            else if (coordonneesBase[i][4] == 1) { // If the robot has picked up the sample with the back end
-//                ptrEchantillon[i]->setPos(robot1->pos()); // Set the position of the sample to the same as the back of the robot
-//                ptrEchantillon[i]->setOffset(-robot1->boundingRect().center().x() - 165,
-//                                              -robot1->boundingRect().center().y() - 62); // Update the offset to appear behind the robot
-//            }
+//        if (coordonneesBase[i][3] == 1) { // If the robot has picked up the sample with the front end
+//            ptrEchantillon[i]->setParentItem(robot1); // Set the parent of the cake to the robot
+//               ptrEchantillon[i]->setPos(100,0); // Set the position of the cake to the front as the robot
+//               qDebug() << "Cake picked up with front end";
+
+//        }
+//        else if (coordonneesBase[i][4] == 1) { // If the robot has picked up the sample with the back end
+//            ptrEchantillon[i]->setParentItem(robot1); // Set the parent of the cake to the robot
+//               ptrEchantillon[i]->setPos(-100,0); // Set the position of the cake to the back as the robot
+//               qDebug() << "Cake picked up with front end";
+//        }
 //    }
 //}
 
 void MainWindow::afficherEchantillon(){
 
-
+    bool firstCakeCollected = false; // track if the first cake layer has been collected
     for (int i = 0; i < 12; i++) {
         if (coordonneesBase[i][3] == 1) { // If the robot has picked up the sample with the front end
+            if (!firstCakeCollected) { // if this is the first cake layer collected
+                ptrEchantillon[i]->setZValue(1); // set the z-value to a high value to keep it on top
+                firstCakeCollected = true; // set flag to true
+            }
             ptrEchantillon[i]->setParentItem(robot1); // Set the parent of the cake to the robot
-               ptrEchantillon[i]->setPos(100,0); // Set the position of the cake to the same as the robot
-               qDebug() << "Cake picked up with front end";
-
+            ptrEchantillon[i]->setPos(100,0); // Set the position of the cake to the front as the robot
+            qDebug() << "Cake picked up with front end";
         }
         else if (coordonneesBase[i][4] == 1) { // If the robot has picked up the sample with the back end
+            if (!firstCakeCollected) { // if this is the first cake layer collected
+                ptrEchantillon[i]->setZValue(1); // set the z-value to a high value to keep it on top
+                firstCakeCollected = true; // set flag to true
+            }
             ptrEchantillon[i]->setParentItem(robot1); // Set the parent of the cake to the robot
-               ptrEchantillon[i]->setPos(-100,0); // Set the position of the cake to the same as the robot
-               qDebug() << "Cake picked up with front end";
+            ptrEchantillon[i]->setPos(-100,0); // Set the position of the cake to the back as the robot
+            qDebug() << "Cake picked up with front end";
         }
     }
 }
