@@ -223,7 +223,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     MyComboBoxDelegate *cbd = new MyComboBoxDelegate(ui->tableView, this);
 
-    connect(cbd, SIGNAL(updateHeaders(const QModelIndex &)), this, SLOT(updateHeader(const QModelIndex &)));
+//    connect(cbd, SIGNAL(updateHeaders(const QModelIndex &)), this, SLOT(updateHeader(const QModelIndex &)));
 
     ui->tableView->setItemDelegateForColumn(1, cbd);
     //ui->tableView->setItemDelegateForColumn(10, cbd);
@@ -256,7 +256,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lcdPosT->display(90);
 
     ui->graphicsView->setMouseTracking(true);
-    QWidget::connect (ui->graphicsView, SIGNAL(sendMousePoint(QPointF)),this, SLOT(setMousePoint(QPointF)));
+//    connect(ui->graphicsView, SIGNAL(mouseMoveEvent(QMouseEvent *event)),this, SLOT(setMousePoint(QMouseEvent *event)));
 }
 
 
@@ -304,7 +304,7 @@ void MainWindow::initVisu()//***************************************************
     robotdep->hide();
 
 //visu des couches de gateaux**************************************************************************
-    for (int i=0; i<12; i++){
+    for (int i=0; i<36; i++){
     QPixmap pix(determinerCouleur(i));
     pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
     ptrEchantillon[i] = scene->addPixmap(pix);
@@ -489,31 +489,45 @@ void drawRobotPath(int table_ligne, QModelIndex index, QGraphicsScene* scene, QG
 //}
 
 //**********************************************************************************************************
+void MainWindow::relacherDernierEchantillon()
+{
+    // Iterate through the ptrEchantillon array in reverse order
+    for (int i = 11; i >= 0; i--)
+    {
+            if (coordonneesBase[i][3] == 1) { // If the robot has picked up the sample with the front end
+                ptrEchantillon[i]->setParentItem(0); // Remove the cake from the robot
+                ptrEchantillon[i]->setPos(ptrEchantillon[i]->pos()); // Set the position of the cake to its current position
+                coordonneesBase[i][3] = 2;
+                qDebug() << "Cake released from front end";
+                QPointF currentPos = ptrEchantillon[i]->pos();
+                qDebug() << "Current position of cake: x=" << currentPos.x() << ", y=" << currentPos.y();
+
+            }
+            else if (coordonneesBase[i][4] == 1) { // If the robot has picked up the sample with the front end
+                ptrEchantillon[i]->setParentItem(0); // Remove the cake from the robot
+                ptrEchantillon[i]->setPos(ptrEchantillon[i]->pos()); // Set the position of the cake to its current position
+                 coordonneesBase[i][4] = 2;
+                qDebug() << "Cake released from back end";
+                QPointF currentPos = ptrEchantillon[i]->pos();
+                qDebug() << "Current position of cake: x=" << currentPos.x() << ", y=" << currentPos.y();
+
+            }
+    }
+}
 
 // Update position of game objects during the strat
 void MainWindow::updateVisu(const QModelIndex &index)
 {
+     qDebug("table view clicked");
     //à remplir pour mettre à jour les mouvements et avoir les tracés rouges
 
     //int i = index.row();
-    static QGraphicsItem *item[7],*Gobelet[50],*itemVentouse[6],*itemManche[2];
-    static QGraphicsItem *itemTextVentouse[6],*itemTextBrasVentouse[6];
-    unsigned int Gobelet_coord[30][2]={{400,300},{1200,300},{1085,450},{515,450},{100,670},{400,950},{800,1100},{1200,1270},{1955,1005},{1650,1065},{1650,1335},{1955,1395}};
-   int Gobelet_coord_ecueil[20][2]={{1450,-67},{1525,-67},{1600,-67},{1675,-67},{1750,-67},{-67,700},{-67,775},{-67,850},{-67,925},{-67,1000}};
-   //static int Gobelet_angle_random[6];
-   //static int Gobelet_rayon_ramdom[6];
+     static QGraphicsItem *item[7] = {0};
     int angle, rayon;
     int Pen_Random[6]={1,2,2,1,1,2};
     double facteur=1;
     //    unsigned int Gobelet_robot[6]={100,100,100,100,100,100};
-    int Ventouse_coo[6][2]={{132,-75},{132,0},{132,75},{-132,75},{-132,0},{-132,-75}};
     int Manche_coord[2][2]={{50,-75},{-15,75}};
-    int Trajectoire_Ventouse[6][4];
-    unsigned int Ventouse_Action_Gobelet[6][2]={{OFF,100},{OFF,100},{OFF,100},{OFF,100},{OFF,100},{OFF,100}};
-    static int Ventouse_Couleur_Gobelet[6];
-    unsigned int Bras_Action_Gobelet[6][3]={{OFF,100,OFF},{OFF,100,OFF},{OFF,100,OFF},{OFF,100,OFF},{OFF,100,OFF},{OFF,100,OFF}};
-    unsigned int Manche_Air_Action[2]={OFF,OFF};
-    unsigned int Manche_Air_Couleur=0;
     double rayonCourbeVent[6];
     int Xoffset,Yoffset,avt_arr,incr,numero_Gobelet,valeur=1;
     double m,p,Xdepart,Xarrivee,Ydepart,Yarrivee,x,y,xc,yc,R,calcul;
@@ -598,15 +612,15 @@ void MainWindow::updateVisu(const QModelIndex &index)
 
         // remove toutes les lignes de déplacement et les lignes des ventouses
         for(int i=0;i<7;i++)
-            scene->removeItem(item[i]);
-        for(int i=0;i<4;i++)
-            scene->removeItem(collisionLine[i]);
-        for(int i=0;i<6;i++){// a enlever????
-            scene->removeItem(ventouse[i]);// a enlever????
-        }
-        for(int i=0;i<2;i++){// a enlever????
-            scene->removeItem(brasDistrib[i]);// a enlever????
-        }
+            if (item[i]) scene->removeItem(item[i]);
+//        for(int i=0;i<4;i++)
+//            scene->removeItem(collisionLine[i]);
+//        for(int i=0;i<6;i++){// a enlever????
+//            scene->removeItem(ventouse[i]);// a enlever????
+//        }
+//        for(int i=0;i<2;i++){// a enlever????
+//            scene->removeItem(brasDistrib[i]);// a enlever????
+//        }
 
 
         switch(indexComboBox)
@@ -719,19 +733,15 @@ void MainWindow::updateVisu(const QModelIndex &index)
                     PosRotrob = -angleRotation;
             }
 
-            if(table_ligne==index.row())
-            {
-                unsigned int diag=DIAG_ROBOT1;
-                for(int i=0;i<6;i++)
-                    if(Ventouse_Action_Gobelet[i][1]!=100)
-                        diag=90+DIAG_ROBOT1;
-                path1.moveTo((PosYrob+(diag/2)*cos(((90-PosRotrobPres) * M_PI)/180)),PosXrob+(diag/2)*sin(((90-PosRotrobPres) * M_PI)/180));
-                path1.arcTo(PosYrob-diag/2,PosXrob-diag/2,diag,diag,PosRotrobPres-90,360);
-                item[1]=scene->addPath(path1,blacklinedot);
-                path.moveTo((PosYrob+(diag/2)*cos(((90-PosRotrobPres) * M_PI)/180)),PosXrob+(diag/2)*sin(((90-PosRotrobPres) * M_PI)/180));
-                path.arcTo(PosYrob-diag/2,PosXrob-diag/2,diag,diag,90-PosRotrobPres,PosRotrob-90);
-                item[0]=scene->addPath(path,redline);
-            }
+           //if(table_ligne==index.row())
+           //{
+           //    path1.moveTo((PosYrob+(diag/2)*cos(((90-PosRotrobPres) * M_PI)/180)),PosXrob+(diag/2)*sin(((90-PosRotrobPres) * M_PI)/180));
+           //    path1.arcTo(PosYrob-diag/2,PosXrob-diag/2,diag,diag,PosRotrobPres-90,360);
+           //    item[1]=scene->addPath(path1,blacklinedot);
+           //    path.moveTo((PosYrob+(diag/2)*cos(((90-PosRotrobPres) * M_PI)/180)),PosXrob+(diag/2)*sin(((90-PosRotrobPres) * M_PI)/180));
+           //    path.arcTo(PosYrob-diag/2,PosXrob-diag/2,diag,diag,90-PosRotrobPres,PosRotrob-90);
+           //    item[0]=scene->addPath(path,redline);
+           //}
             break;
 
         case 3: //Courbe
@@ -800,8 +810,6 @@ void MainWindow::updateVisu(const QModelIndex &index)
                     item[2]=scene->addPath(path,redline);
                     unsigned int diag=DIAG_ROBOT1;
                     for(int i=0;i<6;i++)
-                        if(Ventouse_Action_Gobelet[i][1]!=100)
-                            diag=90+DIAG_ROBOT1;
                     path1.moveTo((PosYrob+(diag/2)*cos(((90-PosRotrobPres) * M_PI)/180)),PosXrob+(diag/2)*sin(((90-PosRotrobPres) * M_PI)/180));
                     path1.arcTo(PosYrob-diag/2,PosXrob-diag/2,diag,diag,PosRotrobPres-90,360);
                     item[3]=scene->addPath(path1,blacklinedot);
@@ -822,9 +830,9 @@ void MainWindow::updateVisu(const QModelIndex &index)
                 if(table_ligne==index.row())
                 {
                     // tracé de la trajectoire
-                    scene->removeItem(item[0]);
-                    scene->removeItem(item[1]);
-                    scene->removeItem(item[2]);
+                    if (item[0]) scene->removeItem(item[0]);
+                    if (item[1]) scene->removeItem(item[1]);
+                    if (item[2]) scene->removeItem(item[2]);
                     path.moveTo(PosYrobPres,PosXrobPres);
                     path.arcTo(PosCYrob-rayonCourbe,PosCXrob-rayonCourbe,2*rayonCourbe,2*rayonCourbe,PosRotrobPres,-angleCourbe);
                     item[0]=scene->addPath(path,redline);
@@ -846,9 +854,12 @@ void MainWindow::updateVisu(const QModelIndex &index)
         case 4: //Action
             if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="")
             {
-                scene->removeItem(item[0]);
-                scene->removeItem(item[1]);
-                scene->removeItem(item[2]);
+                if (item[0]) scene->removeItem(item[0]);
+                item[0] = 0;
+                if (item[1]) scene->removeItem(item[1]);
+                item[1] = 0;
+                if (item[2]) scene->removeItem(item[2]);
+                item[2] = 0;
                 ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,0),ui->tableView->model()->data(ui->tableView->model()->index(table_ligne-1,0)).toInt()+1);
                 ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,2),"Prise_bas");
                 ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),"");
@@ -884,7 +895,37 @@ void MainWindow::updateVisu(const QModelIndex &index)
                     ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),numero_action);
                 }
             }
-            //Fonctions correspondant au type d'action selectionnée
+
+//Prise_gateau_______________________________________________________________________________________________________________
+            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau")
+                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Avant")){
+                qDebug("Test prise avant");
+                // Pick up the cake at the front of the robot
+                 detecterCollisionEchantillon();
+            }
+            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau")
+                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arriere")){
+
+                qDebug("Test prise arriere");
+                  // Pick up the cake at the back of the robot
+                 detecterCollisionEchantillon();
+            }
+//Relacher gateau _________________________________________________________________________________________________________________________________
+        if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Relacher_gateau")
+            &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Avant")){
+            qDebug("Test relacher avant");
+            //qDebug() << "Cake picked up with front end";
+            // Release the last layer of cake that has been collected from the front
+            relacherDernierEchantillon();
+        }
+        if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Relacher_gateau")
+            &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arriere")){
+
+            qDebug("Test relacher arriere");
+            // Release the last layer of cake that has been collected from the front
+            relacherDernierEchantillon();
+        }
+
 
 //Prise_bas____________________________________________________________________________________________________________
 
@@ -910,7 +951,6 @@ void MainWindow::updateVisu(const QModelIndex &index)
                 // on creer le rectangle qui va contenir le rond qui correspond à la ventouse
                 QRect ellipseVentouse(0,0,54,54);
                 int echantillonAttrape;
-
 
 
                 //on verifie les collisions avec la ventouse qui correspond au bras selectionner par la centaine , la dizaine et l'unité
@@ -1155,33 +1195,30 @@ void MainWindow::updateVisu(const QModelIndex &index)
             }
 
 //**********************************| année 2023| *********************************************************************
+//            qDebug() << ui->tableView->model()->data(ui->tableView->model()->index(table_ligne, 2)).toString();
 
-
-                      // Check the value of a or b
-            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau"))
-                      {
-                qDebug()<<"ICI";
-                      QRect ellipse_gateau(0, 0, 54, 54);
-                          // Add the ellipse to the front
-                      if (((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Avant"))
-                      {
-                          qDebug()<<"ICIZE FUZHFZIOHFZIVHVZOFZIJ";
-                          pos_gateau = scene->addEllipse(ellipse_gateau, redline);
-                          pos_gateau->setParentItem(robot1);
-                          pos_gateau->setPos(100,0); //QPointF(LONGUEUR_ROBOT / 2, LARGEUR_ROBOT / 2));
-                          pos_gateau->topLevelItem();
-                      }
-                      if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arriere"))
-                      {
-                          qDebug()<<"ICItoo";
-                          // Add the ellipse to the back
-                          pos_gateau = scene->addEllipse(ellipse_gateau, redline);
-                          pos_gateau->setParentItem(robot1);
-                          pos_gateau->setPos(100,0); //QPointF(LONGUEUR_ROBOT / 2, LARGEUR_ROBOT / 2));
-                          pos_gateau->topLevelItem();
-                      }
-             }
-
+//                if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Relacher_gateau")){
+//                    // Find the last cake that was picked up by the robot
+//                    QGraphicsPixmapItem* lastCake = nullptr;
+//                    for (int i = 11; i >= 0; i--) {
+//                        if (coordonneesBase[i][3] == 1 || coordonneesBase[i][4] == 1) {
+//                            lastCake = ptrEchantillon[i];
+//                            break;
+//                        }
+//                    }
+//                    if (lastCake != nullptr) {
+//                        // Set the parent of the last cake to the scene
+//                        lastCake->setParentItem(nullptr);
+//                        // Set the position of the last cake to where it currently is
+//                        QPointF scenePos = lastCake->mapToScene(QPointF(0, 0));
+//                        lastCake->setPos(scenePos);
+//                        // Clear the coordinates for the last cake
+//                        coordonneesBase[lastCakeIndex][3] = 0;
+//                        coordonneesBase[lastCakeIndex][4] = 0;
+//                        qDebug() << "Last cake released";
+//                    }
+//                }
+//            }
 
             break;
 //**********************************************************************************************************************
@@ -1313,6 +1350,9 @@ void MainWindow::updateVisu(const QModelIndex &index)
             }
             if(table_ligne==index.row())
             {
+                for (int i=0; i<5; i++)
+                    if (item[i]) scene->removeItem(item[i]);
+
                 // Tracé Ligne centre trajectoire du robot
                 item[0]= scene->addLine(int(PosYrobPres), int(PosXrobPres),int(PosYrob),int(PosXrob),redline);
 
@@ -1332,8 +1372,6 @@ void MainWindow::updateVisu(const QModelIndex &index)
                 ,int(PosYrob - LARGEUR_ROBOT/2*sin(((angle-90) * M_PI)/180)), int(PosXrob - LARGEUR_ROBOT/2*cos(((angle-90) * M_PI)/180)),redline);
                 // arc depart
                 for(int i=0;i<6;i++)
-                    if(Ventouse_Action_Gobelet[i][1]!=100)
-                        diag=90+DIAG_ROBOT1;
                 path1.moveTo((PosYrobPres+(diag/2)*cos(((90-PosRotrobPres) * M_PI)/180)),PosXrobPres+(diag/2)*sin(((90-PosRotrobPres) * M_PI)/180));
                 path1.arcTo(PosYrobPres-diag/2,PosXrobPres-diag/2,diag,diag,PosRotrobPres-90,360);
                 item[3]=scene->addPath(path1,blacklinedot);
@@ -1349,119 +1387,21 @@ void MainWindow::updateVisu(const QModelIndex &index)
                 path.arcTo(PosYrobPres-diag/2,PosXrobPres-diag/2,diag,diag,PosRotrobPres-90,anglefin);
                 item[4]=scene->addPath(path,redline);
             }
-            // Avt Gauche
-            Xoffset=Ventouse_coo[0+avt_arr][0]*cos(((angle) * M_PI)/180)-Ventouse_coo[0+avt_arr][1]*sin(((angle) * M_PI)/180);
-            Yoffset=Ventouse_coo[0+avt_arr][0]*sin(((angle) * M_PI)/180)+Ventouse_coo[0+avt_arr][1]*cos(((angle) * M_PI)/180);
-            Trajectoire_Ventouse[0+avt_arr][0]=int(PosXrobPres+Xoffset);
-            Trajectoire_Ventouse[0+avt_arr][1]=int(PosYrobPres+Yoffset);
-            Trajectoire_Ventouse[0+avt_arr][2]=int(PosXrob+Xoffset);
-            Trajectoire_Ventouse[0+avt_arr][3]=int(PosYrob+Yoffset);
-            // Avt Centre
-            Xoffset=Ventouse_coo[1+avt_arr][0]*cos(((angle) * M_PI)/180)-Ventouse_coo[1+avt_arr][1]*sin(((angle) * M_PI)/180);
-            Yoffset=Ventouse_coo[1+avt_arr][0]*sin(((angle) * M_PI)/180)+Ventouse_coo[1+avt_arr][1]*cos(((angle) * M_PI)/180);
-            Trajectoire_Ventouse[1+avt_arr][0]=int(PosXrobPres+Xoffset);
-            Trajectoire_Ventouse[1+avt_arr][1]=int(PosYrobPres+Yoffset);
-            Trajectoire_Ventouse[1+avt_arr][2]=int(PosXrob+Xoffset);
-            Trajectoire_Ventouse[1+avt_arr][3]=int(PosYrob+Yoffset);
-            // Avt Droite
-            Xoffset=Ventouse_coo[2+avt_arr][0]*cos(((angle) * M_PI)/180)-Ventouse_coo[2+avt_arr][1]*sin(((angle) * M_PI)/180);
-            Yoffset=Ventouse_coo[2+avt_arr][0]*sin(((angle) * M_PI)/180)+Ventouse_coo[2+avt_arr][1]*cos(((angle) * M_PI)/180);
-            Trajectoire_Ventouse[2+avt_arr][0]=int(PosXrobPres+Xoffset);
-            Trajectoire_Ventouse[2+avt_arr][1]=int(PosYrobPres+Yoffset);
-            Trajectoire_Ventouse[2+avt_arr][2]=int(PosXrob+Xoffset);
-            Trajectoire_Ventouse[2+avt_arr][3]=int(PosYrob+Yoffset);
 
-            for(int i=0+avt_arr;i<3+avt_arr;i++)
-            {
-                // si ventouse est activé et que pas de gobelet pris
-                if((Ventouse_Action_Gobelet[i][0]==ON)&&(Ventouse_Action_Gobelet[i][1]==100))
-                {
-                    // vérifie si la trajectoire passe par un cercle de 30mm de diamétre (centre du gobelet)
-                    for(int j=0;j<24;j++)
-                    {
-                        xc=double(Gobelet_coord[j][0]);
-                        yc=double(Gobelet_coord[j][1]);
-                        m=(double(Trajectoire_Ventouse[i][3])-double(Trajectoire_Ventouse[i][1]))
-                                /(double(Trajectoire_Ventouse[i][2])-double(Trajectoire_Ventouse[i][0]));
-                        p=double(Trajectoire_Ventouse[i][1])-m*double(Trajectoire_Ventouse[i][0]);
-                        R=15;
-                        // Si déplacement sur l'axe des x plus grand que sur l'axe des y
-                        if(abs(Trajectoire_Ventouse[i][0]-Trajectoire_Ventouse[i][2])>abs(Trajectoire_Ventouse[i][1]-Trajectoire_Ventouse[i][3]))
-                        {
-                            if(Trajectoire_Ventouse[i][0]<Trajectoire_Ventouse[i][2]) // si x arrivee plus grand que x depart
-                            {
-                                Xdepart=Trajectoire_Ventouse[i][0];
-                                Xarrivee=Trajectoire_Ventouse[i][2];
-                            }
-                            else // si x depart plus grand que x arrivee
-                            {
-                                Xdepart=Trajectoire_Ventouse[i][2];
-                                Xarrivee=Trajectoire_Ventouse[i][0];
-                            }
-                            for(x=Xdepart;x<Xarrivee;x++) // parcours l'axe des x mm par mm pour voir si la trajectoire du robot croise le gobelet
-                            {
-                                if(Trajectoire_Ventouse[i][1]==Trajectoire_Ventouse[i][3]) // si trajectoire parllele à l'axe des x
-                                        y=Trajectoire_Ventouse[i][1];
-                                else
-                                        y=m*x+p;
-                                calcul=((x-xc)*(x-xc)+(y-yc)*(y-yc));
-                                if(calcul<R*R) // trajectoire croise le gobelet
-                                {
-                                    Ventouse_Action_Gobelet[i][1]=j; // affecte à la ventouse le numero de gobelet
-                                    if(Pen[j]==ellipsered) Ventouse_Couleur_Gobelet[i]=ROSE;
-                                    else if(Pen[j]==ellipsegreen) Ventouse_Couleur_Gobelet[i]=BROWN;
-                                    break; // casse la boucle for
-                                }
-                            }
-                        }
-                        else // Si déplacement sur l'axe des y plus grand que sur l'axe des x
-                        {
-                            if(Trajectoire_Ventouse[i][1]<Trajectoire_Ventouse[i][3]) // si y arrivee plus grand que y depart
-                            {
-                                Ydepart=Trajectoire_Ventouse[i][1];
-                                Yarrivee=Trajectoire_Ventouse[i][3];
-                            }
-                            else // si y depart plus grand que y arrivee
-                            {
-                                Ydepart=Trajectoire_Ventouse[i][3];
-                                Yarrivee=Trajectoire_Ventouse[i][1];
-                            }
-                            for(y=Ydepart;y<Yarrivee;y++)
-                            {
-                                if(Trajectoire_Ventouse[i][0]==Trajectoire_Ventouse[i][2]) // si trajectoire parllele à l'axe des y
-                                    x=Trajectoire_Ventouse[i][0];
-                                else
-                                    x=(y-p)/m;
-                                calcul=((x-xc)*(x-xc)+(y-yc)*(y-yc));
-                                if(calcul<R*R)
-                                {
-                                    Ventouse_Action_Gobelet[i][1]=j;
-                                    if(Pen[j]==ellipsered) Ventouse_Couleur_Gobelet[i]=ROSE;
-                                    else if(Pen[j]==ellipsegreen) Ventouse_Couleur_Gobelet[i]=BROWN ;
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
             if(table_ligne==index.row()) // si ligne actuel on trace les arc de cercle pour représenter les rotations
             {
+                if (item[5]) scene->removeItem(item[5]);
+                item[5] = 0;
+                if (item[6]) scene->removeItem(item[6]);
+                item[6] = 0;
+
                 // arc d arrivee
-                for(int i=0;i<6;i++) // on verifie qu'on a au moins gobelet
-                {
-                    if(Ventouse_Action_Gobelet[i][1]!=100) // si on a un gobelet
-                        diag=90+DIAG_ROBOT1; // on augmente le rayon de rotation
-                }
                 path1.moveTo((PosYrob+(diag/2)*cos(((90-PosRotrobPres) * M_PI)/180)),PosXrob+(diag/2)*sin(((90-PosRotrobPres) * M_PI)/180));
                 path1.arcTo(PosYrob-diag/2,PosXrob-diag/2,diag,diag,PosRotrobPres-90,360);
                 item[5]=scene->addPath(path1,blacklinedot);
                 path.moveTo((PosYrob+(diag/2)*cos(((PosRotrobPres-angle) * M_PI)/180)),PosXrob+(diag/2)*sin(((PosRotrobPres-angle) * M_PI)/180));
                 path.arcTo(PosYrob-diag/2,PosXrob-diag/2,diag,diag,anglefin,PosRotrob-anglefin-90);
                 item[6]=scene->addPath(path,redline);
-
-
 
             }
             break;
@@ -1485,271 +1425,6 @@ void MainWindow::updateVisu(const QModelIndex &index)
         robot1->setRotation(90-PosRotrob);
         // Affichage de la position en X,Y,T
 
-        // tracé des lignes ventouses
-        for(int i=0;i<6;i++)
-        {
-            scene->removeItem(itemVentouse[i]);
-            scene->removeItem(itemTextVentouse[i]);
-            Yoffset=Ventouse_coo[i][0]*sin(((PosRotrob) * M_PI)/180)+Ventouse_coo[i][1]*cos(((PosRotrob) * M_PI)/180);
-            Xoffset=Ventouse_coo[i][0]*cos(((PosRotrob) * M_PI)/180)-Ventouse_coo[i][1]*sin(((PosRotrob) * M_PI)/180);
-            numero_Gobelet=Ventouse_Action_Gobelet[i][1];
-            if(Ventouse_Action_Gobelet[i][0]==ON)
-            {
-                if(numero_Gobelet==100)
-                {
-                    int ligne_mouvement=futur_i;
-                    int nombre_de_ligne=ui->tableView->model()->rowCount();
-                    data = ui->tableView->model()->data(j).toString();
-                    unsigned int mouvement=0;
-                    while(ligne_mouvement<nombre_de_ligne)
-                    {
-                        j = ui->tableView->model()->index(ligne_mouvement,1);
-                        data = ui->tableView->model()->data(j).toString();
-                        mouvement = dataCol1.indexOf(data);
-                        if((mouvement==1)||(mouvement==3)||(mouvement)==6)
-                        {
-                            numero_ligne_courbe=ligne_mouvement;
-                            break;
-                        }
-                        ligne_mouvement=ui->tableView->model()->data(ui->tableView->model()->index(ligne_mouvement,10)).toInt();
-                    }
-
-                    if((mouvement==0)||(mouvement==1)) // ligne droite ou pas de mouvement
-                        itemVentouse[i] = scene->addLine(int(PosYrob + Yoffset), int(PosXrob + Xoffset)
-                    ,int(PosYrob + Yoffset+4000*sin(((PosRotrob+(180*(i/3))) * M_PI)/180)), int(PosXrob + Xoffset+ 4000*cos(((PosRotrob+(180*(i/3))) * M_PI)/180)),blacklinedot);
-                    else if(mouvement==3) // courbure
-                    {
-                        rayonCourbe = ui->tableView->model()->data(ui->tableView->model()->index(numero_ligne_courbe,2)).toDouble();
-                        angleCourbe = ui->tableView->model()->data(ui->tableView->model()->index(numero_ligne_courbe,3)).toDouble();
-                        double angle,angleDebut,angleFin;
-                        if (ui->tableView->model()->data(ui->tableView->model()->index(numero_ligne_courbe,4)).toString() == "Gauche")
-                        {
-                            angle=abs((qAtan2(rayonCourbe-Ventouse_coo[i][1],Ventouse_coo[i][0])*180/M_PI)-90);
-                            if(angleCourbe<0)
-                                angle=-angle;
-                            // calcul du centre de rotation du robot
-                            PosCXrob = PosXrob - rayonCourbe * sin((PosRotrob * M_PI)/180);
-                            PosCYrob = PosYrob + rayonCourbe * cos((PosRotrob * M_PI)/180);
-                            // calcul du rayon de courbure de la ventouse
-                            x=PosXrob+Xoffset;
-                            y=PosYrob+Yoffset;
-                            xc=PosCXrob;
-                            yc=PosCYrob;
-                            rayonCourbeVentouse=sqrt(double((x-xc)*(x-xc))+double((y-yc)*(y-yc)));
-                            // calcul de l'angle de départ est d'arrivée
-                            pathArcVentouse[i].moveTo(y,x);
-                            angleDebut=180+PosRotrobPres+angle;
-                            angleFin=angleCourbe;
-                            pathArcVentouse[i].arcTo(yc-rayonCourbeVentouse,xc-rayonCourbeVentouse,2*rayonCourbeVentouse,2*rayonCourbeVentouse,angleDebut,angleFin);
-                            itemVentouse[i]=scene->addPath(pathArcVentouse[i],blacklinedot);
-                        }
-                        else
-                        {
-                            angle=abs((qAtan2(rayonCourbe+Ventouse_coo[i][1],Ventouse_coo[i][0])*180/M_PI)-90);
-                            if(angleCourbe<0)
-                                angle=-angle;
-                            // calcul du centre de rotation(
-                            PosCXrob = PosXrobPres + rayonCourbe * sin((PosRotrob * M_PI)/180);
-                            PosCYrob = PosYrobPres - rayonCourbe * cos((PosRotrob * M_PI)/180);
-
-                            // calcul du rayon de courbure de la ventouse
-                            x=PosXrob+Xoffset;
-                            y=PosYrob+Yoffset;
-                            xc=PosCXrob;
-                            yc=PosCYrob;
-                            rayonCourbeVentouse=sqrt(double((x-xc)*(x-xc))+double((y-yc)*(y-yc)));
-                            // calcul de l'angle de départ est d'arrivée
-                            angleDebut=PosRotrobPres-angle;
-                            angleFin=-angleCourbe;
-                            pathArcVentouse[i].moveTo(y,x);//PosYrobPres+Yoffset,PosXrobPres+Xoffset); // point de depart de l'arc
-                            pathArcVentouse[i].arcTo(yc-rayonCourbeVentouse,xc-rayonCourbeVentouse,2*rayonCourbeVentouse,2*rayonCourbeVentouse,angleDebut,angleFin);
-                            itemVentouse[i]=scene->addPath(pathArcVentouse[i],blacklinedot);
-                        }
-                        ui->lcdPosArcOffset->display(angle);
-                        ui->lcdPosArcDebut->display(angleDebut);
-                        ui->lcdPosArcFin->display(angleFin);
-                    }
-                    else if(mouvement==6)
-                    {
-                        double PosXrobfinal = ui->tableView->model()->data(ui->tableView->model()->index(numero_ligne_courbe,3)).toDouble();
-                        double PosYrobfinal = ui->tableView->model()->data(ui->tableView->model()->index(numero_ligne_courbe,4)).toDouble();
-                        double PosRotrobfinal = (ui->tableView->model()->data(ui->tableView->model()->index(numero_ligne_courbe,5)).toDouble());
-                        double angle=abs(qAtan2(PosYrobfinal-PosYrobPres,PosXrobfinal-PosXrobPres)* 180)/M_PI;
-                        if(PosYrobfinal-PosYrobPres<0)
-                        {
-                            angle=-angle;
-                        }
-                        if((ui->tableView->model()->data(ui->tableView->model()->index(numero_ligne_courbe,2)).toString())=="Arrière")
-                        {
-                            angle+=180;
-                        }
-                        Yoffset=Ventouse_coo[i][0]*sin(((angle) * M_PI)/180)+Ventouse_coo[i][1]*cos(((angle) * M_PI)/180);
-                        Xoffset=Ventouse_coo[i][0]*cos(((angle) * M_PI)/180)-Ventouse_coo[i][1]*sin(((angle) * M_PI)/180);
-                        itemVentouse[i] = scene->addLine(int(PosYrobPres + Yoffset), int(PosXrobPres + Xoffset)
-                    ,int(PosYrobfinal + Yoffset+4000*sin(((angle+(180*(i/3))) * M_PI)/180)), int(PosXrobfinal + Xoffset+ 4000*cos(((angle+(180*(i/3))) * M_PI)/180)),blacklinedot);
-                    }
-                }
-                else
-                {
-                    // affichage gobelet
-                    Gobelet_coord[numero_Gobelet][0]=uint(PosXrob + Xoffset); //-36
-                    Gobelet_coord[numero_Gobelet][1]=uint(PosYrob + Yoffset); //-36
-                    Gobelet[numero_Gobelet]->setPos(Gobelet_coord[numero_Gobelet][1]-36, Gobelet_coord[numero_Gobelet][0]-36);
-                    pathtext[i].addText(0,0 , font,  QString::number(i));
-                    itemTextVentouse[i]=scene->addPath(pathtext[i], QPen(QBrush(Qt::black), 3), QBrush(Qt::black));
-                    itemTextVentouse[i]->setPos(Gobelet_coord[numero_Gobelet][1]-12,Gobelet_coord[numero_Gobelet][0]+12);
-                }
-
-            }
-
-            ventouse[i]->setTransformOriginPoint(ventouse[0]->boundingRect().center());
-            ventouse[i]->setPos(ROBOTCENTRE);
-
-            switch (i){
-                case 0 : ventouse[i]->moveBy((226.06)*sin(((PosRotrob) * M_PI)/180 - 28.6*M_PI/180) , (226.06)*cos(((PosRotrob) * M_PI)/180 - 28.6*M_PI/180));
-                        break;
-                case 1 : ventouse[i]->moveBy((137.5)*sin(((PosRotrob) * M_PI)/180) , (137.5)*cos(((PosRotrob) * M_PI)/180));
-                        break;
-                case 2 : ventouse[i]->moveBy((226.06)*sin(((PosRotrob) * M_PI)/180 + 28.6*M_PI/180) , (226.06)*cos(((PosRotrob) * M_PI)/180 + 28.6*M_PI/180));
-                        break;
-                case 5 : ventouse[i]->moveBy((226.06)*sin(((PosRotrob) * M_PI)/180 + 28.6*M_PI/180 + M_PI) , (226.06)*cos(((PosRotrob) * M_PI)/180 + 28.6*M_PI/180 + M_PI));
-                        break;
-                case 4 : ventouse[i]->moveBy((137.5)*sin(((PosRotrob) * M_PI)/180 + M_PI) , (137.5)*cos(((PosRotrob) * M_PI)/180 + M_PI));
-                        break;
-                case 3 : ventouse[i]->moveBy((226.06)*sin(((PosRotrob) * M_PI)/180 + 28.6*M_PI/180 - M_PI) , (226.06)*cos(((PosRotrob) * M_PI)/180 - 28.6*M_PI/180 + M_PI));
-                        break;
-            }
-            switch (i + 10){
-                case 10 : ventouse[i + 10]->moveBy((186.06)*sin(((PosRotrob) * M_PI)/180 - 28.6*M_PI/180) , (186.06)*cos(((PosRotrob) * M_PI)/180 - 28.6*M_PI/180));
-                        break;
-                case 11 : ventouse[i + 10]->moveBy((97.5)*sin(((PosRotrob) * M_PI)/180) , (97.5)*cos(((PosRotrob) * M_PI)/180));
-                        break;
-                case 12 : ventouse[i + 10]->moveBy((186.06)*sin(((PosRotrob) * M_PI)/180 - 28.6*M_PI/180) , (186.06)*cos(((PosRotrob) * M_PI)/180 - 28.6*M_PI/180));
-                        break;
-                case 15 : ventouse[i + 10]->moveBy((186.06)*sin(((PosRotrob) * M_PI)/180 - 28.6*M_PI/180) , (186.06)*cos(((PosRotrob) * M_PI)/180 - 28.6*M_PI/180));
-                        break;
-                case 14 : ventouse[i + 10]->moveBy((97.5)*sin(((PosRotrob) * M_PI)/180) , (97.5)*cos(((PosRotrob) * M_PI)/180));
-                        break;
-                case 13 : ventouse[i + 10]->moveBy((186.06)*sin(((PosRotrob) * M_PI)/180 - 28.6*M_PI/180) , (186.06)*cos(((PosRotrob) * M_PI)/180 - 28.6*M_PI/180));
-                        break;
-            }
-            bras[i + 1] = ventouse[i]->pos();
-            //bras[i + 11] = ventouse[i + 10]->pos();
-
-
-
-            if(resDeploye[0]){
-                scene->removeItem(brasMesure[0]); // on supprime le bras
-
-                int signeoffset0;
-                QRect rect0(0,0,100,150);
-
-
-                //on ajoutre le bras et place son point de transformation au point de contact avec le robot
-                brasMesure[0]= scene->addRect(rect0);
-                brasMesure[0]->setPen(redline);
-                brasMesure[0]->setTransformOriginPoint(brasMesure[0]->boundingRect().center().x(),0);
-
-
-
-
-                //on détermine l'offset
-                if(PosRotrob <= 90 || PosRotrob >= 270) signeoffset0 = 1;
-                else signeoffset0 = 0;
-
-
-
-                //les sin et les cos permettent au bras de se déplacer sur un cercle pour suivre la rotation du robot
-                // -40 et -5 sont la pour corriger manuellement quelques imperfection pour s'assurer que le bras est bien centré
-                brasMesure[0]->setPos(PosYrob  - 40*signeoffset0 + 285*cos(PosRotrob*(M_PI/180)),PosXrob - 285*sin(PosRotrob*(M_PI/180)) -5*signeoffset0);
-                brasMesure[0]->setRotation(90 - PosRotrob);
-
-
-            }
-            else
-                scene->removeItem(brasMesure[0]);
-
-            if(resDeploye[1]){
-                scene->removeItem(brasMesure[1]); // on supprime le bras
-
-
-                QRect rect1(0,0,100,150);
-
-                //on ajoutre le bras et place son point de transformation au point de contact avec le robot
-                brasMesure[1]= scene->addRect(rect1);
-                brasMesure[1]->setPen(redline);
-                brasMesure[1]->setTransformOriginPoint(brasMesure[1]->boundingRect().center().x(),0);
-
-                //on détermine l'offset
-
-
-                //les sin et les cos permettent au bras de se déplacer sur un cercle pour suivre la rotation du robot
-                // -60 et -5 sont la pour corriger manuellement quelques imperfection pour s'assurer que le bras est bien centré
-                brasMesure[1]->setPos(PosYrob -25 - 150*cos(PosRotrob*(M_PI/180)),PosXrob + 150*sin(PosRotrob*(M_PI/180)));
-                brasMesure[1]->setRotation(90 - PosRotrob);
-            }
-            else
-                scene->removeItem(brasMesure[1]);
-
-            qDebug() << "cos(M_PI) = " << cos(M_PI);
-            qDebug() << "cos(180) = " << cos(180);
-        }
-        for(int i=0;i<6;i++)
-        {
-            scene->removeItem(itemTextBrasVentouse[i]);
-            if(Bras_Action_Gobelet[i][0]==ON)
-            {
-                int numero_gobelet=Bras_Action_Gobelet[i][1];
-                // change coord gobelet et deplacement
-                if(Bras_Action_Gobelet[i][2]==ON)
-                {
-                    Yoffset=(Ventouse_coo[i][0]*1.6)*sin(((PosRotrob) * M_PI)/180)+Ventouse_coo[i][1]*cos(((PosRotrob) * M_PI)/180);
-                    Xoffset=(Ventouse_coo[i][0]*1.6)*cos(((PosRotrob) * M_PI)/180)-Ventouse_coo[i][1]*sin(((PosRotrob) * M_PI)/180);
-                }
-                else
-                {
-                    Yoffset=Ventouse_coo[i][0]/2*sin(((PosRotrob) * M_PI)/180)+Ventouse_coo[i][1]*cos(((PosRotrob) * M_PI)/180);
-                    Xoffset=Ventouse_coo[i][0]/2*cos(((PosRotrob) * M_PI)/180)-Ventouse_coo[i][1]*sin(((PosRotrob) * M_PI)/180);
-                }
-                Gobelet_coord_ecueil[numero_gobelet][0]=uint(PosXrob + Xoffset-36);
-                Gobelet_coord_ecueil[numero_gobelet][1]=uint(PosYrob + Yoffset-36);
-                Gobelet[numero_gobelet+24]->setPos(Gobelet_coord_ecueil[numero_gobelet][1], Gobelet_coord_ecueil[numero_gobelet][0]);
-                pathtext[i].addText(0,0 , font,  QString::number(i));
-                itemTextBrasVentouse[i]=scene->addPath(pathtext[i], QPen(QBrush(Qt::black), 3), QBrush(Qt::black));
-                itemTextBrasVentouse[i]->setPos(Gobelet_coord_ecueil[numero_gobelet][1]+24,Gobelet_coord_ecueil[numero_gobelet][0]+48);
-            }
-        }
-        for(int i=0;i<2;i++)
-        {
-            scene->removeItem(itemManche[i]);
-            int angle;
-            Yoffset=Manche_coord[i][0]*sin(((PosRotrob) * M_PI)/180)+Manche_coord[i][1]*cos(((PosRotrob) * M_PI)/180);
-            Xoffset=Manche_coord[i][0]*cos(((PosRotrob) * M_PI)/180)-Manche_coord[i][1]*sin(((PosRotrob) * M_PI)/180);
-            if(Manche_Air_Action[i]==ON)
-            {
-                if(i==0) angle = -1;
-                if(i==1) angle = 1;
-                if(Manche_Air_Couleur == 1) //Niveau bas
-                {
-                    itemManche[i] = scene->addLine(int(PosYrob + Yoffset), int(PosXrob + Xoffset),
-                                                   int(PosYrob + Yoffset+150*sin(((PosRotrob+(90*(angle))) * M_PI)/180)),
-                                                   int(PosXrob + Xoffset+150*cos(((PosRotrob+(90*(angle))) * M_PI)/180)),redline);
-                }
-                else if(Manche_Air_Couleur == 2) //Niveau Moyen
-                {
-                    itemManche[i] = scene->addLine(int(PosYrob + Yoffset), int(PosXrob + Xoffset),
-                                                   int(PosYrob + Yoffset+150*sin(((PosRotrob+(90*(angle))) * M_PI)/180)),
-                                                   int(PosXrob + Xoffset+150*cos(((PosRotrob+(90*(angle))) * M_PI)/180)),greenline);
-                }
-                /*
-                pathtext[i].addText(0,0 , font, QString::number(i));
-                itemTextManche[i]=scene->addPath(pathtext[i], QPen(QBrush(Qt::black), 3), QBrush(Qt::black));
-                itemTextManche[i]->setPos(Manche_coord[i][0]+24,Manche_coord[i][1]+48);
-                */
-            }
-        }
-
-
       table_ligne=futur_i;
       for(int i = 0; i < 30; ++i){
           if(coordonnees[i][5] > 10) coordonnees[i][4] = PosRotrob - 90 ;
@@ -1758,7 +1433,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
       }
         //miseAJourEchantillons();
         //detecterEchantillons();
-        detecterCollisionEchantillon();
+        //detecterCollisionEchantillon();
         afficherEchantillon();
 
     }
@@ -1767,8 +1442,8 @@ void MainWindow::updateVisu(const QModelIndex &index)
     ui->lcdPosY->display(PosYrob);
     ui->lcdPosT->display(PosRotrob);
 
-
 }
+
 /**********************************************************************************
  *             Fonction resetComboBox() : Supprime les combobox                   *
  *********************************************************************************/
@@ -2024,7 +1699,7 @@ void MainWindow::on_ExportFileButton_clicked()
                            << ","
                            << "0"
                            << ","
-                           << "Y"
+                           << "X"
                            << ",";
             }
             else { textStream << newValue
@@ -2033,7 +1708,7 @@ void MainWindow::on_ExportFileButton_clicked()
                               << ","
                               << "0"
                               << ","
-                              << "X"
+                              << "Y"
                               << ",";
             }
             testindex = ui->tableView->model()->index(i,3);
@@ -2239,8 +1914,8 @@ void MainWindow::on_ImportFileButton_clicked()
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,1),dataCol1[5]);
                 if(liste[2] == "F") ui->tableView->model()->setData(ui->tableView->model()->index(index,2),"Avant");
                 else ui->tableView->model()->setData(ui->tableView->model()->index(index,2),"Arrière");
-                if(liste[6] == "Y") ui->tableView->model()->setData(ui->tableView->model()->index(index,4),"Abscisse");
-                else ui->tableView->model()->setData(ui->tableView->model()->index(index,4),"Ordonnée");
+                if(liste[6] == "Y") ui->tableView->model()->setData(ui->tableView->model()->index(index,4),"Ordonnée");
+                else ui->tableView->model()->setData(ui->tableView->model()->index(index,4),"Abscisse");
                 if(liste[7] == "M") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Mécanique");
                 else ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Arrière");
                 if(liste[3] == "115") ui->tableView->model()->setData(ui->tableView->model()->index(index,5),"Rob-");
@@ -2332,45 +2007,32 @@ void MainWindow::detecterCollisionEchantillon() {
     ui->graphicsView->scene()->addItem(frontZone);
     ui->graphicsView->scene()->addItem(backZone);
 
-    qDebug("test collision");
-    qDebug() << "Front " << frontZoneRect;
+   // qDebug("test collision");
+    //qDebug() << "Front " << frontZoneRect;
     // Check for collisions between the robot and samples
     for (int i = 0; i < 12; i++) {
-        if (ptrEchantillon[i]->collidesWithItem(frontZone)) {
-            // Update the value of coordonneesBase[i][3] to 1
-            coordonneesBase[i][3] = 1;
-            qDebug("Collision avec échantillon en face");
-            //break;
-        }
-        // Check if the collision is inside the back detection zone
-        else if (ptrEchantillon[i]->collidesWithItem(backZone)) {
-            // Update the value of coordonneesBase[i][4] to 1
-            coordonneesBase[i][4] = 1;
-            qDebug("Collision avec échantillon derrière");
-            //break;
+        if ((coordonnees[i][3] != 1) && (coordonnees[i][4] != 1)) { //regarder si les gateau ne sont pas prise
+            if (ptrEchantillon[i]->collidesWithItem(frontZone)) {
+                // Update the value of coordonneesBase[i][3] to 1
+                coordonneesBase[i][3] = 1;
+                //ptrEchantillon[i]->setParentItem(robot1);
+                //ptrEchantillon[i]->setPos(100, 0);
+                //qDebug("Collision avec échantillon en face");
+                //break;
+            }
+            // Check if the collision is inside the back detection zone
+            else if (ptrEchantillon[i]->collidesWithItem(backZone)) {
+                // Update the value of coordonneesBase[i][4] to 1
+                coordonneesBase[i][4] = 1;
+                //ptrEchantillon[i]->setParentItem(robot1);
+                //ptrEchantillon[i]->setPos(-100, 0);
+                //qDebug("Collision avec échantillon derrière");
+                //break;
+            }
         }
     }
 }
 
-
-
-//void MainWindow::afficherEchantillon(){
-
-
-//    for (int i = 0; i < 12; i++) {
-//        if (coordonneesBase[i][3] == 1) { // If the robot has picked up the sample with the front end
-//            ptrEchantillon[i]->setParentItem(robot1); // Set the parent of the cake to the robot
-//               ptrEchantillon[i]->setPos(100,0); // Set the position of the cake to the front as the robot
-//               qDebug() << "Cake picked up with front end";
-
-//        }
-//        else if (coordonneesBase[i][4] == 1) { // If the robot has picked up the sample with the back end
-//            ptrEchantillon[i]->setParentItem(robot1); // Set the parent of the cake to the robot
-//               ptrEchantillon[i]->setPos(-100,0); // Set the position of the cake to the back as the robot
-//               qDebug() << "Cake picked up with front end";
-//        }
-//    }
-//}
 
 void MainWindow::afficherEchantillon(){
 
@@ -2392,7 +2054,7 @@ void MainWindow::afficherEchantillon(){
             }
             ptrEchantillon[i]->setParentItem(robot1); // Set the parent of the cake to the robot
             ptrEchantillon[i]->setPos(-100,0); // Set the position of the cake to the back as the robot
-            qDebug() << "Cake picked up with front end";
+            qDebug() << "Cake picked up with back end";
         }
     }
 }
@@ -2462,8 +2124,6 @@ if(collisionLine[0]->collidesWithItem(ptrEchantillon[j]) //ça fait peur , mais 
    && collisionLine[3]->collidesWithItem(ptrEchantillon[j])){
     toReturn  = j;
 }
-
-
 
 }
 //on cache les lignes de collision pour éviter les bug graphique (et parceque c'est moche) n'hesitez pas a commenter cette boucle pour mieux comprendre le système
@@ -2587,7 +2247,7 @@ return toReturn;
 
 void MainWindow::on_pushButton_clicked()
 {
-
+/*
 
         QPixmap robot(":/Images/Cake2023/ROB2023.png");
 
@@ -2618,5 +2278,7 @@ void MainWindow::on_pushButton_clicked()
             break;
 
         }
+        */
 }
+
 

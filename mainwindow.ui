@@ -508,13 +508,6 @@ font: rgb(0, 0, 0);</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="6">
-            <widget class="QPushButton" name="pushButton">
-             <property name="text">
-              <string>Robot 2</string>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="1">
             <widget class="QSpinBox" name="Blocage_pourcentage">
              <property name="font">
@@ -684,7 +677,6 @@ font: rgb(0, 0, 0);</string>
   <tabstop>Blocage_ligne</tabstop>
   <tabstop>checkBox_blocage</tabstop>
   <tabstop>checkBox</tabstop>
-  <tabstop>pushButton</tabstop>
   <tabstop>Blocage_pourcentage</tabstop>
   <tabstop>secondY</tabstop>
   <tabstop>secondX</tabstop>

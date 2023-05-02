@@ -98,7 +98,7 @@ private:
 
     //attributs spécifiques à l'année 2022
     int chasseNeigeFlag[2]{false,false};
-    QGraphicsPixmapItem *ptrEchantillon[30],*ptrCarre[10];
+    QGraphicsPixmapItem *ptrEchantillon[36],*ptrCarre[10];
     QGraphicsRectItem *brasMesure[2];
     QGraphicsEllipseItem *ventouse[17], *pos_gateau, ventouseFront, ventouseBack ;
     QGraphicsLineItem *collisionLine[6],*ventouseVerticale[2], *brasDistrib[2];
@@ -107,6 +107,10 @@ private:
     QGraphicsRectItem* backZone; // Declare backZone as a member variable of MainWindow
 
 
+    // Emplacement avant
+    QVector<int> avant;
+    // Emplacement arrière
+    QVector<int> arriere;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
@@ -140,7 +144,8 @@ public slots:
     QPixmap determinerCouleur(int i);                   // détermine la pixmap à utiliser pour l'échantillon i du tableau coordonnées
     void afficherEchantillon();                    //affiche l'échantillon i du tableau de coordonnées
     int collisionVentouse(int i, int rotRob);          // crée quatres lignes qui permettent de savoir si la ventouse est bien placée
-    void resetPosEchantillon();                         // remet à zéro les positions des échantillons en reprenant les valeurs de base du tableau coordonnées
+    void resetPosEchantillon();                         // remet à zéro les positions des échantillons en reprenant les valeurs de base du tableau coordonnées;
+    void relacherDernierEchantillon();
 
     //méthode de l'année 2023
     //void checkCakeCollected(QGraphicsPixmapItem* robotItem); //verifie si la position des couches de gateaux sont le meme que celui du robot
