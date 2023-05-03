@@ -68,27 +68,27 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
         {
   //***************| action relative à l'année dernière |***************************************
             //chasse neige
-            cb->addItem(QString("Ascenceur")); //action 150
+            //cb->addItem(QString("Ascenceur")); //action 150
 
-            //action liées aux bras
-            cb->addItem(QString("Prise_bas"));
-            cb->addItem(QString("Passe"));
-            cb->addItem(QString("Pose_bas"));
-            cb->addItem(QString("Pose_Haut"));
-            cb->addItem(QString("Prise_bordure"));
-            cb->addItem(QString("Pose_bordure"));
-            cb->addItem(QString("Prise_distrib"));
-            cb->addItem(QString("Ranger"));
+            ////action liées aux bras
+            //cb->addItem(QString("Prise_bas"));
+            //cb->addItem(QString("Passe"));
+            //cb->addItem(QString("Pose_bas"));
+            //cb->addItem(QString("Pose_Haut"));
+            //cb->addItem(QString("Prise_bordure"));
+            //cb->addItem(QString("Pose_bordure"));
+            //cb->addItem(QString("Prise_distrib"));
+            //cb->addItem(QString("Ranger"));
 
-            //actions liées aux bras de mesures
-            cb->addItem(QString("Res_prestest"));
-            cb->addItem(QString("Res_mes"));
-            cb->addItem(QString("Res_rang"));
+            ////actions liées aux bras de mesures
+            //cb->addItem(QString("Res_prestest"));
+            //cb->addItem(QString("Res_mes"));
+            //cb->addItem(QString("Res_rang"));
 
-            //actions liées à la statuette
-            cb->addItem(QString("Pre_prise"));
-            cb->addItem(QString("Prise_statuette"));
-            cb->addItem(QString("Pose_statuette"));
+            ////actions liées à la statuette
+            //cb->addItem(QString("Pre_prise"));
+            //cb->addItem(QString("Prise_statuette"));
+            //cb->addItem(QString("Pose_statuette"));
 
 
 
@@ -221,7 +221,7 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
 
     if(index.column() == 6)
     {
-        if(!model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Debut Match"))
+        if(!model->data(model->index(index.row(), 1),Qt::DisplayRole).toString().contains("Debut Match"))//si différent de "debut match" ajouter
         {
             cb->addItem(QString("Précis"));
             cb->addItem(QString("Non"));

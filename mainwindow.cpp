@@ -23,40 +23,39 @@ const QStringList MainWindow::dataEquipe = {"Vert",
                                             "Bleu"};
 
 
-const QStringList MainWindow::dataAction = {"Ascenceur", // action number 150
+const QStringList MainWindow::dataAction = { //"Ascenceur" // action number 150
 
-                                            "Prise_bas",
-                                            "Passe",
-                                            "Pose_bas",
-                                            "Pose_Haut",
-                                            "Prise_bordure",
-                                            "Pose_bordure",
-                                            "Prise_distrib",
-                                            "Ranger",
+                                             //,"Prise_bas"
+                                             //,"Passe"
+                                             //,"Pose_bas"
+                                             //, "Pose_Haut"
+                                             //,"Prise_bordure"
+                                             //,"Pose_bordure"
+                                             //,"Prise_distrib"
+                                             //,"Ranger"
 
-                                            "Res_prestest",
-                                            "Res_mes",
-                                            "Res_rang"
+                                             //,"Res_prestest"
+                                             //,"Res_mes"
+                                             //,"Res_rang"
 
-                                            ,"Pre_prise"
-                                            ,"Prise_statuette"
-                                            ,"Pose_statuette"
+                                             //,"Pre_prise"
+                                             //,"Prise_statuette"
+                                             //,"Pose_statuette"
 
-                                            ,"Evitement"
-                                            ,"Set_odo"
-                                            ,"Wait"
-                                            ,"Wait_other_bot"
-                                            ,"Check_pos_adversaire"
-                                            ,"Fin_de_match"
-                                            ,"Ajouter_point"
-
-                                            ,"Prise_gateau"
-                                            ,"Relacher_gateau"
-                                            ,"Etage_gateau"
-                                            ,"Pose_cerise"
-                                            ,"Attrape_cerise"
-                                            ,"Tir_cerise"
-                                            ,"Deguisement"};
+                                             /*,*/"Evitement"
+                                             ,"Set_odo"
+                                             ,"Wait"
+                                             ,"Wait_other_bot"
+                                             ,"Check_pos_adversaire"
+                                             ,"Fin_de_match"
+                                             ,"Ajouter_point"
+                                             ,"Prise_gateau"
+                                             ,"Relacher_gateau"
+                                             ,"Etage_gateau"
+                                             ,"Pose_cerise"
+                                             ,"Attrape_cerise"
+                                             ,"Tir_cerise"
+                                             ,"Deguisement"};
 
 int carreFlag = 1 , robot2Flag = 0;
 double distanceLigneDroite;
@@ -231,7 +230,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     initHeaderData();
 
-    connect(ui->tableView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(tableViewIsClicked(const QModelIndex &)));
+    connect(ui->tableView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(tableViewIsClicked(const QModelIndex &))); //affichage dès le lancement de l'éditeur
 
     ui->tableView->model()->insertRow(ui->tableView->model()->rowCount());
     ui->tableView->model()->setData(ui->tableView->model()->index(0,0),0);
@@ -240,8 +239,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->model()->setData(ui->tableView->model()->index(0,3),0);
     ui->tableView->model()->setData(ui->tableView->model()->index(0,4),50);
     ui->tableView->model()->setData(ui->tableView->model()->index(0,5),50);
-    ui->tableView->model()->setData(ui->tableView->model()->index(0,6),"Précis");
-    ui->tableView->model()->setData(ui->tableView->model()->index(0,7),"Attendre");
+    ui->tableView->model()->setData(ui->tableView->model()->index(0,6)," ");
+    ui->tableView->model()->setData(ui->tableView->model()->index(0,7)," ");
 
     ui->tableView->model()->setData(ui->tableView->model()->index(0,10),1);
     ui->tableView->model()->setData(ui->tableView->model()->index(0,11),1);
@@ -1587,8 +1586,7 @@ void MainWindow::on_ExportFileButton_clicked()
                        << ",";
             testindex = ui->tableView->model()->index(i,3); // angle
             angle = ui->tableView->model()->data(testindex).toDouble()*10;
-            textStream << angle
-                       << ",";
+            textStream << angle;
             break;
 
         case 1: //Ligne Droite
@@ -1668,9 +1666,9 @@ void MainWindow::on_ExportFileButton_clicked()
                           else if (ui->tableView->model()->data(testindex).toString() == "Etage 8") textStream << "E8";
                           else if (ui->tableView->model()->data(testindex).toString() == "Gauche") textStream << "L";
                           else if (ui->tableView->model()->data(testindex).toString() == "Droite") textStream << "R";
-                          else textStream << "0";
-                          //                << ","
-                          //                << "0";
+                          else textStream << "0"
+                                          << ","
+                                          << "0";
                           //textStream << ui->tableView->model()->data(testindex).toString() //ajouter du texte
 
             break;
@@ -1794,10 +1792,10 @@ void MainWindow::on_ExportFileButton_clicked()
             }
         }
 
-        textStream << "0"
+        textStream << "0" //espace après le P,W,T
                    << ","
                    << "0"
-                   << ",";
+                  << ",";
         testindex = ui->tableView->model()->index(i,10);
         textStream << ui->tableView->model()->data(testindex).toString()
                    << ",";
@@ -1893,10 +1891,11 @@ void MainWindow::on_ImportFileButton_clicked()
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,1),dataCol1[4]);
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,2),dataAction[getAction(liste[3].toInt())]);
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,3),liste[4]);
+                if(liste[4] == "0") ui->tableView->model()->setData(ui->tableView->model()->index(index,3)," ");
                 if(liste[4] == "Y") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Oui");
-                else ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Non");
+                else if (liste[4] == "N") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Non");
                 if(liste[4] == "F") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Avant");
-                else ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Arrière");
+                else if (liste[4] == "B") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Arrière");
                 if(liste[4] == "E0") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 0");
                 else if (liste[4] == "E1") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 1");
                 else if (liste[4] == "E2") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 2");
@@ -1907,7 +1906,7 @@ void MainWindow::on_ImportFileButton_clicked()
                 else if (liste[4] == "E7") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 7");
                 else if (liste[4] == "E8") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 8");
                 if(liste[4] == "L") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Gauche");
-                else ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Droite");
+                else if (liste[4] == "R") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Droite");
             }
             else if(liste[1] == "R") //Recalage
             {
@@ -2149,97 +2148,97 @@ int MainWindow::getAction(int chiffre){
 int toReturn = 0;
 switch(chiffre){
 
-case 170 : //Deploiement --> changer en ascenseur
-toReturn = 0 ;
-break;
-
-case 171: //Prise_bas
-toReturn = 1  ;
-break;
-case 172: //Passe
-toReturn = 2  ;
-break;
-case 173: //Pose_bas
-toReturn = 3  ;
-break;
-case 174 : //Pose_Haut
-toReturn = 4  ;
-break;
-case 175 : //Prise_bordure
-toReturn = 5 ;
-break;
-case 176 : //Pose_bordure
-toReturn = 6 ;
-break;
-case 177 : //Prise_distrib
-toReturn = 7 ;
-break;
-case 178: //Ranger
-toReturn = 8 ;
-break;
-
-case 154: //Res_prestest
-toReturn = 9 ;
-break;
-case 155: //Res_mes
-toReturn = 10 ;
-break;
-case 156: //Res_rang
-toReturn = 11 ;
-break;
-
-case 180: //Pre_prise
-toReturn = 12 ;
-break;
-case 181: //Prise_statuette
-toReturn = 13 ;
-break;
-case 182: //Pose_statuette
-toReturn = 14 ;
-break;
+//case 170 : //Deploiement --> changer en ascenseur
+//toReturn = 0 ;
+//break;
+//
+//case 171: //Prise_bas
+//toReturn = 1  ;
+//break;
+//case 172: //Passe
+//toReturn = 2  ;
+//break;
+//case 173: //Pose_bas
+//toReturn = 3  ;
+//break;
+//case 174 : //Pose_Haut
+//toReturn = 4  ;
+//break;
+//case 175 : //Prise_bordure
+//toReturn = 5 ;
+//break;
+//case 176 : //Pose_bordure
+//toReturn = 6 ;
+//break;
+//case 177 : //Prise_distrib
+//toReturn = 7 ;
+//break;
+//case 178: //Ranger
+//toReturn = 8 ;
+//break;
+//
+//case 154: //Res_prestest
+//toReturn = 9 ;
+//break;
+//case 155: //Res_mes
+//toReturn = 10 ;
+//break;
+//case 156: //Res_rang
+//toReturn = 11 ;
+//break;
+//
+//case 180: //Pre_prise
+//toReturn = 12 ;
+//break;
+//case 181: //Prise_statuette
+//toReturn = 13 ;
+//break;
+//case 182: //Pose_statuette
+//toReturn = 14 ;
+//break;
 
 case 0: //Evitement
-toReturn =  15;
+toReturn =  0;
 break;
 case 1: //Set odo
-toReturn =  16;
+toReturn =  1;
 break;
 case 2: //wait
-toReturn =  17;
+toReturn =  2;
 break;
 case 3: //wait other bot
-toReturn =  18;
+toReturn =  3;
 break;
 case 4: //check pos adversaire
-toReturn =  19;
+toReturn =  4;
 break;
 case 5: //Fin de match
-toReturn =  20;
+toReturn =  5;
 break;
 case 9: //Ajouter point
-toReturn =  21;
+toReturn =  6;
 break;
 
 case 10: //Prise gateau
-toReturn =  22;
+toReturn =  7;
 break;
 case 11: //Relacher gateau
-toReturn =  23;
+toReturn =  8;
 break;
 case 20: //Monter gateau
-toReturn =  24;
+toReturn =  9;
 break;
 case 30: //pose cérise gateau
-toReturn =  25;
+toReturn =  10;
 break;
 case 40: //Attrape cérise
-toReturn =  26;
+toReturn =  11;
 break;
 case 41: //Tir cérise
-toReturn =  27;
+toReturn =  12;
 break;
 case 50: //déguisement
-toReturn =  28;
+toReturn =  13;
 break;
 }
 return toReturn;
