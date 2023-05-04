@@ -1645,7 +1645,8 @@ void MainWindow::on_ExportFileButton_clicked()
 
             qDebug() << " Index Action : " << indexComboBoxAction;
 
-            QString indexToAction[29] = {"150","171","172","173", "174", "175","176","177","178","154","155","156","180","181","182","0","1","2","3","4","5","9","10","11","20","30","40","41","50"}; //case en tableau
+            QString indexToAction[29] = {/*"150","171","172","173", "174", "175","176","177","178","154","155","156","180","181","182",*/
+                                         "0","1","2","3","4","5","9","10","11","20","30","40","41","50"}; //case en tableau
 
             textStream << indexToAction[indexComboBoxAction];
 
@@ -1666,10 +1667,11 @@ void MainWindow::on_ExportFileButton_clicked()
                           else if (ui->tableView->model()->data(testindex).toString() == "Etage 8") textStream << "E8";
                           else if (ui->tableView->model()->data(testindex).toString() == "Gauche") textStream << "L";
                           else if (ui->tableView->model()->data(testindex).toString() == "Droite") textStream << "R";
-                          else textStream << "0"
-                                          << ","
-                                          << "0";
+                          else textStream << "0";
                           //textStream << ui->tableView->model()->data(testindex).toString() //ajouter du texte
+                          textStream << ","
+                                     << "0";
+
 
             break;
         }
