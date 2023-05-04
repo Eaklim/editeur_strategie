@@ -112,7 +112,8 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
             //Action liés au cérise
             cb->addItem(QString("Pose_cerise"));//action 30
             cb->addItem(QString("Attrape_cerise"));//action 40
-            cb->addItem(QString("Tir_cerise"));//action 41
+            cb->addItem(QString("Range_Attrape_cerise"));//action 41
+            cb->addItem(QString("Tir_cerise"));//action 42
 
             //action liés au fin de jeu
             cb->addItem(QString("Deguisement")); //action 50
@@ -170,6 +171,7 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
         }
 
         else if((model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Attrape_cerise"))
+                ||(model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Range_Attrape_cerise"))
                 ||(model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Tir_cerise")))
         {
             cb->addItem(QString("Gauche"));

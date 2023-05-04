@@ -54,6 +54,7 @@ const QStringList MainWindow::dataAction = { //"Ascenceur" // action number 150
                                              ,"Etage_gateau"
                                              ,"Pose_cerise"
                                              ,"Attrape_cerise"
+                                             ,"Range_Attrape_cerise"
                                              ,"Tir_cerise"
                                              ,"Deguisement"};
 
@@ -1646,7 +1647,7 @@ void MainWindow::on_ExportFileButton_clicked()
             qDebug() << " Index Action : " << indexComboBoxAction;
 
             QString indexToAction[29] = {/*"150","171","172","173", "174", "175","176","177","178","154","155","156","180","181","182",*/
-                                         "0","1","2","3","4","5","9","10","11","20","30","40","41","50"}; //case en tableau
+                                         "0","1","2","3","4","5","9","10","11","20","30","40","41","42","50"}; //case en tableau
 
             textStream << indexToAction[indexComboBoxAction];
 
@@ -2236,11 +2237,14 @@ break;
 case 40: //Attrape cérise
 toReturn =  11;
 break;
-case 41: //Tir cérise
+case 41: //Range Attrape cérise
 toReturn =  12;
 break;
-case 50: //déguisement
+case 42: //Tir cérise
 toReturn =  13;
+break;
+case 50: //déguisement
+toReturn =  14;
 break;
 }
 return toReturn;
