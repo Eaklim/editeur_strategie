@@ -1677,6 +1677,7 @@ void MainWindow::on_ExportFileButton_clicked()
             break;
         }
         case 5: //Recalage
+        {
             textStream << "R"
                        << ",";
             testindex = ui->tableView->model()->index(i,2);
@@ -1684,6 +1685,8 @@ void MainWindow::on_ExportFileButton_clicked()
                                                                                            << ",";
             else textStream << "B"
                             << ",";
+            testindex=ui->tableView->model()->index(i,4);
+            QString coordonne = ui->tableView->model()->data(testindex).toString();
 
             testindex = ui->tableView->model()->index(i,5);
             if(ui->tableView->model()->data(testindex).toString() == "Rob-") newValue = 115;
@@ -1722,8 +1725,10 @@ void MainWindow::on_ExportFileButton_clicked()
                             << "0"
                             << ",";
             break;
+        }
 
         case 6: //XYT
+        {
             textStream << "X"
                        << ",";
             testindex = ui->tableView->model()->index(i,2);
@@ -1814,6 +1819,7 @@ void MainWindow::on_ExportFileButton_clicked()
         textStream << "\n";
     }
     file.close();
+  }
 }
 
 void MainWindow::on_ImportFileButton_clicked()
