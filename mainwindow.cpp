@@ -629,12 +629,12 @@ void MainWindow::updateVisu(const QModelIndex &index)
 
             old_equipe = equipe;
             testindex = ui->tableView->model()->index(table_ligne,2);
-            if(ui->tableView->model()->data(testindex).toString() == "Vert")
+            if(ui->tableView->model()->data(testindex).toString() == "Bleu")
             {
                 testindex = ui->tableView->model()->index(table_ligne,4);
-                PosXrob = ui->tableView->model()->data(testindex).toDouble();
+                PosXrob = (ui->tableView->model()->data(testindex).toDouble())+220;
                 testindex = ui->tableView->model()->index(table_ligne,5);
-                PosYrob = ui->tableView->model()->data(testindex).toDouble();
+                PosYrob = (ui->tableView->model()->data(testindex).toDouble())+1050;
                 testindex = ui->tableView->model()->index(table_ligne,3);
                 PosRotrob = ((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble());
                 PosRotrobPres=PosRotrob;
@@ -643,12 +643,12 @@ void MainWindow::updateVisu(const QModelIndex &index)
                 equipe = 0;
             }
 
-            else if(ui->tableView->model()->data(testindex).toString() == "Bleu")
+            else if(ui->tableView->model()->data(testindex).toString() == "Vert")
             {
                 testindex = ui->tableView->model()->index(table_ligne,4);
-                PosXrob = ui->tableView->model()->data(testindex).toDouble();
+                PosXrob = (ui->tableView->model()->data(testindex).toDouble())+1700;
                 testindex = ui->tableView->model()->index(table_ligne,5);
-                PosYrob = 3000 - (ui->tableView->model()->data(testindex).toDouble());
+                PosYrob = (ui->tableView->model()->data(testindex).toDouble())+1050;
                 testindex = ui->tableView->model()->index(table_ligne,3);
                 PosRotrob = -((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble());
                 PosRotrobPres=PosRotrob;
