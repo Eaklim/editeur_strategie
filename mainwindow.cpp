@@ -645,11 +645,11 @@ void MainWindow::updateVisu(const QModelIndex &index)
                        else if(ui->tableView->model()->data(testindex).toString() == "Vert")
                        {
                            testindex = ui->tableView->model()->index(table_ligne,4);
-                           PosXrob = (ui->tableView->model()->data(testindex).toDouble()) + 1000 ;
+                           PosXrob = (ui->tableView->model()->data(testindex).toDouble()) +1000 ;
                            testindex = ui->tableView->model()->index(table_ligne,5);
                            PosYrob = (ui->tableView->model()->data(testindex).toDouble());
                            testindex = ui->tableView->model()->index(table_ligne,3);
-                           PosRotrob = -((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble()) + 180 ;
+                           PosRotrob = -((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble()) +180 ;
                            PosRotrobPres=PosRotrob;
                            PosXrobPres=PosXrob;
                            PosYrobPres=PosYrob;
