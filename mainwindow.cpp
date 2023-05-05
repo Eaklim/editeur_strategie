@@ -628,34 +628,33 @@ void MainWindow::updateVisu(const QModelIndex &index)
         case 0: //Début match
 
             old_equipe = equipe;
-            testindex = ui->tableView->model()->index(table_ligne,2);
-            if(ui->tableView->model()->data(testindex).toString() == "Bleu")
-            {
-                testindex = ui->tableView->model()->index(table_ligne,4);
-                PosXrob = (ui->tableView->model()->data(testindex).toDouble());
-                testindex = ui->tableView->model()->index(table_ligne,5);
-                PosYrob = (ui->tableView->model()->data(testindex).toDouble());
-                testindex = ui->tableView->model()->index(table_ligne,3);
-                PosRotrob = ((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble());
-                PosRotrobPres=PosRotrob;
-                PosXrobPres=PosXrob;
-                PosYrobPres=PosYrob;
-                equipe = 0;
-            }
-
-            else if(ui->tableView->model()->data(testindex).toString() == "Vert")
-            {
-                testindex = ui->tableView->model()->index(table_ligne,4);
-                PosXrob = (ui->tableView->model()->data(testindex).toDouble());
-                testindex = ui->tableView->model()->index(table_ligne,5);
-                PosYrob = 3000 - (ui->tableView->model()->data(testindex).toDouble());
-                testindex = ui->tableView->model()->index(table_ligne,3);
-                PosRotrob = -((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble());
-                PosRotrobPres=PosRotrob;
-                PosXrobPres=PosXrob;
-                PosYrobPres=PosYrob;
-                equipe = 1;
-            }
+                       testindex = ui->tableView->model()->index(table_ligne,2);
+                       if(ui->tableView->model()->data(testindex).toString() == "Bleu")
+                       {
+                           testindex = ui->tableView->model()->index(table_ligne,4);
+                           PosXrob = ui->tableView->model()->data(testindex).toDouble();
+                           testindex = ui->tableView->model()->index(table_ligne,5);
+                           PosYrob = ui->tableView->model()->data(testindex).toDouble();
+                           testindex = ui->tableView->model()->index(table_ligne,3);
+                           PosRotrob = ((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble());
+                           PosRotrobPres=PosRotrob;
+                           PosXrobPres=PosXrob;
+                           PosYrobPres=PosYrob;
+                           equipe = 0;
+                       }
+                       else if(ui->tableView->model()->data(testindex).toString() == "Vert")
+                       {
+                           testindex = ui->tableView->model()->index(table_ligne,4);
+                           PosXrob = (ui->tableView->model()->data(testindex).toDouble()) + 1000 ;
+                           testindex = ui->tableView->model()->index(table_ligne,5);
+                           PosYrob = (ui->tableView->model()->data(testindex).toDouble());
+                           testindex = ui->tableView->model()->index(table_ligne,3);
+                           PosRotrob = -((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble()) + 180 ;
+                           PosRotrobPres=PosRotrob;
+                           PosXrobPres=PosXrob;
+                           PosYrobPres=PosYrob;
+                           equipe = 1;
+                       }
 
             break;
 
