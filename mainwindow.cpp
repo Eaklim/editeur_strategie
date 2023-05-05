@@ -1,4 +1,4 @@
-﻿#include "mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QList>
 #include<iostream>
@@ -1687,7 +1687,6 @@ void MainWindow::on_ExportFileButton_clicked()
                             << ",";
             testindex=ui->tableView->model()->index(i,4);
             QString coordonne = ui->tableView->model()->data(testindex).toString();
-
             testindex = ui->tableView->model()->index(i,5);
             if(ui->tableView->model()->data(testindex).toString() == "Rob-") newValue = 115;
             if(ui->tableView->model()->data(testindex).toString() == "Rob+") newValue = 1885;
@@ -1728,7 +1727,6 @@ void MainWindow::on_ExportFileButton_clicked()
         }
 
         case 6: //XYT
-        {
             textStream << "X"
                        << ",";
             testindex = ui->tableView->model()->index(i,2);
@@ -1819,7 +1817,6 @@ void MainWindow::on_ExportFileButton_clicked()
         textStream << "\n";
     }
     file.close();
-  }
 }
 
 void MainWindow::on_ImportFileButton_clicked()
@@ -2291,5 +2288,4 @@ void MainWindow::on_pushButton_clicked()
         }
         */
 }
-
 
