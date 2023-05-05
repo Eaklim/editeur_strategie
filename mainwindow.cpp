@@ -632,9 +632,9 @@ void MainWindow::updateVisu(const QModelIndex &index)
             if(ui->tableView->model()->data(testindex).toString() == "Bleu")
             {
                 testindex = ui->tableView->model()->index(table_ligne,4);
-                PosXrob = (ui->tableView->model()->data(testindex).toDouble())+220;
+                PosXrob = (ui->tableView->model()->data(testindex).toDouble());
                 testindex = ui->tableView->model()->index(table_ligne,5);
-                PosYrob = (ui->tableView->model()->data(testindex).toDouble())+1050;
+                PosYrob = (ui->tableView->model()->data(testindex).toDouble());
                 testindex = ui->tableView->model()->index(table_ligne,3);
                 PosRotrob = ((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble());
                 PosRotrobPres=PosRotrob;
@@ -646,9 +646,9 @@ void MainWindow::updateVisu(const QModelIndex &index)
             else if(ui->tableView->model()->data(testindex).toString() == "Vert")
             {
                 testindex = ui->tableView->model()->index(table_ligne,4);
-                PosXrob = (ui->tableView->model()->data(testindex).toDouble())+1700;
+                PosXrob = (ui->tableView->model()->data(testindex).toDouble());
                 testindex = ui->tableView->model()->index(table_ligne,5);
-                PosYrob = (ui->tableView->model()->data(testindex).toDouble())+1050;
+                PosYrob = 3000 - (ui->tableView->model()->data(testindex).toDouble());
                 testindex = ui->tableView->model()->index(table_ligne,3);
                 PosRotrob = -((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble());
                 PosRotrobPres=PosRotrob;
@@ -1587,7 +1587,11 @@ void MainWindow::on_ExportFileButton_clicked()
                        << ",";
             testindex = ui->tableView->model()->index(i,3); // angle
             angle = ui->tableView->model()->data(testindex).toDouble()*10;
-            textStream << angle;
+            textStream << angle
+                       << ","
+                       << "0"
+                       << ","
+                       << "0";
             break;
 
         case 1: //Ligne Droite
@@ -1801,7 +1805,7 @@ void MainWindow::on_ExportFileButton_clicked()
         textStream << "0" //espace après le P,W,T
                    << ","
                    << "0"
-                  << ",";
+                   << ",";
         testindex = ui->tableView->model()->index(i,10);
         textStream << ui->tableView->model()->data(testindex).toString()
                    << ",";
@@ -1856,6 +1860,7 @@ void MainWindow::on_ImportFileButton_clicked()
             ui->tableView->model()->setData(ui->tableView->model()->index(index,0),liste[0].toInt()+i);
             ui->tableView->model()->setData(ui->tableView->model()->index(index,10),liste[11].toInt()+i);
             ui->tableView->model()->setData(ui->tableView->model()->index(index,11),liste[12].toInt()+i);
+
             if(liste[1] == "P") //Debut match
             {
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,1),dataCol1[0]);
