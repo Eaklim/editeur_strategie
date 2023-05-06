@@ -19,8 +19,8 @@ const QStringList MainWindow::dataCol1 = {"Debut Match",
                                           "XYT",
                                           /*"toto"*/};
 
-const QStringList MainWindow::dataEquipe = {"Vert",
-                                            "Bleu"};
+const QStringList MainWindow::dataEquipe = {"Bleu",
+                                            "Vert"};
 
 
 const QStringList MainWindow::dataAction = { //"Ascenceur" // action number 150
@@ -230,7 +230,7 @@ MainWindow::MainWindow(QWidget *parent)
     //ui->tableView->setItemDelegateForColumn(11, cbd);
 
     initHeaderData();
-
+    setFocusOnButton();
     connect(ui->tableView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(tableViewIsClicked(const QModelIndex &))); //affichage dès le lancement de l'éditeur
 
     ui->tableView->model()->insertRow(ui->tableView->model()->rowCount());
@@ -238,8 +238,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->model()->setData(ui->tableView->model()->index(0,1),dataCol1.at(0));
     ui->tableView->model()->setData(ui->tableView->model()->index(0,2),dataEquipe.at(0));
     ui->tableView->model()->setData(ui->tableView->model()->index(0,3),0);
-    ui->tableView->model()->setData(ui->tableView->model()->index(0,4),50);
-    ui->tableView->model()->setData(ui->tableView->model()->index(0,5),50);
+    ui->tableView->model()->setData(ui->tableView->model()->index(0,4),0);
+    ui->tableView->model()->setData(ui->tableView->model()->index(0,5),0);
     ui->tableView->model()->setData(ui->tableView->model()->index(0,6)," ");
     ui->tableView->model()->setData(ui->tableView->model()->index(0,7)," ");
 
@@ -256,6 +256,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lcdPosT->display(90);
 
     ui->graphicsView->setMouseTracking(true);
+
 //    connect(ui->graphicsView, SIGNAL(mouseMoveEvent(QMouseEvent *event)),this, SLOT(setMousePoint(QMouseEvent *event)));
 }
 
@@ -645,16 +646,17 @@ void MainWindow::updateVisu(const QModelIndex &index)
                        else if(ui->tableView->model()->data(testindex).toString() == "Vert")
                        {
                            testindex = ui->tableView->model()->index(table_ligne,4);
-                           PosXrob = (ui->tableView->model()->data(testindex).toDouble()) +1000 ;
+                           PosXrob = 2000- (ui->tableView->model()->data(testindex).toDouble()) ;
                            testindex = ui->tableView->model()->index(table_ligne,5);
                            PosYrob = (ui->tableView->model()->data(testindex).toDouble());
                            testindex = ui->tableView->model()->index(table_ligne,3);
-                           PosRotrob = -((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble()) +180 ;
+                           PosRotrob = ((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble()) +180 ;
                            PosRotrobPres=PosRotrob;
                            PosXrobPres=PosXrob;
                            PosYrobPres=PosYrob;
                            equipe = 1;
                        }
+                       robot1->setPos(PosYrob,PosXrob);
 
             break;
 
@@ -1864,9 +1866,9 @@ void MainWindow::on_ImportFileButton_clicked()
             {
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,1),dataCol1[0]);
                 if(liste[2] == "B")
-                    ui->tableView->model()->setData(ui->tableView->model()->index(index,2),"bleu");
+                    ui->tableView->model()->setData(ui->tableView->model()->index(index,2),"Bleu");
                 else
-                    ui->tableView->model()->setData(ui->tableView->model()->index(index,2),"vert");
+                    ui->tableView->model()->setData(ui->tableView->model()->index(index,2),"Vert");
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,3),liste[5].toDouble()/10);
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,4),liste[3]);
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,5),liste[4]);
@@ -1983,6 +1985,8 @@ void MainWindow::on_ImportFileButton_clicked()
         y++;
         indexdebut++;
     }
+    updateVisu(testindex);
+    connect(ui->tableView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(tableViewIsClicked(const QModelIndex &)));
 }
 
 
@@ -2292,4 +2296,3 @@ void MainWindow::on_pushButton_clicked()
         }
         */
 }
-
