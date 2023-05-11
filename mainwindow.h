@@ -158,6 +158,7 @@ public slots:
     //void detecterEchantillon();
     //void detecterEchantillons();
     void detecterCollisionEchantillon();
+    void afficher_gateau();
 
 
 protected:
