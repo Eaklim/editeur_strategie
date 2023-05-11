@@ -64,27 +64,6 @@ const QStringList MainWindow::dataAction = { //"Ascenceur" // action number 150
 int carreFlag = 1 , robot2Flag = 0;
 double distanceLigneDroite;
 
-
-QPointF bras[17]{};
-unsigned int coordonneesBase[12][7]={ // coordonnées des échantillons {x,y,COULEUR,prise_avant ,prise_arrière, caché, pas prise}
-                                    {230,575,ROSE,0,0,0,1}, // en haut à gauche
-                                    {230,775,YELLOW,0,0,0,1},
-                                    {230,2425,ROSE,0,0,0,1}, // en haut à droite
-                                    {230,2225,YELLOW,0,0,0,1},
-                                    {1775,575,ROSE,0,0,0,1}, // en bas à gauche
-                                    {1775,775,YELLOW,0,0,0,1},
-                                    {1775,2425,ROSE,0,0,0,1}, // eh bas à droite
-                                    {1775,2225,YELLOW,0,0,0,1},
-                                    {730,1125,BROWN,0,0,0,1}, //milieu haut gauche
-                                    {730,1875,BROWN,0,0,0,1}, //milieu haut droite
-                                    {1280,1125,BROWN,0,0,0,1}, //milieu bas gauche
-                                    {1280,1875,BROWN,0,0,0,1}, //milieu bas droite
-                                   },xOffset_cake,yOffset_cake;
-
-//position actuelle des elements du jeu à faire modifer à chaque action
-int coordonnees[30][6]{
-};
-
 void setItemImagePositionAsRobot(QGraphicsPixmapItem* item, QGraphicsPixmapItem* robot) {
     item->setPos(robot->pos());
 }
@@ -185,30 +164,29 @@ void setTableHeaders_XYT(QTableView *tableView, QAbstractItemDelegate *cbd) {
     tableView->update();
 }
 ////Affichage des couches de gateaux***********************************************************************************************************************
-//unsigned int gateaux_coord[12][7]={ // coordonnées des échantillons {x,y,COULEUR,prise_avant ,prise_arrière, caché, pas prise}
-//                                    {230,575,ROSE,0,0,0,1}, // en haut à gauche
-//                                    {230,775,YELLOW,0,0,0,1},
-//
-//                                    {230,2425,ROSE,0,0,0,1}, // en haut à droite
-//                                    {230,2225,YELLOW,0,0,0,1},
-//
-//                                    {1775,575,ROSE,0,0,0,1}, // en bas à gauche
-//                                    {1775,775,YELLOW,0,0,0,1},
-//
-//                                    {1775,2425,ROSE,0,0,0,1}, // eh bas à droite
-//                                    {1775,2225,YELLOW,0,0,0,1},
-//
-//                                    {730,1125,BROWN,0,0,0,1}, //milieu haut gauche
-//                                    {730,1875,BROWN,0,0,0,1}, //milieu haut droite
-//                                    {1280,1125,BROWN,0,0,0,1}, //milieu bas gauche
-//                                    {1280,1875,BROWN,0,0,0,1}, //milieu bas droite
-//                                   },Xoffset_gateau,Yoffset_gateau;
+unsigned int coordonneesBase[12][7]={ // coordonnées des échantillons {x,y,COULEUR,prise_avant ,prise_arrière, caché, pas prise}
+                                    {230,575,ROSE,0,0,0,1}, // en haut à gauche
+                                    {230,775,YELLOW,0,0,0,1},
+                                    {230,2425,ROSE,0,0,0,1}, // en haut à droite
+                                    {230,2225,YELLOW,0,0,0,1},
+                                    {1775,575,ROSE,0,0,0,1}, // en bas à gauche
+                                    {1775,775,YELLOW,0,0,0,1},
+                                    {1775,2425,ROSE,0,0,0,1}, // eh bas à droite
+                                    {1775,2225,YELLOW,0,0,0,1},
+                                    {730,1125,BROWN,0,0,0,1}, //milieu haut gauche
+                                    {730,1875,BROWN,0,0,0,1}, //milieu haut droite
+                                    {1280,1125,BROWN,0,0,0,1}, //milieu bas gauche
+                                    {1280,1875,BROWN,0,0,0,1}, //milieu bas droite
+                                   },xOffset_cake,yOffset_cake;
+
+//position actuelle des elements du jeu à faire modifer à chaque action
+int coordonnees[30][6]{
+};
 
 void MainWindow::afficher_gateau()
 {
-    qreal xOffset_cake = -100 * cos(((PosRotrob + 90) * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
-    qreal yOffset_cake = -100 * sin(((PosRotrob + 90) * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
-
+    qreal xOffset_cake = -100 * cos((PosRotrob * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
+    qreal yOffset_cake = -100 * sin((PosRotrob * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
     for (int i = 0; i < 12; i++) {
         QPixmap pix(determinerCouleur(i));
         pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
@@ -218,36 +196,39 @@ void MainWindow::afficher_gateau()
             ptrEchantillon[i]->setOffset(-ptrEchantillon[i]->boundingRect().center().x(),
                                          -ptrEchantillon[i]->boundingRect().center().y());
         }
-
-       for (int i=0;i<12;i++)
-       {
-           if (coordonneesBase[i][6] == 0 && coordonneesBase[i][3] == 1 && coordonneesBase[i][4] == 0)
-           {
-           ptrEchantillon[i]->setPos(PosYrob- yOffset_cake,PosXrob - xOffset_cake );
-           qDebug("Pris gateau avant");
-           qDebug() << "Xoffset_gateau: " << xOffset_cake;
-           qDebug() << "Yoffset_gateau: " << yOffset_cake;
-           qDebug() << "pos x bot: " << PosXrob;
-           qDebug() << "pos y bot: " << PosYrob;
-           }
-           else if (coordonneesBase[i][6] == 0 && coordonneesBase[i][3] == 0 && coordonneesBase[i][4] == 1)
-           {
-               //ptrEchantillon[i]->setPos(PosXrob+Xoffset_gateau,PosYrob+Yoffset_gateau);// faire suivre le gateau au robot
-               // qDebug("Pris gateau arrière");
-           }
-       }
-       for (int i=0;i<12;i++)
-       {
-           qDebug() << "Cake position: " << ptrEchantillon[i]->pos();
-           qDebug() << "coordonneesBase[" << i << "]: "
-                    << coordonneesBase[i][0] << ", "
-                    << coordonneesBase[i][1] << ", "
-                    << coordonneesBase[i][2] << ", "
-                    << coordonneesBase[i][3] << ", "
-                    << coordonneesBase[i][4] << ", "
-                    << coordonneesBase[i][5] << ", "
-                    << coordonneesBase[i][6];
-       }
+    }
+    for (int i=0;i<12;i++)
+    {
+        if (coordonneesBase[i][6] == 0 && coordonneesBase[i][3] == 1 && coordonneesBase[i][4] == 0)
+        {
+        ptrEchantillon[i]->setPos(PosYrob - yOffset_cake,PosXrob - xOffset_cake );
+        qDebug("Pris gateau avant");
+        qDebug() << "Xoffset_gateau: " << xOffset_cake;
+        qDebug() << "Yoffset_gateau: " << yOffset_cake;
+        qDebug() << "pos x bot: " << PosXrob;
+        qDebug() << "pos y bot: " << PosYrob;
+        }
+        else if (coordonneesBase[i][6] == 0 && coordonneesBase[i][3] == 0 && coordonneesBase[i][4] == 1)
+        {
+        ptrEchantillon[i]->setPos(PosYrob + yOffset_cake,PosXrob + xOffset_cake );
+        qDebug("Pris gateau arrière");
+        qDebug() << "Xoffset_gateau: " << xOffset_cake;
+        qDebug() << "Yoffset_gateau: " << yOffset_cake;
+        qDebug() << "pos x bot: " << PosXrob;
+        qDebug() << "pos y bot: " << PosYrob;
+        }
+    }
+    for (int i=0;i<12;i++)
+    {
+        qDebug() << "Cake position: " << ptrEchantillon[i]->pos();
+        qDebug() << "coordonneesBase[" << i << "]: "
+                 << coordonneesBase[i][0] << ", "
+                 << coordonneesBase[i][1] << ", "
+                 << coordonneesBase[i][2] << ", "
+                 << coordonneesBase[i][3] << ", "
+                 << coordonneesBase[i][4] << ", "
+                 << coordonneesBase[i][5] << ", "
+                 << coordonneesBase[i][6];
     }
 }
 
@@ -1082,272 +1063,272 @@ void MainWindow::updateVisu(const QModelIndex &index)
         }
 
 
-//Prise_bas____________________________________________________________________________________________________________
+////Prise_bas____________________________________________________________________________________________________________
 
-            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_bas")
-                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
+//            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_bas")
+//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
 
-                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
-                int tabBrasChoisi[3];
+//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
+//                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
+//                int tabBrasChoisi[3];
 
-                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
-                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
-                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
-                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
-
-
-                //on determine la centaine, la dizaine et l'unité
-
-                tabBrasChoisi[0] = brasChoisi/100;
-                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
-                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
-
-                // on creer le rectangle qui va contenir le rond qui correspond à la ventouse
-                QRect ellipseVentouse(0,0,54,54);
-                int echantillonAttrape;
+//                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
+//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
+//                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
+//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
 
 
-                //on verifie les collisions avec la ventouse qui correspond au bras selectionner par la centaine , la dizaine et l'unité
-                // ex : 210 va activer les bras 1 ,2 et 0
-                for(int i = 0; i<3;i++){
-                   if(tabBrasChoisi[i] != 0 || i == 2 ){
-                       ventouse[tabBrasChoisi[i]] = scene->addEllipse(ellipseVentouse);
-                       ventouse[tabBrasChoisi[i]]->setPen(redline);
-                       echantillonAttrape = collisionVentouse(tabBrasChoisi[i],PosRotrob);
-                       if(echantillonAttrape != -1){
-                           coordonnees[echantillonAttrape][5] = tabBrasChoisi[i] + 1;
-                           bras[tabBrasChoisi[i] + 1] = ventouse[tabBrasChoisi[i] + 1]->pos();
-                       }
-                   }
+//                //on determine la centaine, la dizaine et l'unité
 
-                }
-            }
-//Passe__________________________________________________________________________________________________________
-            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Passe")
-                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
+//                tabBrasChoisi[0] = brasChoisi/100;
+//                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
+//                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
 
-                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
-                int tabBrasChoisi[3];
-
-                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
-                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
-                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
-                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
+//                // on creer le rectangle qui va contenir le rond qui correspond à la ventouse
+//                QRect ellipseVentouse(0,0,54,54);
+//                int echantillonAttrape;
 
 
-                //on determine la centaine, la dizaine et l'unité
+//                //on verifie les collisions avec la ventouse qui correspond au bras selectionner par la centaine , la dizaine et l'unité
+//                // ex : 210 va activer les bras 1 ,2 et 0
+//                for(int i = 0; i<3;i++){
+//                   if(tabBrasChoisi[i] != 0 || i == 2 ){
+//                       ventouse[tabBrasChoisi[i]] = scene->addEllipse(ellipseVentouse);
+//                       ventouse[tabBrasChoisi[i]]->setPen(redline);
+//                       echantillonAttrape = collisionVentouse(tabBrasChoisi[i],PosRotrob);
+//                       if(echantillonAttrape != -1){
+//                           coordonnees[echantillonAttrape][5] = tabBrasChoisi[i] + 1;
+//                           bras[tabBrasChoisi[i] + 1] = ventouse[tabBrasChoisi[i] + 1]->pos();
+//                       }
+//                   }
 
-                tabBrasChoisi[0] = brasChoisi/100;
-                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
-                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
+//                }
+//            }
+////Passe__________________________________________________________________________________________________________
+//            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Passe")
+//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
 
-                for(int i = 0; i<3;i++){
-                    if(tabBrasChoisi[i] != 0 || i == 2 ){
-                        for(int J = 0;J < 30; J++){
-                            if (coordonnees[J][5] == tabBrasChoisi[i] + 1){
-                                coordonnees[J][5] += 10;
-                                coordonnees[J][3] = 2;
+//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
+//                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
+//                int tabBrasChoisi[3];
 
-                            }
-
-                    }
-                }
-
-
-            }
-          }
-
-//Pose_bas__________________________________________________________________________________________________________
-            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Pose_bas")
-                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
-
-                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
-                int tabBrasChoisi[3];
+//                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
+//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
+//                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
+//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
 
 
-                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
-                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
-                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
-                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
+//                //on determine la centaine, la dizaine et l'unité
 
-                //on determine la centaine, la dizaine et l'unité
+//                tabBrasChoisi[0] = brasChoisi/100;
+//                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
+//                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
 
-                tabBrasChoisi[0] = brasChoisi/100;
-                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
-                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
+//                for(int i = 0; i<3;i++){
+//                    if(tabBrasChoisi[i] != 0 || i == 2 ){
+//                        for(int J = 0;J < 30; J++){
+//                            if (coordonnees[J][5] == tabBrasChoisi[i] + 1){
+//                                coordonnees[J][5] += 10;
+//                                coordonnees[J][3] = 2;
 
-                //on remet le bras choisi à 0 dans le tableau de coordonnées
-                for(int i = 0; i<3;i++){
-                   if(tabBrasChoisi[i] != 0 || i == 2 ){
-                        for(int J = 0;J < 30; J++){
-                            if (coordonnees[J][5] == tabBrasChoisi[i] + 1){
+//                            }
 
-                                coordonnees[J][5] = 0;
-                                coordonnees[J][0] += ptrEchantillon[i]->boundingRect().center().x() - GLOBALOFFSETX;
-                                coordonnees[J][1] += ptrEchantillon[i]->boundingRect().center().y() - GLOBALOFFSETY;
-                            }
-                        }
-                   }
-                }
-
-            }
-//Pose_Haut__________________________________________________________________________________________________________________
-            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Pose_Haut")
-                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
-
-                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
-                int tabBrasChoisi[3];
+//                    }
+//                }
 
 
-                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
-                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
-                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
-                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
+//            }
+//          }
 
-                //on determine la centaine, la dizaine et l'unité
+////Pose_bas__________________________________________________________________________________________________________
+//            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Pose_bas")
+//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
 
-                tabBrasChoisi[0] = brasChoisi/100;
-                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
-                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
-
-                //on remet le bras choisi à 0 dans le tableau de coordonnées
-                for(int i = 0; i<3;i++){
-                   if(tabBrasChoisi[i] != 0 || i == 2 ){
-                        for(int J = 0;J < 30; J++){
-                            if (coordonnees[J][5] == tabBrasChoisi[i] + 11){
-
-                                coordonnees[J][5] = 0;
-                                coordonnees[J][3] = 1;
-                                coordonnees[J][0] += ptrEchantillon[i]->boundingRect().center().x() - GLOBALOFFSETX;
-                                coordonnees[J][1] += ptrEchantillon[i]->boundingRect().center().y() - GLOBALOFFSETY;
-                            }
-                        }
-                   }
-                }
-            }
-//Prise_bordure_____________________________________________________________________________________________________________
-            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_bordure")
-                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
-
-                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
-                int tabBrasChoisi[3];
-
-                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
-                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
-                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
-                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
+//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
+//                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
+//                int tabBrasChoisi[3];
 
 
-                //on determine la centaine, la dizaine et l'unité
+//                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
+//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
+//                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
+//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
 
-                tabBrasChoisi[0] = brasChoisi/100;
-                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
-                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
+//                //on determine la centaine, la dizaine et l'unité
 
-                // on creer le rectangle qui va contenir le rond qui correspond à la ventouse
-                QRect ellipseVentouse(0,0,54,54);
-                int echantillonAttrape;
+//                tabBrasChoisi[0] = brasChoisi/100;
+//                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
+//                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
 
+//                //on remet le bras choisi à 0 dans le tableau de coordonnées
+//                for(int i = 0; i<3;i++){
+//                   if(tabBrasChoisi[i] != 0 || i == 2 ){
+//                        for(int J = 0;J < 30; J++){
+//                            if (coordonnees[J][5] == tabBrasChoisi[i] + 1){
 
+//                                coordonnees[J][5] = 0;
+//                                coordonnees[J][0] += ptrEchantillon[i]->boundingRect().center().x() - GLOBALOFFSETX;
+//                                coordonnees[J][1] += ptrEchantillon[i]->boundingRect().center().y() - GLOBALOFFSETY;
+//                            }
+//                        }
+//                   }
+//                }
 
-                //on verifie les collisions avec la ventouse qui correspond au bras selectionner par la centaine , la dizaine et l'unité
-                // ex : 210 va activer les bras 1 ,2 et 0
-                for(int i = 0; i<3;i++){
-                   if(tabBrasChoisi[i] != 0 || i == 2 ){
-                       ventouse[tabBrasChoisi[i]] = scene->addEllipse(ellipseVentouse);
-                       ventouse[tabBrasChoisi[i]]->setPen(greenline);
-                       echantillonAttrape = collisionVentouse(tabBrasChoisi[i],PosRotrob);
-                       if(echantillonAttrape != -1){
-                           coordonnees[echantillonAttrape][5] = tabBrasChoisi[i] + 1 + 10;
-                           bras[tabBrasChoisi[i] + 1] = ventouse[tabBrasChoisi[i] + 1]->pos();
-                       }
-                   }
+//            }
+////Pose_Haut__________________________________________________________________________________________________________________
+//            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Pose_Haut")
+//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
 
-
-                }
-            }
-
-
-//Prise_distrib_______________________________________________________________________________________________________________________
-            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_distrib")
-                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
-                QLine ligneDistrib(0,0,232,0);
-
-                //on fait apparaitre le bon bras sur la scene
-                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-
-                brasDistrib[brasChoisi] = scene->addLine(ligneDistrib);
-
-                //on le place au bon endroit
-                brasDistrib[brasChoisi]->setPen(redline);
-                brasDistrib[brasChoisi]->setPos(robot1->pos() + robot1->boundingRect().center());
-                brasDistrib[brasChoisi]->moveBy(GLOBALOFFSETX,-10);
-                brasDistrib[brasChoisi]->setRotation(90 - PosRotrob + 180*brasChoisi); //on fait un tour complet si on choisi le bras 1
-
-                //on vérifie la collision avec l'échantillon le plus plus éloigné de chaque distributeur (pour être sur d'être a la bonne distance)
-
-                if(brasDistrib[brasChoisi]->collidesWithItem(ptrEchantillon[18])){ //jaune bas
-                    coordonnees[20][5] = 12;
-                    coordonnees[19][5] = 13;
-                    coordonnees[18][5] = 11;
-                }
-                if(brasDistrib[brasChoisi]->collidesWithItem(ptrEchantillon[21])){ //jaune bas
-                    coordonnees[23][5] = 12;
-                    coordonnees[22][5] = 13;
-                    coordonnees[21][5] = 11;
-                }
-                if(brasDistrib[brasChoisi]->collidesWithItem(ptrEchantillon[24])){ //jaune bas
-                    coordonnees[26][5] = 12;
-                    coordonnees[25][5] = 13;
-                    coordonnees[24][5] = 11;
-                }
-                if(brasDistrib[brasChoisi]->collidesWithItem(ptrEchantillon[27])){ //jaune bas
-                    coordonnees[29][5] = 12;
-                    coordonnees[28][5] = 13;
-                    coordonnees[27][5] = 11;
-                }
+//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
+//                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
+//                int tabBrasChoisi[3];
 
 
-            }
-//Deploiement________________________________________________________________________________________________________________
-            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Deploiement")//verifie si la 2ème colonne corespond au
-                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){           //"deploiement" et que le 3ème n'est pas un string vide
-                int ouvertFerme = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt()); // si la condition est vérifié, il prends la valeur
-                                                                                                                        // de la 3ème colonne et le convertit en int et le
-                chasseNeigeFlag[0] = ouvertFerme;                                                                       // stock dans la var ouvertFerme
+//                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
+//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
+//                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
+//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
+
+//                //on determine la centaine, la dizaine et l'unité
+
+//                tabBrasChoisi[0] = brasChoisi/100;
+//                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
+//                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
+
+//                //on remet le bras choisi à 0 dans le tableau de coordonnées
+//                for(int i = 0; i<3;i++){
+//                   if(tabBrasChoisi[i] != 0 || i == 2 ){
+//                        for(int J = 0;J < 30; J++){
+//                            if (coordonnees[J][5] == tabBrasChoisi[i] + 11){
+
+//                                coordonnees[J][5] = 0;
+//                                coordonnees[J][3] = 1;
+//                                coordonnees[J][0] += ptrEchantillon[i]->boundingRect().center().x() - GLOBALOFFSETX;
+//                                coordonnees[J][1] += ptrEchantillon[i]->boundingRect().center().y() - GLOBALOFFSETY;
+//                            }
+//                        }
+//                   }
+//                }
+//            }
+////Prise_bordure_____________________________________________________________________________________________________________
+//            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_bordure")
+//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
+
+//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
+//                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
+//                int tabBrasChoisi[3];
+
+//                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
+//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
+//                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
+//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
 
 
-            }
+//                //on determine la centaine, la dizaine et l'unité
+
+//                tabBrasChoisi[0] = brasChoisi/100;
+//                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
+//                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
+
+//                // on creer le rectangle qui va contenir le rond qui correspond à la ventouse
+//                QRect ellipseVentouse(0,0,54,54);
+//                int echantillonAttrape;
 
 
-            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Res_prestest")
-                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!=""))
-            {
-                resDeploye[(ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt())] = true;
-            }
-            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Res_mes")
-                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!=""))
-            {
-                int carreMesure = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-                if (brasMesure[0]->collidesWithItem(ptrCarre[carreMesure])){
 
-                    ptrCarre[carreMesure]->hide();
-                }
-                else if (brasMesure[1]->collidesWithItem(ptrCarre[carreMesure])){
+//                //on verifie les collisions avec la ventouse qui correspond au bras selectionner par la centaine , la dizaine et l'unité
+//                // ex : 210 va activer les bras 1 ,2 et 0
+//                for(int i = 0; i<3;i++){
+//                   if(tabBrasChoisi[i] != 0 || i == 2 ){
+//                       ventouse[tabBrasChoisi[i]] = scene->addEllipse(ellipseVentouse);
+//                       ventouse[tabBrasChoisi[i]]->setPen(greenline);
+//                       echantillonAttrape = collisionVentouse(tabBrasChoisi[i],PosRotrob);
+//                       if(echantillonAttrape != -1){
+//                           coordonnees[echantillonAttrape][5] = tabBrasChoisi[i] + 1 + 10;
+//                           bras[tabBrasChoisi[i] + 1] = ventouse[tabBrasChoisi[i] + 1]->pos();
+//                       }
+//                   }
 
-                    ptrCarre[carreMesure]->hide();
-                }
-            }
-            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Res_rang")
-                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!=""))
-            {
-                resDeploye[(ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt())] = false;
-            }
+
+//                }
+//            }
+
+
+////Prise_distrib_______________________________________________________________________________________________________________________
+//            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_distrib")
+//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
+//                QLine ligneDistrib(0,0,232,0);
+
+//                //on fait apparaitre le bon bras sur la scene
+//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
+
+//                brasDistrib[brasChoisi] = scene->addLine(ligneDistrib);
+
+//                //on le place au bon endroit
+//                brasDistrib[brasChoisi]->setPen(redline);
+//                brasDistrib[brasChoisi]->setPos(robot1->pos() + robot1->boundingRect().center());
+//                brasDistrib[brasChoisi]->moveBy(GLOBALOFFSETX,-10);
+//                brasDistrib[brasChoisi]->setRotation(90 - PosRotrob + 180*brasChoisi); //on fait un tour complet si on choisi le bras 1
+
+//                //on vérifie la collision avec l'échantillon le plus plus éloigné de chaque distributeur (pour être sur d'être a la bonne distance)
+
+//                if(brasDistrib[brasChoisi]->collidesWithItem(ptrEchantillon[18])){ //jaune bas
+//                    coordonnees[20][5] = 12;
+//                    coordonnees[19][5] = 13;
+//                    coordonnees[18][5] = 11;
+//                }
+//                if(brasDistrib[brasChoisi]->collidesWithItem(ptrEchantillon[21])){ //jaune bas
+//                    coordonnees[23][5] = 12;
+//                    coordonnees[22][5] = 13;
+//                    coordonnees[21][5] = 11;
+//                }
+//                if(brasDistrib[brasChoisi]->collidesWithItem(ptrEchantillon[24])){ //jaune bas
+//                    coordonnees[26][5] = 12;
+//                    coordonnees[25][5] = 13;
+//                    coordonnees[24][5] = 11;
+//                }
+//                if(brasDistrib[brasChoisi]->collidesWithItem(ptrEchantillon[27])){ //jaune bas
+//                    coordonnees[29][5] = 12;
+//                    coordonnees[28][5] = 13;
+//                    coordonnees[27][5] = 11;
+//                }
+
+
+//            }
+////Deploiement________________________________________________________________________________________________________________
+//            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Deploiement")//verifie si la 2ème colonne corespond au
+//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){           //"deploiement" et que le 3ème n'est pas un string vide
+//                int ouvertFerme = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt()); // si la condition est vérifié, il prends la valeur
+//                                                                                                                        // de la 3ème colonne et le convertit en int et le
+//                chasseNeigeFlag[0] = ouvertFerme;                                                                       // stock dans la var ouvertFerme
+
+
+//            }
+
+
+//            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Res_prestest")
+//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!=""))
+//            {
+//                resDeploye[(ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt())] = true;
+//            }
+//            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Res_mes")
+//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!=""))
+//            {
+//                int carreMesure = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
+//                if (brasMesure[0]->collidesWithItem(ptrCarre[carreMesure])){
+
+//                    ptrCarre[carreMesure]->hide();
+//                }
+//                else if (brasMesure[1]->collidesWithItem(ptrCarre[carreMesure])){
+
+//                    ptrCarre[carreMesure]->hide();
+//                }
+//            }
+//            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Res_rang")
+//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!=""))
+//            {
+//                resDeploye[(ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt())] = false;
+//            }
 
 //**********************************| année 2023| *********************************************************************
 //            qDebug() << ui->tableView->model()->data(ui->tableView->model()->index(table_ligne, 2)).toString();
@@ -1609,8 +1590,16 @@ void MainWindow::updateVisu(const QModelIndex &index)
         if (coordonneesBase[i][6] == 0 && coordonneesBase[i][3] == 1 && coordonneesBase[i][4] == 0)
         {
         ptrEchantillon[i]->setPos(PosYrob - yOffset_cake,PosXrob - xOffset_cake );
-        //ptrEchantillon[i]->setPos(PosXrob - xOffset_cake,PosYrob - yOffset_cake );
         qDebug("Pris gateau avant");
+        qDebug() << "Xoffset_gateau: " << xOffset_cake;
+        qDebug() << "Yoffset_gateau: " << yOffset_cake;
+        qDebug() << "pos x bot: " << PosXrob;
+        qDebug() << "pos y bot: " << PosYrob;
+        }
+        else if (coordonneesBase[i][6] == 0 && coordonneesBase[i][3] == 0 && coordonneesBase[i][4] == 1)
+        {
+        ptrEchantillon[i]->setPos(PosYrob + yOffset_cake,PosXrob + xOffset_cake );
+        qDebug("Pris gateau arrière");
         qDebug() << "Xoffset_gateau: " << xOffset_cake;
         qDebug() << "Yoffset_gateau: " << yOffset_cake;
         qDebug() << "pos x bot: " << PosXrob;
