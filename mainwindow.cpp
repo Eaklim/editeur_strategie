@@ -772,7 +772,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
                            testindex = ui->tableView->model()->index(table_ligne,5);
                            PosYrob = ui->tableView->model()->data(testindex).toDouble();
                            testindex = ui->tableView->model()->index(table_ligne,3);
-                           PosRotrob = ((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble());
+                           PosRotrob = (ui->tableView->model()->data(testindex).toDouble());
                            PosRotrobPres=PosRotrob;
                            PosXrobPres=PosXrob;
                            PosYrobPres=PosYrob;
@@ -785,7 +785,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
                            testindex = ui->tableView->model()->index(table_ligne,5);
                            PosYrob = (ui->tableView->model()->data(testindex).toDouble());
                            testindex = ui->tableView->model()->index(table_ligne,3);
-                           PosRotrob = ((PosRotrobPres)+ui->tableView->model()->data(testindex).toDouble()) +180 ;
+                           PosRotrob = (ui->tableView->model()->data(testindex).toDouble()) +180 ;
                            PosRotrobPres=PosRotrob;
                            PosXrobPres=PosXrob;
                            PosYrobPres=PosYrob;
@@ -1040,7 +1040,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
                  detecterCollisionEchantillon();
             }
             if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau")
-                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arriere")){
+                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arrière")){
 
                 qDebug("Test prise arriere");
                   // Pick up the cake at the back of the robot
@@ -1055,7 +1055,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
             relacherDernierEchantillon();
         }
         if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Relacher_gateau")
-            &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arriere")){
+            &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arrière")){
 
             qDebug("Test relacher arriere");
             // Release the last layer of cake that has been collected from the front
@@ -2203,8 +2203,9 @@ void MainWindow::detecterCollisionEchantillon() {
     ui->graphicsView->scene()->addItem(frontZone);
     ui->graphicsView->scene()->addItem(backZone);
 
-   // qDebug("test collision");
-    //qDebug() << "Front " << frontZoneRect;
+    // Create a flag variable to keep track of whether the robot has picked up a cake
+    bool pickedUpCake = false;
+
     // Check for collisions between the robot and samples
     for (int i = 0; i < 12; i++)
     {
@@ -2217,7 +2218,12 @@ void MainWindow::detecterCollisionEchantillon() {
                     coordonneesBase[i][3] = 1;
                     coordonneesBase[i][4] = 0;
                     coordonneesBase[i][6] = 0;
-                    qDebug("Collision avec échantillon en face");
+                    qDebug("Collision avec échantillon en face");                   
+                    // If this is the first cake that the robot is picking up, set coordonneesBase[i][5] to 1
+                    if (!pickedUpCake) {
+                        coordonneesBase[i][5] = 1;
+                        pickedUpCake = true;
+                    }
                     //break;
                 }
                 if (coordonneesBase[i][4] == 0)
@@ -2229,7 +2235,13 @@ void MainWindow::detecterCollisionEchantillon() {
                         coordonneesBase[i][3] = 0;
                         coordonneesBase[i][4] = 1;
                         coordonneesBase[i][6] = 0;
-                        qDebug("Collision avec échantillon derrière");
+                        qDebug("Collision avec échantillon derrière"); 
+                        // If this is the first cake that the robot is picking up, set coordonneesBase[i][5] to 1
+                        if (!pickedUpCake)
+                        {
+                            coordonneesBase[i][5] = 1;
+                            pickedUpCake = true;
+                        }
                         //break;
                     }
                 }
@@ -2250,7 +2262,7 @@ void MainWindow::afficherEchantillon(){
     //        }
     //        ptrEchantillon[i]->setParentItem(robot1); // Set the parent of the cake to the robot
     //        ptrEchantillon[i]->setPos(100,0); // Set the position of the cake to the front as the robot
-    //        qDebug() << "Cake picked up with front end";
+    //        qDebrug() << "Cake picked up with front end";
     //    }
     //    else if (coordonneesBase[i][4] == 1) { // If the robot has picked up the sample with the back end
     //        if (!firstCakeCollected) { // if this is the first cake layer collected
