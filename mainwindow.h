@@ -98,7 +98,7 @@ private:
 
     //attributs spécifiques à l'année 2022
     int chasseNeigeFlag[2]{false,false};
-    QGraphicsPixmapItem *ptrEchantillon[36],*ptrCarre[10];
+    QGraphicsPixmapItem *ptrGateau[36],*ptrCarre[10];
     QGraphicsRectItem *brasMesure[2];
     QGraphicsEllipseItem *ventouse[17], *pos_gateau, ventouseFront, ventouseBack ;
     QGraphicsLineItem *collisionLine[6],*ventouseVerticale[2], *brasDistrib[2];
