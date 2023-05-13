@@ -701,7 +701,14 @@ void MainWindow::updateVisu(const QModelIndex &index)
     int newValue;
     bool resDeploye[2] {false,false};
 
-    //unsigned int coord_gateau[];
+    unsigned int coordGateau[12][7];
+    for (int i = 0; i < 12; i++) {
+        for (int j = 0; j < 7; j++) {
+            coordGateau[i][j] = coordonneesBase[i][j];
+        }
+    }
+
+
 
     resetPosEchantillon();
 
@@ -713,7 +720,6 @@ void MainWindow::updateVisu(const QModelIndex &index)
     qDebug() << nbUpdateVisu << "______________________________________________________________________________________________________";
 
     int cpt_boucle=0;
-    //afficher_gateau();
 
 
     while((table_ligne<index.row()+1)&&(cpt_boucle<(2*(ui->tableView->model()->rowCount())))) // on suit les numero de lignes et on bloque la boucle infini à 2 occurences
@@ -747,7 +753,9 @@ void MainWindow::updateVisu(const QModelIndex &index)
 
         // remove toutes les lignes de déplacement et les lignes des ventouses
         for(int i=0;i<7;i++)
+        {
             if (item[i]) scene->removeItem(item[i]);
+        }
 //        for(int i=0;i<4;i++)
 //            scene->removeItem(collisionLine[i]);
 //        for(int i=0;i<6;i++){// a enlever????
