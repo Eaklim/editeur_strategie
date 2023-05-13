@@ -13,6 +13,9 @@
 double PosXrob = 0, PosYrob = 0, PosRotrob = 0, PosXrobPres = 90, PosYrobPres =0 , PosRotrobPres = 0,
         PosCXrob= 0, PosCYrob= 0, rayonCourbe, rayonCourbeVentouse, angleCourbe,angleRotation;
 
+
+unsigned int coordGateau[12][7];
+
 const QStringList MainWindow::dataCol1 = {"Debut Match",
                                           "Ligne Droite",
                                           "Rotation",
@@ -164,6 +167,7 @@ void setTableHeaders_XYT(QTableView *tableView, QAbstractItemDelegate *cbd) {
     tableView->update();
 }
 ////Affichage des couches de gateaux***********************************************************************************************************************
+
 unsigned int coordonneesBase[12][7]={ // coordonnées des échantillons {x,y,COULEUR,prise_avant ,prise_arrière, caché, pas prise}
                                     {230,575,ROSE,0,0,0,1}, // en haut à gauche
                                     {230,775,YELLOW,0,0,0,1},
@@ -177,60 +181,13 @@ unsigned int coordonneesBase[12][7]={ // coordonnées des échantillons {x,y,COU
                                     {730,1875,BROWN,0,0,0,1}, //milieu haut droite
                                     {1280,1125,BROWN,0,0,0,1}, //milieu bas gauche
                                     {1280,1875,BROWN,0,0,0,1}, //milieu bas droite
-                                   },xOffset_cake,yOffset_cake;
+                                   };
+unsigned int xOffset_cake,yOffset_cake;
 
 //position actuelle des elements du jeu à faire modifer à chaque action
 int coordonnees[30][6]{
 };
 
-void MainWindow::afficher_gateau()
-{
-    qreal xOffset_cake = -100 * cos((PosRotrob * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
-    qreal yOffset_cake = -100 * sin((PosRotrob * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
-    for (int i = 0; i < 12; i++) {
-        QPixmap pix(determinerCouleur(i));
-        pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
-        ptrGateau[i] = scene->addPixmap(pix);
-        if (coordonneesBase[i][6] == 1 && coordonneesBase[i][3] == 0 && coordonneesBase[i][4] == 0) {
-            ptrGateau[i]->setPos(coordonneesBase[i][1], coordonneesBase[i][0]);
-            ptrGateau[i]->setOffset(-ptrGateau[i]->boundingRect().center().x(),
-                                         -ptrGateau[i]->boundingRect().center().y());
-        }
-    }
-    for (int i=0;i<12;i++)
-    {
-        if (coordonneesBase[i][6] == 0 && coordonneesBase[i][3] == 1 && coordonneesBase[i][4] == 0)
-        {
-        ptrGateau[i]->setPos(PosYrob - yOffset_cake,PosXrob - xOffset_cake );
-        qDebug("Pris gateau avant");
-        qDebug() << "Xoffset_gateau: " << xOffset_cake;
-        qDebug() << "Yoffset_gateau: " << yOffset_cake;
-        qDebug() << "pos x bot: " << PosXrob;
-        qDebug() << "pos y bot: " << PosYrob;
-        }
-        else if (coordonneesBase[i][6] == 0 && coordonneesBase[i][3] == 0 && coordonneesBase[i][4] == 1)
-        {
-        ptrGateau[i]->setPos(PosYrob + yOffset_cake,PosXrob + xOffset_cake );
-        qDebug("Pris gateau arrière");
-        qDebug() << "Xoffset_gateau: " << xOffset_cake;
-        qDebug() << "Yoffset_gateau: " << yOffset_cake;
-        qDebug() << "pos x bot: " << PosXrob;
-        qDebug() << "pos y bot: " << PosYrob;
-        }
-    }
-    for (int i=0;i<12;i++)
-    {
-        qDebug() << "Cake position: " << ptrGateau[i]->pos();
-        qDebug() << "coordonneesBase[" << i << "]: "
-                 << coordonneesBase[i][0] << ", "
-                 << coordonneesBase[i][1] << ", "
-                 << coordonneesBase[i][2] << ", "
-                 << coordonneesBase[i][3] << ", "
-                 << coordonneesBase[i][4] << ", "
-                 << coordonneesBase[i][5] << ", "
-                 << coordonneesBase[i][6];
-    }
-}
 
 //Affichage cérise****************************************************************************************************************************************
 static QGraphicsItem *item[7],*Cerise[50];
@@ -251,6 +208,26 @@ static QGraphicsItem *item[7],*Cerise[50];
     unsigned int Cerise_coord[4][2]={{15,1365},{2000-15,1365},{1000,15},{1000,2715}},Xoffset,Yoffset;
     unsigned char cerise_size=22;
     unsigned char Ecart_cerise=30;
+
+void MainWindow::create_Gateau()
+{
+    for (int i = 0; i < 12; i++) {
+        for (int j = 0; j < 7; j++) {
+            coordGateau[i][j] = coordonneesBase[i][j];
+        }
+    }
+
+    for(int i=0;i<12;i++) // cree tous les Gateaux sur la table
+    {
+        QPixmap pix(determinerCouleur(coordGateau[i][2]));
+        pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
+        ptrGateau[i] = scene->addPixmap(pix);
+        ptrGateau[i]->setOffset(-ptrGateau[i]->boundingRect().center().x(),
+                                                 -ptrGateau[i]->boundingRect().center().y());
+
+    }
+}
+
 
 void create_cerise(QGraphicsScene *scene)
 {
@@ -317,7 +294,6 @@ MainWindow::MainWindow(QWidget *parent)
     ,brasDistrib{new QGraphicsLineItem , new QGraphicsLineItem}
 
 {
-    resetPosEchantillon();
     initVisu();
     initModel();
 
@@ -460,15 +436,16 @@ void MainWindow::initVisu()//***************************************************
     qDebug() << scene->sceneRect();
 
     create_cerise(scene);
-    afficher_gateau();
+    create_Gateau();
+    afficher_Gateau();
 }
 //********************************************************************************************************************
-QPixmap MainWindow::determinerCouleur(int i){
+QPixmap MainWindow::determinerCouleur(int couleur){
     QPixmap pixReturn;
 
     //on vérifie d'abord si l'échantillon doit être face caché
     //if (coordonnees[i][3] == 0){
-        switch(coordonneesBase[i][2]){
+        switch(couleur){
         case BROWN :
             pixReturn.load(":/Images/Cake2023/face_couche_brun.png");
              qDebug("test couche marron");
@@ -701,7 +678,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
     int newValue;
     bool resDeploye[2] {false,false};
 
-    unsigned int coordGateau[12][7];
+
     for (int i = 0; i < 12; i++) {
         for (int j = 0; j < 7; j++) {
             coordGateau[i][j] = coordonneesBase[i][j];
@@ -710,7 +687,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
 
 
 
-    resetPosEchantillon();
+
 
 
     check = ui->checkBox->isChecked();
@@ -1012,46 +989,21 @@ void MainWindow::updateVisu(const QModelIndex &index)
                 ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,7),"Enchainement");
             }
 
-            numero_action=(ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toUInt());
-            numero_manche=numero_action;
-            //Inversion des pompes et bras selectionnés si il y a un changement d'équipe
-            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="VENT_AT") ||
-               ((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="VENT_RE") ||
-               ((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="BRAS_AT") ||
-               ((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="BRAS_RE")||
-               ((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="BRAS_PREPA")||
-               ((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="BRAS_POSE"))
-            {
-                if(equipe!=old_equipe)
-                {
-                    switch(numero_action)
-                    {
-                    case 0: numero_action = 2;break;
-                    case 2: numero_action = 0;break;
-                    case 3: numero_action = 5;break;
-                    case 5: numero_action = 3;break;
-                    case 10:numero_action = 21;break;
-                    case 21:numero_action = 10;break;
-                    case 43:numero_action = 54;break;
-                    case 54:numero_action = 43;break;
-                    }
-                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),numero_action);
-                }
-            }
+
 
 //Prise_gateau_______________________________________________________________________________________________________________
             if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau")
                 &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Avant")){
                 qDebug("Test prise avant");
                 // Pick up the cake at the front of the robot
-                 detecterCollisionEchantillon();
+                 detecterCollisionGateau();
             }
             if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau")
                 &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arrière")){
 
                 qDebug("Test prise arriere");
                   // Pick up the cake at the back of the robot
-                 detecterCollisionEchantillon();
+                 detecterCollisionGateau();
             }
 //Relacher gateau _________________________________________________________________________________________________________________________________
         if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Relacher_gateau")
@@ -1572,61 +1524,41 @@ void MainWindow::updateVisu(const QModelIndex &index)
       table_ligne=futur_i;
       for(int i = 0; i < 30; ++i){
           if(coordonnees[i][5] > 10) coordonnees[i][4] = PosRotrob - 90 ;
-          //afficherEchantillon();
+          //afficherGateau();
 
       }
         //miseAJourEchantillons();
         //detecterEchantillons();
-        //detecterCollisionEchantillon();
-        afficherEchantillon();
+        //detecterCollisionGateau();
+        //afficherGateau();
         //afficher_gateau();
 
     }
     //afficher_gateau();
+
+    Mise_a_jour_coord_gateau();
+    afficher_Gateau();
     Xoffset=-100*cos(((PosRotrob) * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
     Yoffset=-100*sin(((PosRotrob) * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
 
     Cerise[40]->setPos(PosYrob+Yoffset-cerise_size/2,PosXrob+Xoffset-cerise_size/2);
     qDebug("Cerise suit robot");
 //------------------------------------------------------------------------------------------------
-     qreal xOffset_cake = -100 * cos((PosRotrob * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
-     qreal yOffset_cake = -100 * sin((PosRotrob * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
 
-    for (int i=0;i<12;i++)
-    {
-        if (coordonneesBase[i][6] == 0 && coordonneesBase[i][3] == 1 && coordonneesBase[i][4] == 0)
-        {
-        ptrGateau[i]->setPos(PosYrob - yOffset_cake,PosXrob - xOffset_cake );
-        qDebug("Pris gateau avant");
-        qDebug() << "Xoffset_gateau: " << xOffset_cake;
-        qDebug() << "Yoffset_gateau: " << yOffset_cake;
-        qDebug() << "pos x bot: " << PosXrob;
-        qDebug() << "pos y bot: " << PosYrob;
-        }
-        else if (coordonneesBase[i][6] == 0 && coordonneesBase[i][3] == 0 && coordonneesBase[i][4] == 1)
-        {
-        ptrGateau[i]->setPos(PosYrob + yOffset_cake,PosXrob + xOffset_cake );
-        qDebug("Pris gateau arrière");
-        qDebug() << "Xoffset_gateau: " << xOffset_cake;
-        qDebug() << "Yoffset_gateau: " << yOffset_cake;
-        qDebug() << "pos x bot: " << PosXrob;
-        qDebug() << "pos y bot: " << PosYrob;
-        }
-    }
     for (int i=0;i<12;i++)
     {
         qDebug() << "Cake position: " << ptrGateau[i]->pos();
-        qDebug() << "coordonneesBase[" << i << "]: "
-                 << coordonneesBase[i][0] << ", "
-                 << coordonneesBase[i][1] << ", "
-                 << coordonneesBase[i][2] << ", "
-                 << coordonneesBase[i][3] << ", "
-                 << coordonneesBase[i][4] << ", "
-                 << coordonneesBase[i][5] << ", "
-                 << coordonneesBase[i][6];
+        qDebug() << "coordGateau[" << i << "]: "
+                 << coordGateau[i][0] << ", "
+                 << coordGateau[i][1] << ", "
+                 << coordGateau[i][2] << ", "
+                 << coordGateau[i][3] << ", "
+                 << coordGateau[i][4] << ", "
+                 << coordGateau[i][5] << ", "
+                 << coordGateau[i][6];
     }
 
-    //scene->update();
+
     ui->lcdPosX->display(PosXrob);
     ui->lcdPosY->display(PosYrob);
     ui->lcdPosT->display(PosRotrob);
@@ -2178,7 +2110,7 @@ void MainWindow::on_ImportFileButton_clicked()
 }
 
 
-void MainWindow::detecterCollisionEchantillon() {
+void MainWindow::detecterCollisionGateau() {
     // Remove previously added detection zone rectangles from the scene
     QList<QGraphicsItem*> itemsToRemove = ui->graphicsView->scene()->items();
     for(QGraphicsItem* item : itemsToRemove) {
@@ -2216,38 +2148,40 @@ void MainWindow::detecterCollisionEchantillon() {
     // Check for collisions between the robot and samples
     for (int i = 0; i < 12; i++)
     {
-        if (coordonneesBase[i][6] == 1)
+        if (coordGateau[i][6] == 1)
         {
             qDebug("Test Collision");
-            if (coordonneesBase[i][3] == 0) { //regarder si les gateau ne sont pas prise
+            if (coordGateau[i][3] == 0) { //regarder si les gateau ne sont pas prise
                 if (ptrGateau[i]->collidesWithItem(frontZone)) {
                     // Update the value of coordonneesBase[i][3] to 1
-                    coordonneesBase[i][3] = 1;
-                    coordonneesBase[i][4] = 0;
-                    coordonneesBase[i][6] = 0;
-                    qDebug("Collision avec échantillon en face");                   
+                    coordGateau[i][3] = 1;
+                    coordGateau[i][4] = 0;
+                    coordGateau[i][6] = 0;
+                    qDebug("Collision avec échantillon en face");
                     // If this is the first cake that the robot is picking up, set coordonneesBase[i][5] to 1
                     if (!pickedUpCake) {
-                        coordonneesBase[i][5] = 1;
+                        coordGateau[i][5] = 1;
                         pickedUpCake = true;
+
                     }
                     //break;
                 }
-                if (coordonneesBase[i][4] == 0)
+                if (coordGateau[i][4] == 0)
                 {
                 // Check if the collision is inside the back detection zone
                     if (ptrGateau[i]->collidesWithItem(backZone))
                     {
                         // Update the value of coordonneesBase[i][4] to 1
-                        coordonneesBase[i][3] = 0;
-                        coordonneesBase[i][4] = 1;
-                        coordonneesBase[i][6] = 0;
-                        qDebug("Collision avec échantillon derrière"); 
+                        coordGateau[i][3] = 0;
+                        coordGateau[i][4] = 1;
+                        coordGateau[i][6] = 0;
+                        qDebug("Collision avec échantillon derrière");
                         // If this is the first cake that the robot is picking up, set coordonneesBase[i][5] to 1
                         if (!pickedUpCake)
                         {
-                            coordonneesBase[i][5] = 1;
+                            coordGateau[i][5] = 1;
                             pickedUpCake = true;
+
                         }
                         //break;
                     }
@@ -2255,10 +2189,41 @@ void MainWindow::detecterCollisionEchantillon() {
             }
         }
     }
+    ui->graphicsView->scene()->removeItem(frontZone);
+    ui->graphicsView->scene()->removeItem(backZone);
+}
+
+void MainWindow::Mise_a_jour_coord_gateau()
+{
+    qreal xOffset_cake,yOffset_cake,dist_avant=100, dist_arr=-100;
+
+
+    for(int i=0;i<12;i++)
+    {
+        if(coordGateau[i][3]==1)
+        {
+            xOffset_cake = dist_avant * cos((PosRotrob * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
+            yOffset_cake = dist_avant * sin((PosRotrob * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
+            coordGateau[i][0]=PosXrob + xOffset_cake;
+            coordGateau[i][1]=PosYrob + yOffset_cake;
+        }
+        if(coordGateau[i][4]==1)
+        {
+            xOffset_cake = dist_arr * cos((PosRotrob * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
+            yOffset_cake = dist_arr * sin((PosRotrob * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
+            coordGateau[i][0]=PosXrob + xOffset_cake;
+            coordGateau[i][1]=PosYrob + yOffset_cake;
+        }
+    }
 }
 
 
-void MainWindow::afficherEchantillon(){
+void MainWindow::afficher_Gateau()
+{
+    for(int i=0;i<12;i++)
+    {
+        ptrGateau[i]->setPos(coordGateau[i][1], coordGateau[i][0]);
+    }
 
     //bool firstCakeCollected = false; // track if the first cake layer has been collected
     //for (int i = 0; i < 12; i++) {
@@ -2285,89 +2250,8 @@ void MainWindow::afficherEchantillon(){
 
 
 
-int MainWindow::collisionVentouse(int i,int rotRob){
-    QLine ligneVentouse(0,0,10,0);
-    int toReturn = -1; //la fonction retournera -1 si aucune collision n'est détecté, autrement , elle renvoie le numéro de l'échantillon attrapé.
-    int position[2] = {0,0};
 
-    //on setup le pen qui va dessiner les lignes
-    QPen pen;
-    pen.setColor(Qt::green);
-    pen.setWidth(5);
 
-    //on ajoute les lignes à la scène et on et leurs associe le pen
-    collisionLine[0] = scene->addLine(ligneVentouse);
-    collisionLine[0]->setPen(pen);
-    collisionLine[1] = scene->addLine(ligneVentouse);
-    collisionLine[1]->setPen(pen);
-    collisionLine[2] = scene->addLine(ligneVentouse);
-    collisionLine[2]->setPen(pen);
-    collisionLine[3] = scene->addLine(ligneVentouse);
-    collisionLine[3]->setPen(pen);
-
-    //on détermine la position de la ventouse choisie par le paramètre i
-
-    switch (i){
-        case 0 : position[0] = (226.06)*sin(((rotRob) * M_PI)/180 - 28.6*M_PI/180) ;
-                 position[1] =  (226.06)*cos(((rotRob) * M_PI)/180 - 28.6*M_PI/180);
-                break;
-        case 1 : position[0] = (137.5)*sin(((rotRob) * M_PI)/180) ;
-                 position[1] =  (137.5)*cos(((rotRob) * M_PI)/180);
-                break;
-        case 2 : position[0] = (226.06)*sin(((rotRob) * M_PI)/180 + 28.6*M_PI/180) ;
-                 position[1] =  (226.06)*cos(((rotRob) * M_PI)/180 + 28.6*M_PI/180);
-                break;
-        case 5 : position[0] = (226.06)*sin(((rotRob) * M_PI)/180 + 28.6*M_PI/180 + M_PI) ;
-                 position[1] =  (226.06)*cos(((rotRob) * M_PI)/180 + 28.6*M_PI/180 + M_PI);
-                break;
-        case 4 : position[0] = (137.5)*sin(((rotRob) * M_PI)/180 + M_PI) ;
-                 position[1] =  (137.5)*cos(((rotRob) * M_PI)/180 + M_PI);
-                break;
-        case 3 : position[0] = (226.06)*sin(((rotRob) * M_PI)/180 + 28.6*M_PI/180 - M_PI) ;
-                 position[1] =  (226.06)*cos(((rotRob) * M_PI)/180 - 28.6*M_PI/180 + M_PI);
-        break;
-}
-
-collisionLine[0]->setPos(ROBOTCENTRE);
-collisionLine[0]->moveBy(position[0],position[1]);
-collisionLine[0]->moveBy(27-5,0); // on soustrait la position par 5 pixels pour centrer la ligne qui est de 10 pixels
-collisionLine[1]->setPos(ROBOTCENTRE);
-collisionLine[1]->moveBy(position[0],position[1]);
-collisionLine[1]->moveBy(27-5,54);
-collisionLine[2]->setPos(ROBOTCENTRE);
-collisionLine[2]->moveBy(position[0],position[1]);
-collisionLine[2]->moveBy(0-5,27);
-collisionLine[3]->setPos(ROBOTCENTRE);
-collisionLine[3]->moveBy(position[0],position[1]);
-collisionLine[3]->moveBy(54-5,27);
-
-for(int j =0;j<30;j++){
-if(collisionLine[0]->collidesWithItem(ptrGateau[j]) //ça fait peur , mais ça veut juste dire si les quatre lignes vertes touchent l'échantillon
-   && collisionLine[1]->collidesWithItem(ptrGateau[j])
-   && collisionLine[2]->collidesWithItem(ptrGateau[j])
-   && collisionLine[3]->collidesWithItem(ptrGateau[j])){
-    toReturn  = j;
-}
-
-}
-//on cache les lignes de collision pour éviter les bug graphique (et parceque c'est moche) n'hesitez pas a commenter cette boucle pour mieux comprendre le système
-for(int i=0;i<4;i++)
-collisionLine[i]->hide();
-return toReturn;
-}
-
-void MainWindow::resetPosEchantillon(void)
-{
-
-    for(int i = 0; i<30 ; i++)
-    {
-
-        for(int j = 0; j< 6 ; j++)
-        {
-            coordonnees[i][j] = coordonneesBase[i][j];
-        }
-    }
-}
 
 int MainWindow::getAction(int chiffre){
 int toReturn = 0;

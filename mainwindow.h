@@ -142,11 +142,8 @@ public slots:
 
     //methode spécifiques à l'année 2022
     QPixmap determinerCouleur(int i);                   // détermine la pixmap à utiliser pour l'échantillon i du tableau coordonnées
-    void afficherEchantillon();                    //affiche l'échantillon i du tableau de coordonnées
-    int collisionVentouse(int i, int rotRob);          // crée quatres lignes qui permettent de savoir si la ventouse est bien placée
-    void resetPosEchantillon();                         // remet à zéro les positions des échantillons en reprenant les valeurs de base du tableau coordonnées;
     void relacherDernierEchantillon();
-
+    void create_Gateau();
     //méthode de l'année 2023
     //void checkCakeCollected(QGraphicsPixmapItem* robotItem); //verifie si la position des couches de gateaux sont le meme que celui du robot
     //void verifierPriseEchantillon();
@@ -157,9 +154,9 @@ public slots:
 
     //void detecterEchantillon();
     //void detecterEchantillons();
-    void detecterCollisionEchantillon();
-    void afficher_gateau();
-
+    void detecterCollisionGateau();
+    void afficher_Gateau();
+    void Mise_a_jour_coord_gateau();
 
 protected:
     virtual void resizeEvent(QResizeEvent *event);      //Détection d'évènements et redimensionne la vue
