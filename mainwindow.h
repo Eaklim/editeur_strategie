@@ -136,13 +136,13 @@ public slots:
     void SetView();                                     //Actualise la vue (taille des images dans le "graphics view")
     void initVisu();
     int getAction(int chiffre);                         //Permet de déterminer l'action qui correspond à chiffre. utilisé lors de !!l'importation!! de stratégie.
-
+    void Affichage_Debug_Coord_Gateau();
 
     //Initialise la table de jeu et la position initiale du robot
 
     //methode spécifiques à l'année 2022
     QPixmap determinerCouleur(int i);                   // détermine la pixmap à utiliser pour l'échantillon i du tableau coordonnées
-    void relacherDernierEchantillon();
+    void relacherGateau(unsigned int avant_arr);
     void create_Gateau();
     //méthode de l'année 2023
     //void checkCakeCollected(QGraphicsPixmapItem* robotItem); //verifie si la position des couches de gateaux sont le meme que celui du robot
@@ -154,7 +154,7 @@ public slots:
 
     //void detecterEchantillon();
     //void detecterEchantillons();
-    void detecterCollisionGateau();
+    void detecterCollisionGateau(unsigned int avant_arr);
     void afficher_Gateau();
     void Mise_a_jour_coord_gateau();
 

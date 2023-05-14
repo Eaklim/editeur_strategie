@@ -14,7 +14,7 @@ double PosXrob = 0, PosYrob = 0, PosRotrob = 0, PosXrobPres = 90, PosYrobPres =0
         PosCXrob= 0, PosCYrob= 0, rayonCourbe, rayonCourbeVentouse, angleCourbe,angleRotation;
 
 
-unsigned int coordGateau[12][7];
+unsigned int coordGateau[12][5];
 
 const QStringList MainWindow::dataCol1 = {"Debut Match",
                                           "Ligne Droite",
@@ -29,26 +29,7 @@ const QStringList MainWindow::dataEquipe = {"Bleu",
                                             "Vert"};
 
 
-const QStringList MainWindow::dataAction = { //"Ascenceur" // action number 150
-
-                                             //,"Prise_bas"
-                                             //,"Passe"
-                                             //,"Pose_bas"
-                                             //, "Pose_Haut"
-                                             //,"Prise_bordure"
-                                             //,"Pose_bordure"
-                                             //,"Prise_distrib"
-                                             //,"Ranger"
-
-                                             //,"Res_prestest"
-                                             //,"Res_mes"
-                                             //,"Res_rang"
-
-                                             //,"Pre_prise"
-                                             //,"Prise_statuette"
-                                             //,"Pose_statuette"
-
-                                             /*,*/"Evitement"
+const QStringList MainWindow::dataAction = { "Evitement"
                                              ,"Set_odo"
                                              ,"Wait"
                                              ,"Wait_other_bot"
@@ -168,19 +149,19 @@ void setTableHeaders_XYT(QTableView *tableView, QAbstractItemDelegate *cbd) {
 }
 ////Affichage des couches de gateaux***********************************************************************************************************************
 
-unsigned int coordonneesBase[12][7]={ // coordonnées des échantillons {x,y,COULEUR,prise_avant ,prise_arrière, caché, pas prise}
-                                    {230,575,ROSE,0,0,0,1}, // en haut à gauche
-                                    {230,775,YELLOW,0,0,0,1},
-                                    {230,2425,ROSE,0,0,0,1}, // en haut à droite
-                                    {230,2225,YELLOW,0,0,0,1},
-                                    {1775,575,ROSE,0,0,0,1}, // en bas à gauche
-                                    {1775,775,YELLOW,0,0,0,1},
-                                    {1775,2425,ROSE,0,0,0,1}, // eh bas à droite
-                                    {1775,2225,YELLOW,0,0,0,1},
-                                    {730,1125,BROWN,0,0,0,1}, //milieu haut gauche
-                                    {730,1875,BROWN,0,0,0,1}, //milieu haut droite
-                                    {1280,1125,BROWN,0,0,0,1}, //milieu bas gauche
-                                    {1280,1875,BROWN,0,0,0,1}, //milieu bas droite
+unsigned int coordonneesBase[12][5]={ // coordonnées des échantillons {x,y,COULEUR,pas_prise=0/prise_avant=1/prise_arrière=2, caché=0/visible=1}
+                                    {   230,    575,    ROSE,0,1}, // en haut à gauche
+                                    {   230,    775,  YELLOW,0,1},
+                                    {   230,   2425,    ROSE,0,1}, // en haut à droite
+                                    {   230,   2225,  YELLOW,0,1},
+                                    {   1775,   575,    ROSE,0,1}, // en bas à gauche
+                                    {   1775,   775,  YELLOW,0,1},
+                                    {   1775,  2425,    ROSE,0,1}, // eh bas à droite
+                                    {   1775,  2225,  YELLOW,0,1},
+                                    {   730,   1125,   BROWN,0,1}, //milieu haut gauche
+                                    {   730,   1875,   BROWN,0,1}, //milieu haut droite
+                                    {   1280,  1125,   BROWN,0,1}, //milieu bas gauche
+                                    {   1280,  1875,   BROWN,0,1}, //milieu bas droite
                                    };
 unsigned int xOffset_cake,yOffset_cake;
 
@@ -212,7 +193,7 @@ static QGraphicsItem *item[7],*Cerise[50];
 void MainWindow::create_Gateau()
 {
     for (int i = 0; i < 12; i++) {
-        for (int j = 0; j < 7; j++) {
+        for (int j = 0; j < 5; j++) {
             coordGateau[i][j] = coordonneesBase[i][j];
         }
     }
@@ -223,7 +204,7 @@ void MainWindow::create_Gateau()
         pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
         ptrGateau[i] = scene->addPixmap(pix);
         ptrGateau[i]->setOffset(-ptrGateau[i]->boundingRect().center().x(),
-                                                 -ptrGateau[i]->boundingRect().center().y());
+                                -ptrGateau[i]->boundingRect().center().y());
 
     }
 }
@@ -385,31 +366,6 @@ void MainWindow::initVisu()//***************************************************
     robotdep->setRotation(90);
     robotdep->hide();
 
-//visu des couches de gateaux**************************************************************************
-    //for (int i=0; i<12; i++)
-    //{
-    //    if ((coordonneesBase[i][6]==1)&&(coordonneesBase[i][3]==0)&&(coordonneesBase[i][4]==0))
-    //            {
-    //                QPixmap pix(determinerCouleur(i));
-    //                pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
-    //                ptrGateau[i] = scene->addPixmap(pix);
-    //                ptrGateau[i]->setPos(coordonneesBase[i][1], coordonneesBase[i][0]);
-    //                ptrGateau[i]->setOffset(-ptrGateau[i]->boundingRect().center().x(), //met le point ref du gateau à son centre
-    //                                             -ptrGateau[i]->boundingRect().center().y());
-    //            }
-    //    else if ((coordonneesBase[i][6]==1)&&(coordonneesBase[i][3]==0)&&(coordonneesBase[i][4]==0))
-    //            {
-    //                Xoffset=-100*cos(((PosRotrob) * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
-    //                Yoffset=-100*sin(((PosRotrob) * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
-    //                coordonneesBase[40]->setPos(PosYrob+Yoffset-cerise_size/2,PosXrob+Xoffset-cerise_size/2);// faire suivre la cérise au robot
-    //            }
-    //    else if ((coordonneesBase[i][6]==0)&&(coordonneesBase[i][3]==0)&&(coordonneesBase[i][4]==1))
-    //            {
-    //                Xoffset=-100*cos(((PosRotrob) * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
-    //                Yoffset=-100*sin(((PosRotrob) * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
-    //                coordonneesBase[40]->setPos(PosYrob+Yoffset-cerise_size/2,PosXrob+Xoffset-cerise_size/2);// faire suivre la cérise au robot
-    //            }
-    //}
 
     //Création des bordures virtuelles
     QPen redline(Qt::red);
@@ -564,6 +520,8 @@ void MainWindow::updateHeader(const QModelIndex &index)
 
 void drawRobotPath(int table_ligne, QModelIndex index, QGraphicsScene* scene, QGraphicsItem* item[3], QPen redline, double PosXrobPres, double PosYrobPres, double PosRotrobPres, double largeur_robot, double distanceLigneDroite)
 {
+
+
     if(table_ligne == index.row())
     {
         double PosXrob = PosXrobPres + distanceLigneDroite * cos(((PosRotrobPres) * M_PI)/180);
@@ -591,40 +549,7 @@ void drawRobotPath(int table_ligne, QModelIndex index, QGraphicsScene* scene, QG
 //}
 
 //**********************************************************************************************************
-void MainWindow::relacherDernierEchantillon()
-{
-    QPointF currentPosRobot = robot1->pos();
-    // Iterate through the ptrGateau array in reverse order
-    for (int i = 11; i >= 0; i--)
-    {
-            if (coordonneesBase[i][3] == 1) { // If the robot has picked up the sample with the front end
-                ptrGateau[i]->setParentItem(0); // Remove the cake from the robot
-                ptrGateau[i]->setPos(  PosYrob+
-                                            ptrGateau[i]->pos().x()*cos(90-PosRotrob)+ptrGateau[i]->pos().y()*sin(90-PosRotrob)
-                                            ,PosXrob+
-                                            ptrGateau[i]->pos().x()*cos(90-PosRotrob)+ptrGateau[i]->pos().y()*sin(90-PosRotrob)
-                                            //*sin(PosRotrob)
-                                            ); // Set the position of the cake to is current position
 
-
-                coordonneesBase[i][3] = 2;
-                qDebug() << "Cake released from front end";
-                QPointF currentPos = robot1->pos()+ptrGateau[i]->pos();
-
-                qDebug() << "Current position of cake: x=" << currentPos.x() << ", y=" << currentPos.y();
-
-            }
-            else if (coordonneesBase[i][4] == 1) { // If the robot has picked up the sample with the front end
-                ptrGateau[i]->setParentItem(0); // Remove the cake from the robot
-                ptrGateau[i]->setPos(robot1->pos()+ptrGateau[i]->pos()); // Set the position of the cake to its current position
-                 coordonneesBase[i][4] = 2;
-                qDebug() << "Cake released from back end";
-                QPointF currentPos = robot1->pos()+ptrGateau[i]->pos();
-                qDebug() << "Current position of cake: x=" << currentPos.x() << ", y=" << currentPos.y();
-
-            }
-    }
-}
 
 
 
@@ -680,16 +605,10 @@ void MainWindow::updateVisu(const QModelIndex &index)
 
 
     for (int i = 0; i < 12; i++) {
-        for (int j = 0; j < 7; j++) {
+        for (int j = 0; j < 5; j++) {
             coordGateau[i][j] = coordonneesBase[i][j];
         }
     }
-
-
-
-
-
-
     check = ui->checkBox->isChecked();
     setWindowTitle("éditeur de stratégie 2023 - The cherry on the cake ");
 
@@ -729,10 +648,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
         qDebug() << "Rotation robot = " << robot1->rotation();
 
         // remove toutes les lignes de déplacement et les lignes des ventouses
-        for(int i=0;i<7;i++)
-        {
-            if (item[i]) scene->removeItem(item[i]);
-        }
+
 //        for(int i=0;i<4;i++)
 //            scene->removeItem(collisionLine[i]);
 //        for(int i=0;i<6;i++){// a enlever????
@@ -742,11 +658,18 @@ void MainWindow::updateVisu(const QModelIndex &index)
 //            scene->removeItem(brasDistrib[i]);// a enlever????
 //        }
 
+        Affichage_Debug_Coord_Gateau();
+        qDebug("efface item");
+        for(int i=0;i<7;i++)
+        {
+            if (item[i])
+                scene->removeItem(item[i]);
+        }
 
         switch(indexComboBox)
         {
         case 0: //Début match
-
+            qDebug("Début match");
             old_equipe = equipe;
                        testindex = ui->tableView->model()->index(table_ligne,2);
                        if(ui->tableView->model()->data(testindex).toString() == "Bleu")
@@ -781,6 +704,8 @@ void MainWindow::updateVisu(const QModelIndex &index)
 
         case 1: //Ligne Droite
             // effacer les trassé d'avant
+            qDebug("Ligne Droite");
+
             if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="")
 
             {
@@ -821,6 +746,8 @@ void MainWindow::updateVisu(const QModelIndex &index)
             break;
 
         case 2: //Rotation
+            qDebug("Rotation");
+
             if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="")
             {
                 for(int j=2;j<12;j++)
@@ -852,19 +779,10 @@ void MainWindow::updateVisu(const QModelIndex &index)
                 else
                     PosRotrob = -angleRotation;
             }
-
-           //if(table_ligne==index.row())
-           //{
-           //    path1.moveTo((PosYrob+(diag/2)*cos(((90-PosRotrobPres) * M_PI)/180)),PosXrob+(diag/2)*sin(((90-PosRotrobPres) * M_PI)/180));
-           //    path1.arcTo(PosYrob-diag/2,PosXrob-diag/2,diag,diag,PosRotrobPres-90,360);
-           //    item[1]=scene->addPath(path1,blacklinedot);
-           //    path.moveTo((PosYrob+(diag/2)*cos(((90-PosRotrobPres) * M_PI)/180)),PosXrob+(diag/2)*sin(((90-PosRotrobPres) * M_PI)/180));
-           //    path.arcTo(PosYrob-diag/2,PosXrob-diag/2,diag,diag,90-PosRotrobPres,PosRotrob-90);
-           //    item[0]=scene->addPath(path,redline);
-           //}
             break;
 
         case 3: //Courbe
+            qDebug("courbe");
             if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="")
             {
                 for(int j=2;j<12;j++)
@@ -972,17 +890,18 @@ void MainWindow::updateVisu(const QModelIndex &index)
             break;
 
         case 4: //Action
+            qDebug("Action");
             if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="")
             {
-                if (item[0]) scene->removeItem(item[0]);
+                /*if (item[0]) scene->removeItem(item[0]);
                 item[0] = 0;
                 if (item[1]) scene->removeItem(item[1]);
                 item[1] = 0;
                 if (item[2]) scene->removeItem(item[2]);
-                item[2] = 0;
+                item[2] = 0;*/
                 ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,0),ui->tableView->model()->data(ui->tableView->model()->index(table_ligne-1,0)).toInt()+1);
-                ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,2),"Prise_bas");
-                ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),"");
+                ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,2),"Prise_gateau");
+                ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),"Avant");
                 ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,10),ui->tableView->model()->data(ui->tableView->model()->index(table_ligne-1,10)).toInt()+1);
                 ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,11),ui->tableView->model()->data(ui->tableView->model()->index(table_ligne-1,11)).toInt()+1);
                 ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,6),"Non");
@@ -996,330 +915,37 @@ void MainWindow::updateVisu(const QModelIndex &index)
                 &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Avant")){
                 qDebug("Test prise avant");
                 // Pick up the cake at the front of the robot
-                 detecterCollisionGateau();
+                 detecterCollisionGateau(0);
             }
             if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_gateau")
                 &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arrière")){
 
                 qDebug("Test prise arriere");
                   // Pick up the cake at the back of the robot
-                 detecterCollisionGateau();
+                 detecterCollisionGateau(1);
             }
 //Relacher gateau _________________________________________________________________________________________________________________________________
-        if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Relacher_gateau")
-            &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Avant")){
-            qDebug("Test relacher avant");
-            //qDebug() << "Cake picked up with front end";
-            // Release the last layer of cake that has been collected from the front
-            relacherDernierEchantillon();
-        }
-        if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Relacher_gateau")
-            &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arrière")){
-
-            qDebug("Test relacher arriere");
-            // Release the last layer of cake that has been collected from the front
-            relacherDernierEchantillon();
-        }
-
-
-////Prise_bas____________________________________________________________________________________________________________
-
-//            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_bas")
-//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
-
-//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-//                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
-//                int tabBrasChoisi[3];
-
-//                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
-//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
-//                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
-//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
-
-
-//                //on determine la centaine, la dizaine et l'unité
-
-//                tabBrasChoisi[0] = brasChoisi/100;
-//                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
-//                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
-
-//                // on creer le rectangle qui va contenir le rond qui correspond à la ventouse
-//                QRect ellipseVentouse(0,0,54,54);
-//                int echantillonAttrape;
-
-
-//                //on verifie les collisions avec la ventouse qui correspond au bras selectionner par la centaine , la dizaine et l'unité
-//                // ex : 210 va activer les bras 1 ,2 et 0
-//                for(int i = 0; i<3;i++){
-//                   if(tabBrasChoisi[i] != 0 || i == 2 ){
-//                       ventouse[tabBrasChoisi[i]] = scene->addEllipse(ellipseVentouse);
-//                       ventouse[tabBrasChoisi[i]]->setPen(redline);
-//                       echantillonAttrape = collisionVentouse(tabBrasChoisi[i],PosRotrob);
-//                       if(echantillonAttrape != -1){
-//                           coordonnees[echantillonAttrape][5] = tabBrasChoisi[i] + 1;
-//                           bras[tabBrasChoisi[i] + 1] = ventouse[tabBrasChoisi[i] + 1]->pos();
-//                       }
-//                   }
-
-//                }
-//            }
-////Passe__________________________________________________________________________________________________________
-//            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Passe")
-//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
-
-//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-//                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
-//                int tabBrasChoisi[3];
-
-//                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
-//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
-//                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
-//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
-
-
-//                //on determine la centaine, la dizaine et l'unité
-
-//                tabBrasChoisi[0] = brasChoisi/100;
-//                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
-//                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
-
-//                for(int i = 0; i<3;i++){
-//                    if(tabBrasChoisi[i] != 0 || i == 2 ){
-//                        for(int J = 0;J < 30; J++){
-//                            if (coordonnees[J][5] == tabBrasChoisi[i] + 1){
-//                                coordonnees[J][5] += 10;
-//                                coordonnees[J][3] = 2;
-
-//                            }
-
-//                    }
-//                }
-
-
-//            }
-//          }
-
-////Pose_bas__________________________________________________________________________________________________________
-//            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Pose_bas")
-//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
-
-//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-//                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
-//                int tabBrasChoisi[3];
-
-
-//                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
-//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
-//                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
-//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
-
-//                //on determine la centaine, la dizaine et l'unité
-
-//                tabBrasChoisi[0] = brasChoisi/100;
-//                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
-//                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
-
-//                //on remet le bras choisi à 0 dans le tableau de coordonnées
-//                for(int i = 0; i<3;i++){
-//                   if(tabBrasChoisi[i] != 0 || i == 2 ){
-//                        for(int J = 0;J < 30; J++){
-//                            if (coordonnees[J][5] == tabBrasChoisi[i] + 1){
-
-//                                coordonnees[J][5] = 0;
-//                                coordonnees[J][0] += ptrGateau[i]->boundingRect().center().x() - GLOBALOFFSETX;
-//                                coordonnees[J][1] += ptrGateau[i]->boundingRect().center().y() - GLOBALOFFSETY;
-//                            }
-//                        }
-//                   }
-//                }
-
-//            }
-////Pose_Haut__________________________________________________________________________________________________________________
-//            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Pose_Haut")
-//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
-
-//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-//                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
-//                int tabBrasChoisi[3];
-
-
-//                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
-//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
-//                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
-//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
-
-//                //on determine la centaine, la dizaine et l'unité
-
-//                tabBrasChoisi[0] = brasChoisi/100;
-//                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
-//                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
-
-//                //on remet le bras choisi à 0 dans le tableau de coordonnées
-//                for(int i = 0; i<3;i++){
-//                   if(tabBrasChoisi[i] != 0 || i == 2 ){
-//                        for(int J = 0;J < 30; J++){
-//                            if (coordonnees[J][5] == tabBrasChoisi[i] + 11){
-
-//                                coordonnees[J][5] = 0;
-//                                coordonnees[J][3] = 1;
-//                                coordonnees[J][0] += ptrGateau[i]->boundingRect().center().x() - GLOBALOFFSETX;
-//                                coordonnees[J][1] += ptrGateau[i]->boundingRect().center().y() - GLOBALOFFSETY;
-//                            }
-//                        }
-//                   }
-//                }
-//            }
-////Prise_bordure_____________________________________________________________________________________________________________
-//            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_bordure")
-//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
-
-//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-//                QString brasChoisiStr = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString());
-//                int tabBrasChoisi[3];
-
-//                if (brasChoisiStr == "120" || brasChoisiStr == "102" || brasChoisiStr == "012" || brasChoisiStr == "021" || brasChoisiStr == "201" )
-//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),210);
-//                if (brasChoisiStr == "354" || brasChoisiStr == "453" || brasChoisiStr == "435" || brasChoisiStr == "543" || brasChoisiStr == "534" )
-//                    ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,3),345);
-
-
-//                //on determine la centaine, la dizaine et l'unité
-
-//                tabBrasChoisi[0] = brasChoisi/100;
-//                tabBrasChoisi[1] = (brasChoisi - 100*tabBrasChoisi[0])/10; // on enleve la centaine pour trouver la dizaine
-//                tabBrasChoisi[2] = (brasChoisi - 100*tabBrasChoisi[0]) - 10*tabBrasChoisi[1]; // on enleve la centaine et la dizaine pour trouver l'unité
-
-//                // on creer le rectangle qui va contenir le rond qui correspond à la ventouse
-//                QRect ellipseVentouse(0,0,54,54);
-//                int echantillonAttrape;
-
-
-
-//                //on verifie les collisions avec la ventouse qui correspond au bras selectionner par la centaine , la dizaine et l'unité
-//                // ex : 210 va activer les bras 1 ,2 et 0
-//                for(int i = 0; i<3;i++){
-//                   if(tabBrasChoisi[i] != 0 || i == 2 ){
-//                       ventouse[tabBrasChoisi[i]] = scene->addEllipse(ellipseVentouse);
-//                       ventouse[tabBrasChoisi[i]]->setPen(greenline);
-//                       echantillonAttrape = collisionVentouse(tabBrasChoisi[i],PosRotrob);
-//                       if(echantillonAttrape != -1){
-//                           coordonnees[echantillonAttrape][5] = tabBrasChoisi[i] + 1 + 10;
-//                           bras[tabBrasChoisi[i] + 1] = ventouse[tabBrasChoisi[i] + 1]->pos();
-//                       }
-//                   }
-
-
-//                }
-//            }
-
-
-////Prise_distrib_______________________________________________________________________________________________________________________
-//            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Prise_distrib")
-//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){
-//                QLine ligneDistrib(0,0,232,0);
-
-//                //on fait apparaitre le bon bras sur la scene
-//                int brasChoisi = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-
-//                brasDistrib[brasChoisi] = scene->addLine(ligneDistrib);
-
-//                //on le place au bon endroit
-//                brasDistrib[brasChoisi]->setPen(redline);
-//                brasDistrib[brasChoisi]->setPos(robot1->pos() + robot1->boundingRect().center());
-//                brasDistrib[brasChoisi]->moveBy(GLOBALOFFSETX,-10);
-//                brasDistrib[brasChoisi]->setRotation(90 - PosRotrob + 180*brasChoisi); //on fait un tour complet si on choisi le bras 1
-
-//                //on vérifie la collision avec l'échantillon le plus plus éloigné de chaque distributeur (pour être sur d'être a la bonne distance)
-
-//                if(brasDistrib[brasChoisi]->collidesWithItem(ptrGateau[18])){ //jaune bas
-//                    coordonnees[20][5] = 12;
-//                    coordonnees[19][5] = 13;
-//                    coordonnees[18][5] = 11;
-//                }
-//                if(brasDistrib[brasChoisi]->collidesWithItem(ptrGateau[21])){ //jaune bas
-//                    coordonnees[23][5] = 12;
-//                    coordonnees[22][5] = 13;
-//                    coordonnees[21][5] = 11;
-//                }
-//                if(brasDistrib[brasChoisi]->collidesWithItem(ptrGateau[24])){ //jaune bas
-//                    coordonnees[26][5] = 12;
-//                    coordonnees[25][5] = 13;
-//                    coordonnees[24][5] = 11;
-//                }
-//                if(brasDistrib[brasChoisi]->collidesWithItem(ptrGateau[27])){ //jaune bas
-//                    coordonnees[29][5] = 12;
-//                    coordonnees[28][5] = 13;
-//                    coordonnees[27][5] = 11;
-//                }
-
-
-//            }
-////Deploiement________________________________________________________________________________________________________________
-//            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Deploiement")//verifie si la 2ème colonne corespond au
-//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!="")){           //"deploiement" et que le 3ème n'est pas un string vide
-//                int ouvertFerme = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt()); // si la condition est vérifié, il prends la valeur
-//                                                                                                                        // de la 3ème colonne et le convertit en int et le
-//                chasseNeigeFlag[0] = ouvertFerme;                                                                       // stock dans la var ouvertFerme
-
-
-//            }
-
-
-//            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Res_prestest")
-//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!=""))
-//            {
-//                resDeploye[(ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt())] = true;
-//            }
-//            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Res_mes")
-//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!=""))
-//            {
-//                int carreMesure = (ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt());
-//                if (brasMesure[0]->collidesWithItem(ptrCarre[carreMesure])){
-
-//                    ptrCarre[carreMesure]->hide();
-//                }
-//                else if (brasMesure[1]->collidesWithItem(ptrCarre[carreMesure])){
-
-//                    ptrCarre[carreMesure]->hide();
-//                }
-//            }
-//            else if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Res_rang")
-//                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())!=""))
-//            {
-//                resDeploye[(ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toInt())] = false;
-//            }
-
-//**********************************| année 2023| *********************************************************************
-//            qDebug() << ui->tableView->model()->data(ui->tableView->model()->index(table_ligne, 2)).toString();
-
-//                if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Relacher_gateau")){
-//                    // Find the last cake that was picked up by the robot
-//                    QGraphicsPixmapItem* lastCake = nullptr;
-//                    for (int i = 11; i >= 0; i--) {
-//                        if (coordonneesBase[i][3] == 1 || coordonneesBase[i][4] == 1) {
-//                            lastCake = ptrGateau[i];
-//                            break;
-//                        }
-//                    }
-//                    if (lastCake != nullptr) {
-//                        // Set the parent of the last cake to the scene
-//                        lastCake->setParentItem(nullptr);
-//                        // Set the position of the last cake to where it currently is
-//                        QPointF scenePos = lastCake->mapToScene(QPointF(0, 0));
-//                        lastCake->setPos(scenePos);
-//                        // Clear the coordinates for the last cake
-//                        coordonneesBase[lastCakeIndex][3] = 0;
-//                        coordonneesBase[lastCakeIndex][4] = 0;
-//                        qDebug() << "Last cake released";
-//                    }
-//                }
-//            }
+            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Relacher_gateau")
+                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Avant")){
+                qDebug("Test relacher avant");
+                //qDebug() << "Cake picked up with front end";
+                // Release the last layer of cake that has been collected from the front
+                relacherGateau(0);
+            }
+            if(((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Relacher_gateau")
+                &&((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Arrière")){
+
+                qDebug("Test relacher arriere");
+                // Release the last layer of cake that has been collected from the front
+                relacherGateau(1);
+            }
 
             break;
 //**********************************************************************************************************************
 
 
         case 5: //Recalage
+            qDebug("Recalage");
             if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="")
             {
                 ui->tableView->model()->setData(ui->tableView->model()->index(table_ligne,0),ui->tableView->model()->data(ui->tableView->model()->index(table_ligne-1,0)).toInt()+1);
@@ -1399,6 +1025,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
             break;
 
         case 6: //XYT
+            qDebug("XYT");
             int diag=DIAG_ROBOT1;
             double anglefin=0;
 
@@ -1445,8 +1072,9 @@ void MainWindow::updateVisu(const QModelIndex &index)
             }
             if(table_ligne==index.row())
             {
-                for (int i=0; i<5; i++)
-                    if (item[i]) scene->removeItem(item[i]);
+                for (int i=0; i<6; i++)
+                    if (item[i])
+                        scene->removeItem(item[i]);
 
                 // Tracé Ligne centre trajectoire du robot
                 item[0]= scene->addLine(int(PosYrobPres), int(PosXrobPres),int(PosYrob),int(PosXrob),redline);
@@ -1521,42 +1149,23 @@ void MainWindow::updateVisu(const QModelIndex &index)
 
         // Affichage de la position en X,Y,T
 
-      table_ligne=futur_i;
-      for(int i = 0; i < 30; ++i){
+        table_ligne=futur_i;
+        for(int i = 0; i < 30; ++i)
+        {
           if(coordonnees[i][5] > 10) coordonnees[i][4] = PosRotrob - 90 ;
-          //afficherGateau();
-
-      }
-        //miseAJourEchantillons();
-        //detecterEchantillons();
-        //detecterCollisionGateau();
-        //afficherGateau();
-        //afficher_gateau();
+        }
+        Mise_a_jour_coord_gateau();
+        afficher_Gateau();
 
     }
-    //afficher_gateau();
-
-    Mise_a_jour_coord_gateau();
-    afficher_Gateau();
-    Xoffset=-100*cos(((PosRotrob) * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
+     Xoffset=-100*cos(((PosRotrob) * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
     Yoffset=-100*sin(((PosRotrob) * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
 
     Cerise[40]->setPos(PosYrob+Yoffset-cerise_size/2,PosXrob+Xoffset-cerise_size/2);
     qDebug("Cerise suit robot");
 //------------------------------------------------------------------------------------------------
 
-    for (int i=0;i<12;i++)
-    {
-        qDebug() << "Cake position: " << ptrGateau[i]->pos();
-        qDebug() << "coordGateau[" << i << "]: "
-                 << coordGateau[i][0] << ", "
-                 << coordGateau[i][1] << ", "
-                 << coordGateau[i][2] << ", "
-                 << coordGateau[i][3] << ", "
-                 << coordGateau[i][4] << ", "
-                 << coordGateau[i][5] << ", "
-                 << coordGateau[i][6];
-    }
+    Affichage_Debug_Coord_Gateau();
 
 
     ui->lcdPosX->display(PosXrob);
@@ -1781,7 +1390,7 @@ void MainWindow::on_ExportFileButton_clicked()
                           if (ui->tableView->model()->data(testindex).toString() == "Oui") textStream << "Y";
                           else if (ui->tableView->model()->data(testindex).toString() == "Non") textStream << "N";
                           else if (ui->tableView->model()->data(testindex).toString() == "Avant") textStream << "F";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Arriere") textStream << "B";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Arrière") textStream << "B";
                           else if (ui->tableView->model()->data(testindex).toString() == "Etage 0") textStream << "E0";
                           else if (ui->tableView->model()->data(testindex).toString() == "Etage 1") textStream << "E1";
                           else if (ui->tableView->model()->data(testindex).toString() == "Etage 2") textStream << "E2";
@@ -2106,24 +1715,36 @@ void MainWindow::on_ImportFileButton_clicked()
         indexdebut++;
     }
     updateVisu(testindex);
-    connect(ui->tableView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(tableViewIsClicked(const QModelIndex &)));
+    //connect(ui->tableView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(tableViewIsClicked(const QModelIndex &)));
 }
 
-
-void MainWindow::detecterCollisionGateau() {
-    // Remove previously added detection zone rectangles from the scene
-    QList<QGraphicsItem*> itemsToRemove = ui->graphicsView->scene()->items();
-    for(QGraphicsItem* item : itemsToRemove) {
-        if (item == frontZone || item == backZone) {
-            ui->graphicsView->scene()->removeItem(item);
-            delete item;
+void MainWindow::relacherGateau(unsigned int avant_arr)
+{
+    // Iterate through the ptrGateau array in reverse order
+    for (int i = 0; i<12; i++)
+    {
+        if ((coordGateau[i][3] == 1)&&(avant_arr==0))
+        {
+            // on relache a l'avant
+            coordGateau[i][3] = 0;
+            qDebug("relache avant %d",i);
+        }
+        if ((coordGateau[i][3] == 2)&&(avant_arr==1))
+        {
+            // on relache a l'arriere
+            coordGateau[i][3] = 0;
+            qDebug("relache avant %d",i);
         }
     }
+}
+
+void MainWindow::detecterCollisionGateau(unsigned int avant_arr) {
+
 
     // Create new detection zone rectangles at the robot's current position
     unsigned int size_rectangle=50;
-    QRectF frontZoneRect = robot1->mapToScene(robot1->boundingRect().center().x() +105-size_rectangle/2 , robot1->boundingRect().center().y() -size_rectangle/2, size_rectangle, size_rectangle).boundingRect();
-    QRectF backZoneRect = robot1->mapToScene(robot1->boundingRect().center().x()  -110-size_rectangle/2 , robot1->boundingRect().center().y() -size_rectangle/2, size_rectangle, size_rectangle).boundingRect();
+    QRectF frontZoneRect = robot1->mapToScene(robot1->boundingRect().center().x() +100-size_rectangle/2 , robot1->boundingRect().center().y() -size_rectangle/2, size_rectangle, size_rectangle).boundingRect();
+    QRectF backZoneRect = robot1->mapToScene(robot1->boundingRect().center().x()  -100-size_rectangle/2 , robot1->boundingRect().center().y() -size_rectangle/2, size_rectangle, size_rectangle).boundingRect();
 
 
     // Create QGraphicsRectItems for the front and back zones
@@ -2139,58 +1760,72 @@ void MainWindow::detecterCollisionGateau() {
     backZone->setBrush(zoneBrush);
 
     // Add the front and back zones to the scene
-    ui->graphicsView->scene()->addItem(frontZone);
-    ui->graphicsView->scene()->addItem(backZone);
 
     // Create a flag variable to keep track of whether the robot has picked up a cake
     bool pickedUpCake = false;
-
-    // Check for collisions between the robot and samples
-    for (int i = 0; i < 12; i++)
+    if(avant_arr==0)
     {
-        if (coordGateau[i][6] == 1)
+        qDebug("test si colision avant");
+        ui->graphicsView->scene()->addItem(frontZone);
+        for (int i = 0; i < 12; i++)
         {
-            qDebug("Test Collision");
-            if (coordGateau[i][3] == 0) { //regarder si les gateau ne sont pas prise
-                if (ptrGateau[i]->collidesWithItem(frontZone)) {
+            if (coordGateau[i][3] == 0)
+            {
+                if (ptrGateau[i]->collidesWithItem(frontZone))
+                {
                     // Update the value of coordonneesBase[i][3] to 1
                     coordGateau[i][3] = 1;
-                    coordGateau[i][4] = 0;
-                    coordGateau[i][6] = 0;
-                    qDebug("Collision avec échantillon en face");
+                    qDebug("Collision avec échantillon en face %d",i);
                     // If this is the first cake that the robot is picking up, set coordonneesBase[i][5] to 1
-                    if (!pickedUpCake) {
+                    /*if (!pickedUpCake) {
                         coordGateau[i][5] = 1;
                         pickedUpCake = true;
 
-                    }
+                    }*/
                     //break;
                 }
-                if (coordGateau[i][4] == 0)
-                {
-                // Check if the collision is inside the back detection zone
-                    if (ptrGateau[i]->collidesWithItem(backZone))
-                    {
-                        // Update the value of coordonneesBase[i][4] to 1
-                        coordGateau[i][3] = 0;
-                        coordGateau[i][4] = 1;
-                        coordGateau[i][6] = 0;
-                        qDebug("Collision avec échantillon derrière");
-                        // If this is the first cake that the robot is picking up, set coordonneesBase[i][5] to 1
-                        if (!pickedUpCake)
-                        {
-                            coordGateau[i][5] = 1;
-                            pickedUpCake = true;
 
-                        }
-                        //break;
-                    }
-                }
             }
         }
+        ui->graphicsView->scene()->removeItem(frontZone);
     }
-    ui->graphicsView->scene()->removeItem(frontZone);
-    ui->graphicsView->scene()->removeItem(backZone);
+    else
+    {
+        qDebug("test si colision avant");
+        ui->graphicsView->scene()->addItem(backZone);
+        for (int i = 0; i < 12; i++)
+        {
+            if (coordGateau[i][3] == 0)
+            {
+                if (ptrGateau[i]->collidesWithItem(backZone))
+                {
+                    // Update the value of coordonneesBase[i][3] to 1
+                    coordGateau[i][3] = 2;
+                    qDebug("Collision avec échantillon en face %d",i);
+                    // If this is the first cake that the robot is picking up, set coordonneesBase[i][5] to 1
+                    /*if (!pickedUpCake) {
+                        coordGateau[i][5] = 1;
+                        pickedUpCake = true;
+
+                    }*/
+                    //break;
+                }
+
+            }
+        }
+        ui->graphicsView->scene()->removeItem(backZone);
+    }
+
+    // Remove previously added detection zone rectangles from the scene
+    /*QList<QGraphicsItem*> itemsToRemove = ui->graphicsView->scene()->items();
+    for(QGraphicsItem* item : itemsToRemove) {
+        if (item == frontZone || item == backZone) {
+            ui->graphicsView->scene()->removeItem(item);
+            delete item;
+        }
+    }*/
+    /*ui->graphicsView->scene()->removeItem(frontZone);
+    ui->graphicsView->scene()->removeItem(backZone);*/
 }
 
 void MainWindow::Mise_a_jour_coord_gateau()
@@ -2206,13 +1841,15 @@ void MainWindow::Mise_a_jour_coord_gateau()
             yOffset_cake = dist_avant * sin((PosRotrob * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
             coordGateau[i][0]=PosXrob + xOffset_cake;
             coordGateau[i][1]=PosYrob + yOffset_cake;
+            qDebug("mise a jour %i %i %i",i,coordGateau[i][0],coordGateau[i][1]);
         }
-        if(coordGateau[i][4]==1)
+        if(coordGateau[i][3]==2)
         {
             xOffset_cake = dist_arr * cos((PosRotrob * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
             yOffset_cake = dist_arr * sin((PosRotrob * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
             coordGateau[i][0]=PosXrob + xOffset_cake;
             coordGateau[i][1]=PosYrob + yOffset_cake;
+            qDebug("mise a jour %i",i);
         }
     }
 }
@@ -2224,28 +1861,6 @@ void MainWindow::afficher_Gateau()
     {
         ptrGateau[i]->setPos(coordGateau[i][1], coordGateau[i][0]);
     }
-
-    //bool firstCakeCollected = false; // track if the first cake layer has been collected
-    //for (int i = 0; i < 12; i++) {
-    //    if (coordonneesBase[i][3] == 1) { // If the robot has picked up the sample with the front end
-    //        if (!firstCakeCollected) { // if this is the first cake layer collected
-    //            ptrGateau[i]->setZValue(1); // set the z-value to a high value to keep it on top
-    //            firstCakeCollected = true; // set flag to true
-    //        }
-    //        ptrGateau[i]->setParentItem(robot1); // Set the parent of the cake to the robot
-    //        ptrGateau[i]->setPos(100,0); // Set the position of the cake to the front as the robot
-    //        qDebrug() << "Cake picked up with front end";
-    //    }
-    //    else if (coordonneesBase[i][4] == 1) { // If the robot has picked up the sample with the back end
-    //        if (!firstCakeCollected) { // if this is the first cake layer collected
-    //            ptrGateau[i]->setZValue(1); // set the z-value to a high value to keep it on top
-    //            firstCakeCollected = true; // set flag to true
-    //        }
-    //        ptrGateau[i]->setParentItem(robot1); // Set the parent of the cake to the robot
-    //        ptrGateau[i]->setPos(-100,0); // Set the position of the cake to the back as the robot
-    //        qDebug() << "Cake picked up with back end";
-    //    }
-    //}
 }
 
 
@@ -2253,106 +1868,57 @@ void MainWindow::afficher_Gateau()
 
 
 
-int MainWindow::getAction(int chiffre){
-int toReturn = 0;
-switch(chiffre){
-
-//case 170 : //Deploiement --> changer en ascenseur
-//toReturn = 0 ;
-//break;
-//
-//case 171: //Prise_bas
-//toReturn = 1  ;
-//break;
-//case 172: //Passe
-//toReturn = 2  ;
-//break;
-//case 173: //Pose_bas
-//toReturn = 3  ;
-//break;
-//case 174 : //Pose_Haut
-//toReturn = 4  ;
-//break;
-//case 175 : //Prise_bordure
-//toReturn = 5 ;
-//break;
-//case 176 : //Pose_bordure
-//toReturn = 6 ;
-//break;
-//case 177 : //Prise_distrib
-//toReturn = 7 ;
-//break;
-//case 178: //Ranger
-//toReturn = 8 ;
-//break;
-//
-//case 154: //Res_prestest
-//toReturn = 9 ;
-//break;
-//case 155: //Res_mes
-//toReturn = 10 ;
-//break;
-//case 156: //Res_rang
-//toReturn = 11 ;
-//break;
-//
-//case 180: //Pre_prise
-//toReturn = 12 ;
-//break;
-//case 181: //Prise_statuette
-//toReturn = 13 ;
-//break;
-//case 182: //Pose_statuette
-//toReturn = 14 ;
-//break;
-
-case 0: //Evitement
-toReturn =  0;
-break;
-case 1: //Set odo
-toReturn =  1;
-break;
-case 2: //wait
-toReturn =  2;
-break;
-case 3: //wait other bot
-toReturn =  3;
-break;
-case 4: //check pos adversaire
-toReturn =  4;
-break;
-case 5: //Fin de match
-toReturn =  5;
-break;
-case 9: //Ajouter point
-toReturn =  6;
-break;
-
-case 10: //Prise gateau
-toReturn =  7;
-break;
-case 11: //Relacher gateau
-toReturn =  8;
-break;
-case 20: //Monter gateau
-toReturn =  9;
-break;
-case 30: //pose cérise gateau
-toReturn =  10;
-break;
-case 40: //Attrape cérise
-toReturn =  11;
-break;
-case 41: //Range Attrape cérise
-toReturn =  12;
-break;
-case 42: //Tir cérise
-toReturn =  13;
-break;
-case 50: //déguisement
-toReturn =  14;
-break;
-}
+int MainWindow::getAction(int chiffre)
+{
+    int toReturn = 0;
+    switch(chiffre)
+    {
+        case 0: //Evitement
+        toReturn =  0;
+        break;
+        case 1: //Set odo
+        toReturn =  1;
+        break;
+        case 2: //wait
+        toReturn =  2;
+        break;
+        case 3: //wait other bot
+        toReturn =  3;
+        break;
+        case 4: //check pos adversaire
+        toReturn =  4;
+        break;
+        case 5: //Fin de match
+        toReturn =  5;
+        break;
+        case 9: //Ajouter point
+        toReturn =  6;
+        break;
+        case 10: //Prise gateau
+        toReturn =  7;
+        break;
+        case 11: //Relacher gateau
+        toReturn =  8;
+        break;
+        case 20: //Monter gateau
+        toReturn =  9;
+        break;
+        case 30: //pose cérise gateau
+        toReturn =  10;
+        break;
+        case 40: //Attrape cérise
+        toReturn =  11;
+        break;
+        case 41: //Range Attrape cérise
+        toReturn =  12;
+        break;
+        case 42: //Tir cérise
+        toReturn =  13;
+        break;
+        case 50: //déguisement
+        toReturn =  14;
+        break;
+    }
 return toReturn;
 }
 
@@ -2390,4 +1956,19 @@ void MainWindow::on_pushButton_clicked()
 
         }
         */
+}
+void MainWindow::Affichage_Debug_Coord_Gateau()
+{
+    for (int i=0;i<12;i++)
+    {
+        qDebug() << "Cake position: "
+                 << ptrGateau[i]->pos()
+                 << "coordGateau[" << i << "]: "
+                 << coordGateau[i][0] << ", "
+                 << coordGateau[i][1] << ", "
+                 << coordGateau[i][2] << ", "
+                 << coordGateau[i][3] << ", "
+                 << coordGateau[i][4];
+
+    }
 }
