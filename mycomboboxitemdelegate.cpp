@@ -152,7 +152,7 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
                 ||(model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Relacher_gateau")))
         {
             cb->addItem(QString("Avant"));
-            cb->addItem(QString("Arriere"));
+            cb->addItem(QString("Arrière"));
             cb->setCurrentText(model->data(index).toString());
         }
 
