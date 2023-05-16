@@ -114,6 +114,7 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
             cb->addItem(QString("Attrape_cerise"));//action 40
             cb->addItem(QString("Range_Attrape_cerise"));//action 41
             cb->addItem(QString("Tir_cerise"));//action 42
+            cb->addItem(QString("Barillet"));//action 60
 
             //action liés au fin de jeu
             cb->addItem(QString("Deguisement")); //action 50
@@ -189,6 +190,15 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
         {
             cb->addItem(QString("ON"));
             cb->addItem(QString("OFF"));
+            cb->setCurrentText(model->data(index).toString());
+        }
+        else if((model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Barillet")))
+        {
+            cb->addItem(QString("Barillet_1"));
+            cb->addItem(QString("Barillet_2"));
+            cb->addItem(QString("Barillet_3"));
+            cb->addItem(QString("Barillet_4"));
+            cb->addItem(QString("Barillet_5"));
             cb->setCurrentText(model->data(index).toString());
         }
     }

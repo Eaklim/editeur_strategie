@@ -43,7 +43,8 @@ const QStringList MainWindow::dataAction = { "Evitement"
                                              ,"Attrape_cerise"
                                              ,"Range_Attrape_cerise"
                                              ,"Tir_cerise"
-                                             ,"Deguisement"};
+                                             ,"Deguisement"
+                                             ,"Barillet"};
 
 int carreFlag = 1 , robot2Flag = 0;
 double distanceLigneDroite;
@@ -1381,7 +1382,7 @@ void MainWindow::on_ExportFileButton_clicked()
                     qDebug() << " Index Action : " << indexComboBoxAction;
 
                     QString indexToAction[29] = {/*"150","171","172","173", "174", "175","176","177","178","154","155","156","180","181","182",*/
-                                                 "0","1","2","3","4","5","9","10","11","20","30","40","41","42","50"}; //case en tableau
+                                                 "0","1","2","3","4","5","9","10","11","20","30","40","41","42","50","60"}; //case en tableau
 
                     textStream << indexToAction[indexComboBoxAction];
 
@@ -1406,6 +1407,11 @@ void MainWindow::on_ExportFileButton_clicked()
                                   else if (ui->tableView->model()->data(testindex).toString() == "Droite") textStream << "1";//R
                                   else if (ui->tableView->model()->data(testindex).toString() == "ON") textStream << "1";
                                   else if (ui->tableView->model()->data(testindex).toString() == "OFF") textStream << "0";
+                                  else if (ui->tableView->model()->data(testindex).toString() == "Barillet_1") textStream << "1";
+                                  else if (ui->tableView->model()->data(testindex).toString() == "Barillet_2") textStream << "2";
+                                  else if (ui->tableView->model()->data(testindex).toString() == "Barillet_3") textStream << "3";
+                                  else if (ui->tableView->model()->data(testindex).toString() == "Barillet_4") textStream << "4";
+                                  else if (ui->tableView->model()->data(testindex).toString() == "Barillet_5") textStream << "5";
                                   else textStream << "0";
                                   //textStream << ui->tableView->model()->data(testindex).toString() //ajouter du texte
                                   textStream << ","
@@ -1668,6 +1674,14 @@ void MainWindow::on_ImportFileButton_clicked()
                             {
                                 if(liste[4] == "0") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"OFF");
                                 else if (liste[4] == "1") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"ON");
+                            }
+                            else if(liste[3] == "60")// si liste colonne 3 = Barillet
+                            {
+                                if (liste[4] == "1") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Barillet_1");
+                                else if (liste[4] == "2") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Barillet_2");
+                                else if (liste[4] == "3") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Barillet_3");
+                                else if (liste[4] == "4") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Barillet_4");
+                                else if (liste[4] == "5") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Barillet_5");
                             }
                         }
             else if(liste[1] == "R") //Recalage
@@ -1939,6 +1953,10 @@ int MainWindow::getAction(int chiffre)
         case 50: //déguisement
         toReturn =  14;
         break;
+        case 60: //Barillet
+        toReturn =  15;
+        break;
+
     }
 return toReturn;
 }
