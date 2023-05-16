@@ -1283,7 +1283,7 @@ void MainWindow::on_ExportFileButton_clicked()
 
     QTextStream textStream(&file);
     QModelIndex j;
-    QModelIndex testindex;
+    QModelIndex testindex, testindex2;
     QString data,data2;
     int indexComboBox,indexComboBoxAction,ligne;
     double angle = 0;
@@ -1389,19 +1389,23 @@ void MainWindow::on_ExportFileButton_clicked()
                           testindex = ui->tableView->model()->index(i,3);
                           if (ui->tableView->model()->data(testindex).toString() == "Oui") textStream << "Y";
                           else if (ui->tableView->model()->data(testindex).toString() == "Non") textStream << "N";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Avant") textStream << "F";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Arrière") textStream << "B";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 0") textStream << "E0";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 1") textStream << "E1";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 2") textStream << "E2";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 3") textStream << "E3";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 4") textStream << "E4";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 5") textStream << "E5";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 6") textStream << "E6";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 7") textStream << "E7";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 8") textStream << "E8";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Gauche") textStream << "L";
-                          else if (ui->tableView->model()->data(testindex).toString() == "Droite") textStream << "R";
+                          //else if (ui->tableView->model()->data(testindex).toString() == "Avant") textStream << "F";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Avant") textStream << "70";
+                          //else if (ui->tableView->model()->data(testindex).toString() == "Arrière") textStream << "B";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Arriere") textStream << "71";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 0") textStream << "0";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 1") textStream << "1";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 2") textStream << "2";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 3") textStream << "3";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 4") textStream << "4";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 5") textStream << "5";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 6") textStream << "6";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 7") textStream << "7";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Etage 8") textStream << "8";
+                          else if (ui->tableView->model()->data(testindex).toString() == "Gauche") textStream << "0";//L
+                          else if (ui->tableView->model()->data(testindex).toString() == "Droite") textStream << "1";//R
+                          else if (ui->tableView->model()->data(testindex).toString() == "ON") textStream << "1";
+                          else if (ui->tableView->model()->data(testindex).toString() == "OFF") textStream << "0";
                           else textStream << "0";
                           //textStream << ui->tableView->model()->data(testindex).toString() //ajouter du texte
                           textStream << ","
@@ -1633,21 +1637,38 @@ void MainWindow::on_ImportFileButton_clicked()
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,2),dataAction[getAction(liste[3].toInt())]);
                 ui->tableView->model()->setData(ui->tableView->model()->index(index,3),liste[4]);
                 if(liste[4] == "0") ui->tableView->model()->setData(ui->tableView->model()->index(index,3)," ");
+                else if(liste[3] == "0")
+                {
                 if(liste[4] == "Y") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Oui");
                 else if (liste[4] == "N") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Non");
-                if(liste[4] == "F") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Avant");
-                else if (liste[4] == "B") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Arrière");
-                if(liste[4] == "E0") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 0");
-                else if (liste[4] == "E1") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 1");
-                else if (liste[4] == "E2") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 2");
-                else if (liste[4] == "E3") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 3");
-                else if (liste[4] == "E4") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 4");
-                else if (liste[4] == "E5") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 5");
-                else if (liste[4] == "E6") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 6");
-                else if (liste[4] == "E7") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 7");
-                else if (liste[4] == "E8") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 8");
-                if(liste[4] == "L") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Gauche");
-                else if (liste[4] == "R") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Droite");
+                }
+                //if(liste[4] == "F") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Avant");
+                if(liste[4] == "70") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Avant");
+                //else if (liste[4] == "B") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Arrière");
+                else if (liste[4] == "71") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Arriere");
+                else if(liste[3] == "20")// si liste colonne 3 = etage gateau
+                {
+                    if(liste[4] == "0") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 0");
+                    else if (liste[4] == "1") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 1");
+                    else if (liste[4] == "2") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 2");
+                    else if (liste[4] == "3") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 3");
+                    else if (liste[4] == "4") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 4");
+                    else if (liste[4] == "5") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 5");
+                    else if (liste[4] == "6") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 6");
+                    else if (liste[4] == "7") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 7");
+                    else if (liste[4] == "8") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Etage 8");
+                }
+                else if((liste[3] == "40")||(liste[3] == "41"))// si colonne 3 = attrape cérise ou range attrape cérise
+                {
+                    if(liste[4] == "0") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Gauche");
+                    else if (liste[4] == "1") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Droite");
+
+                }
+                else if(liste[3] == "50") // si colonne 3 = deguisement
+                {
+                    if(liste[4] == "0") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"OFF");
+                    else if (liste[4] == "1") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"ON");
+                }
             }
             else if(liste[1] == "R") //Recalage
             {

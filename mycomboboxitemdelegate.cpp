@@ -178,6 +178,19 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
             cb->addItem(QString("Droite"));
             cb->setCurrentText(model->data(index).toString());
         }
+        else if((model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Wait")))
+        {
+            cb->addItem(QString("2"));
+            cb->addItem(QString("5"));
+            cb->addItem(QString("10"));
+            cb->setCurrentText(model->data(index).toString());
+        }
+        else if((model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Deguisement")))
+        {
+            cb->addItem(QString("ON"));
+            cb->addItem(QString("OFF"));
+            cb->setCurrentText(model->data(index).toString());
+        }
     }
 
     if(index.column() == 4)
