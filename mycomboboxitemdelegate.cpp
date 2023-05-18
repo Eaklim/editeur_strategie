@@ -201,6 +201,14 @@ void MyComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index
             cb->addItem(QString("Barillet_5"));
             cb->setCurrentText(model->data(index).toString());
         }
+        else if((model->data(model->index(index.row(), 2),Qt::DisplayRole).toString().contains("Pose_cerise")))
+        {
+            cb->addItem(QString("Cerise_1"));
+            cb->addItem(QString("Cerise_2"));
+            cb->addItem(QString("Cerise_3"));
+            cb->addItem(QString("Cerise_4"));
+            cb->setCurrentText(model->data(index).toString());
+        }
     }
 
     if(index.column() == 4)

@@ -9,12 +9,13 @@
 #define ROBOTCENTRE robot1->pos().x() + GLOBALOFFSETX - 25,robot1->pos().y() + GLOBALOFFSETY + 15
 #define ROBOTCENTREX robot1->pos().x() + GLOBALOFFSETX - 25
 #define ROBOTCENTREY robot1->pos().y() + GLOBALOFFSETY + 15
+#define NOMBRECOUCHE 36
 
 double PosXrob = 0, PosYrob = 0, PosRotrob = 0, PosXrobPres = 90, PosYrobPres =0 , PosRotrobPres = 0,
         PosCXrob= 0, PosCYrob= 0, rayonCourbe, rayonCourbeVentouse, angleCourbe,angleRotation;
 
 
-unsigned int coordGateau[12][5];
+unsigned int coordGateau[NOMBRECOUCHE][5], Etage_ascenseur=0;
 
 const QStringList MainWindow::dataCol1 = {"Debut Match",
                                           "Ligne Droite",
@@ -150,25 +151,24 @@ void setTableHeaders_XYT(QTableView *tableView, QAbstractItemDelegate *cbd) {
 }
 ////Affichage des couches de gateaux***********************************************************************************************************************
 
-unsigned int coordonneesBase[12][5]={ // coordonnées des échantillons {x,y,COULEUR,pas_prise=0/prise_avant=1/prise_arrière=2, caché=0/visible=1}
-                                    {   230,    575,    ROSE,0,1}, // en haut à gauche
-                                    {   230,    775,  YELLOW,0,1},
-                                    {   230,   2425,    ROSE,0,1}, // en haut à droite
-                                    {   230,   2225,  YELLOW,0,1},
-                                    {   1775,   575,    ROSE,0,1}, // en bas à gauche
-                                    {   1775,   775,  YELLOW,0,1},
-                                    {   1775,  2425,    ROSE,0,1}, // eh bas à droite
-                                    {   1775,  2225,  YELLOW,0,1},
-                                    {   730,   1125,   BROWN,0,1}, //milieu haut gauche
-                                    {   730,   1875,   BROWN,0,1}, //milieu haut droite
-                                    {   1280,  1125,   BROWN,0,1}, //milieu bas gauche
-                                    {   1280,  1875,   BROWN,0,1}, //milieu bas droite
-                                   };
+unsigned int coordonneesBase[NOMBRECOUCHE][5]={ // coordonnées des échantillons {x,y,COULEUR,pas_prise=0 + niveau 0 à 9/prise_avant=10 + niveau /prise_arrière=20 + prise, caché=0/visible=1}
+                                    {   230,    575,    ROSE,0,1},{   230,    575,    ROSE,1,1},{   230,    575,    ROSE,2,1}, // en haut à gauche
+                                    {   230,    775,  YELLOW,0,1},{   230,    775,  YELLOW,1,1},{   230,    775,  YELLOW,2,1},
+                                    {   230,   2425,    ROSE,0,1},{   230,   2425,    ROSE,1,1},{   230,   2425,    ROSE,2,1},// en haut à droite
+                                    {   230,   2225,  YELLOW,0,1},{   230,   2225,  YELLOW,1,1},{   230,   2225,  YELLOW,2,1},
+                                    {   1775,   575,    ROSE,0,1},{   1775,   575,    ROSE,1,1},{   1775,   575,    ROSE,2,1},// en bas à gauche
+                                    {   1775,   775,  YELLOW,0,1},{   1775,   775,  YELLOW,1,1},{   1775,   775,  YELLOW,2,1},
+                                    {   1775,  2425,    ROSE,0,1},{   1775,  2425,    ROSE,1,1},{   1775,  2425,    ROSE,2,1},// en bas à droite
+                                    {   1775,  2225,  YELLOW,0,1},{   1775,  2225,  YELLOW,1,1},{   1775,  2225,  YELLOW,2,1},
+                                    {   730,   1125,   BROWN,0,1},{   730,   1125,   BROWN,1,1},{   730,   1125,   BROWN,2,1},//milieu haut gauche
+                                    {   730,   1875,   BROWN,0,1},{   730,   1875,   BROWN,1,1},{   730,   1875,   BROWN,2,1}, //milieu haut droite
+                                    {   1280,  1125,   BROWN,0,1},{   1280,  1125,   BROWN,1,1},{   1280,  1125,   BROWN,2,1}, //milieu bas gauche
+                                    {   1280,  1875,   BROWN,0,1},{   1280,  1875,   BROWN,1,1},{   1280,  1875,   BROWN,2,1}}; //milieu bas droite
+
 unsigned int xOffset_cake,yOffset_cake;
 
 //position actuelle des elements du jeu à faire modifer à chaque action
-int coordonnees[30][6]{
-};
+
 
 
 //Affichage cérise****************************************************************************************************************************************
@@ -193,13 +193,13 @@ static QGraphicsItem *item[7],*Cerise[50];
 
 void MainWindow::create_Gateau()
 {
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < NOMBRECOUCHE; i++) {
         for (int j = 0; j < 5; j++) {
             coordGateau[i][j] = coordonneesBase[i][j];
         }
     }
 
-    for(int i=0;i<12;i++) // cree tous les Gateaux sur la table
+    for(int i=0;i<NOMBRECOUCHE;i++) // cree tous les Gateaux sur la table
     {
         QPixmap pix(determinerCouleur(coordGateau[i][2]));
         pix = pix.scaled(pix.width() * 0.27, pix.height() * 0.27, Qt::KeepAspectRatio);
@@ -605,7 +605,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
     bool resDeploye[2] {false,false};
 
 
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < NOMBRECOUCHE; i++) {
         for (int j = 0; j < 5; j++) {
             coordGateau[i][j] = coordonneesBase[i][j];
         }
@@ -617,7 +617,7 @@ void MainWindow::updateVisu(const QModelIndex &index)
     qDebug() << nbUpdateVisu << "______________________________________________________________________________________________________";
 
     int cpt_boucle=0;
-
+    Etage_ascenseur=0;
 
     while((table_ligne<index.row()+1)&&(cpt_boucle<(2*(ui->tableView->model()->rowCount())))) // on suit les numero de lignes et on bloque la boucle infini à 2 occurences
     {
@@ -941,6 +941,30 @@ void MainWindow::updateVisu(const QModelIndex &index)
                 relacherGateau(1);
             }
 
+// niveau ascenseur
+            if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,2)).toString())=="Etage_gateau")
+            {
+                qDebug("Etage ascenseur %d", Etage_ascenseur );
+                if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Etage 0")
+                    Etage_ascenseur=0;
+                if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Etage 1")
+                    Etage_ascenseur=1;
+                if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Etage 2")
+                    Etage_ascenseur=2;
+                if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Etage 3")
+                    Etage_ascenseur=3;
+                if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Etage 4")
+                    Etage_ascenseur=4;
+                if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Etage 5")
+                    Etage_ascenseur=5;
+                if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Etage 6")
+                    Etage_ascenseur=6;
+                if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Etage 7")
+                    Etage_ascenseur=7;
+                if((ui->tableView->model()->data(ui->tableView->model()->index(table_ligne,3)).toString())=="Etage 8")
+                    Etage_ascenseur=8;
+                qDebug("Etage ascenseur %d", Etage_ascenseur );
+            }
             break;
 //**********************************************************************************************************************
 
@@ -1151,10 +1175,10 @@ void MainWindow::updateVisu(const QModelIndex &index)
         // Affichage de la position en X,Y,T
 
         table_ligne=futur_i;
-        for(int i = 0; i < 30; ++i)
+/*        for(int i = 0; i < 30; ++i)
         {
           if(coordonnees[i][5] > 10) coordonnees[i][4] = PosRotrob - 90 ;
-        }
+        }*/
         Mise_a_jour_coord_gateau();
         afficher_Gateau();
 
@@ -1412,6 +1436,10 @@ void MainWindow::on_ExportFileButton_clicked()
                                   else if (ui->tableView->model()->data(testindex).toString() == "Barillet_3") textStream << "3";
                                   else if (ui->tableView->model()->data(testindex).toString() == "Barillet_4") textStream << "4";
                                   else if (ui->tableView->model()->data(testindex).toString() == "Barillet_5") textStream << "5";
+                                  else if (ui->tableView->model()->data(testindex).toString() == "Cerise_1") textStream << "1";
+                                  else if (ui->tableView->model()->data(testindex).toString() == "Cerise_2") textStream << "2";
+                                  else if (ui->tableView->model()->data(testindex).toString() == "Cerise_3") textStream << "3";
+                                  else if (ui->tableView->model()->data(testindex).toString() == "Cerise_4") textStream << "4";
                                   else textStream << "0";
                                   //textStream << ui->tableView->model()->data(testindex).toString() //ajouter du texte
                                   textStream << ","
@@ -1683,6 +1711,15 @@ void MainWindow::on_ImportFileButton_clicked()
                                 else if (liste[4] == "4") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Barillet_4");
                                 else if (liste[4] == "5") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Barillet_5");
                             }
+                            else if(liste[3] == "30")// si liste colonne 3 = Barillet
+                            {
+                                if (liste[4] == "1") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Cerise_1");
+                                else if (liste[4] == "2") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Cerise_2");
+                                else if (liste[4] == "3") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Cerise_3");
+                                else if (liste[4] == "4") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Cerise_4");
+                                else if (liste[4] == "5") ui->tableView->model()->setData(ui->tableView->model()->index(index,3),"Cerise_5");
+                            }
+
                         }
             else if(liste[1] == "R") //Recalage
             {
@@ -1756,21 +1793,25 @@ void MainWindow::on_ImportFileButton_clicked()
 void MainWindow::relacherGateau(unsigned int avant_arr)
 {
     // Iterate through the ptrGateau array in reverse order
-    for (int i = 0; i<12; i++)
-    {
-        if ((coordGateau[i][3] == 1)&&(avant_arr==0))
+
+        for (int i = 0; i<NOMBRECOUCHE; i++)
         {
-            // on relache a l'avant
-            coordGateau[i][3] = 0;
-            qDebug("relache avant %d",i);
+            if (((coordGateau[i][3]/10)==1)&&(avant_arr==0))
+            {
+                // on relache a l'avant
+                coordGateau[i][3] = coordGateau[i][3]-10;
+                qDebug("relache avant %d",i);
+            }
+            if (((coordGateau[i][3]/10)==2)&&(avant_arr==1))
+            {
+                // on relache a l'arriere
+                coordGateau[i][3] = coordGateau[i][3]-20;
+                qDebug("relache avant %d",i);
+            }
         }
-        if ((coordGateau[i][3] == 2)&&(avant_arr==1))
-        {
-            // on relache a l'arriere
-            coordGateau[i][3] = 0;
-            qDebug("relache avant %d",i);
-        }
-    }
+
+
+
 }
 
 void MainWindow::detecterCollisionGateau(unsigned int avant_arr) {
@@ -1800,16 +1841,16 @@ void MainWindow::detecterCollisionGateau(unsigned int avant_arr) {
     bool pickedUpCake = false;
     if(avant_arr==0)
     {
-        qDebug("test si colision avant");
+        qDebug("test si colision avant niveau ascenseur %d",Etage_ascenseur);
         ui->graphicsView->scene()->addItem(frontZone);
-        for (int i = 0; i < 12; i++)
+        for (int i = 0; i < NOMBRECOUCHE; i++)
         {
-            if (coordGateau[i][3] == 0)
+            if (((coordGateau[i][3]/10)==0)&&((coordGateau[i][3])>=Etage_ascenseur))
             {
                 if (ptrGateau[i]->collidesWithItem(frontZone))
                 {
                     // Update the value of coordonneesBase[i][3] to 1
-                    coordGateau[i][3] = 1;
+                    coordGateau[i][3] = 10+coordGateau[i][3];
                     qDebug("Collision avec échantillon en face %d",i);
                     // If this is the first cake that the robot is picking up, set coordonneesBase[i][5] to 1
                     /*if (!pickedUpCake) {
@@ -1828,14 +1869,14 @@ void MainWindow::detecterCollisionGateau(unsigned int avant_arr) {
     {
         qDebug("test si colision avant");
         ui->graphicsView->scene()->addItem(backZone);
-        for (int i = 0; i < 12; i++)
+        for (int i = 0; i < NOMBRECOUCHE; i++)
         {
-            if (coordGateau[i][3] == 0)
+            if ((coordGateau[i][3]/10)==0)
             {
                 if (ptrGateau[i]->collidesWithItem(backZone))
                 {
                     // Update the value of coordonneesBase[i][3] to 1
-                    coordGateau[i][3] = 2;
+                    coordGateau[i][3] = 20+coordGateau[i][3];
                     qDebug("Collision avec échantillon en face %d",i);
                     // If this is the first cake that the robot is picking up, set coordonneesBase[i][5] to 1
                     /*if (!pickedUpCake) {
@@ -1865,12 +1906,12 @@ void MainWindow::detecterCollisionGateau(unsigned int avant_arr) {
 
 void MainWindow::Mise_a_jour_coord_gateau()
 {
-    qreal xOffset_cake,yOffset_cake,dist_avant=100, dist_arr=-100;
+    qreal xOffset_cake,yOffset_cake,dist_avant=100, dist_arr=-100,nombre_gateau;
 
 
-    for(int i=0;i<12;i++)
+    for(int i=0;i<NOMBRECOUCHE;i++)
     {
-        if(coordGateau[i][3]==1)
+        if((coordGateau[i][3]/10)==1) // entre 10 et 19 pris a l'avant
         {
             xOffset_cake = dist_avant * cos((PosRotrob * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
             yOffset_cake = dist_avant * sin((PosRotrob * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
@@ -1878,7 +1919,7 @@ void MainWindow::Mise_a_jour_coord_gateau()
             coordGateau[i][1]=PosYrob + yOffset_cake;
             qDebug("mise a jour %i %i %i",i,coordGateau[i][0],coordGateau[i][1]);
         }
-        if(coordGateau[i][3]==2)
+        if((coordGateau[i][3]/10)==2) // entre 20 et 29 pris a l'arriere
         {
             xOffset_cake = dist_arr * cos((PosRotrob * M_PI)/180)-0*sin(((PosRotrob) * M_PI)/180);
             yOffset_cake = dist_arr * sin((PosRotrob * M_PI)/180)+0*cos(((PosRotrob) * M_PI)/180);
@@ -1892,7 +1933,7 @@ void MainWindow::Mise_a_jour_coord_gateau()
 
 void MainWindow::afficher_Gateau()
 {
-    for(int i=0;i<12;i++)
+    for(int i=0;i<NOMBRECOUCHE;i++)
     {
         ptrGateau[i]->setPos(coordGateau[i][1], coordGateau[i][0]);
     }
@@ -1998,7 +2039,7 @@ void MainWindow::on_pushButton_clicked()
 }
 void MainWindow::Affichage_Debug_Coord_Gateau()
 {
-    for (int i=0;i<12;i++)
+    for (int i=0;i<NOMBRECOUCHE;i++)
     {
         qDebug() << "Cake position: "
                  << ptrGateau[i]->pos()
