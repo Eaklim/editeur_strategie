@@ -1312,6 +1312,7 @@ void MainWindow::on_ExportFileButton_clicked()
     QString data,data2;
     int indexComboBox,indexComboBoxAction,ligne;
     double angle = 0;
+    double PWM_Moteur=0;
     double newValue;
 
     for(int i = 0; i < ui->tableView->model()->rowCount(); i++)
@@ -1444,6 +1445,13 @@ void MainWindow::on_ExportFileButton_clicked()
                                   //textStream << ui->tableView->model()->data(testindex).toString() //ajouter du texte
                                   textStream << ","
                                              << "0";
+                                  testindex = ui->tableView->model()->index(i,4);
+                                  if (ui->tableView->model()->data(testindex).toString() == "Tir_cerise")
+                                  {
+                                  testindex = ui->tableView->model()->index(i,4);
+                                  textStream << ui->tableView->model()->data(testindex).toString()
+                                             << ",";
+                                  }
 
 
                     break;

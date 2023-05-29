@@ -31,7 +31,7 @@
 #define LONGUEUR_ROBOT 240
 #define LARGEUR_ROBOT 240
 #define LARGEUR_VENTOUSE 150
-#define DIAG_ROBOT1 339
+#define DIAG_ROBOT1 166
 
 #define OFF 0
 #define ON 1
@@ -56,12 +56,21 @@
 #define OBSTACLE_3_X 2095
 #define OBSTACLE_3_Y 1850
 
+#define DEBUT_MATCH 0
+#define LIGNE_DROITE 1
+#define ROTATION 2
+#define COURBE 3
+#define ACTION 4
+#define RECALAGE 5
+#define XYTETA 6
+
+
 QT_BEGIN_NAMESPACE
 //class QTableView;
 
 void drawRobotPath(int table_ligne, QModelIndex index, QGraphicsScene* scene, QGraphicsLineItem* item[3], QPen redline, double PosXrobPres, double PosYrobPres, double PosRotrobPres, double largeur_robot, double distanceLigneDroite);
 //void calculcentrerotationgauche(double PosXrobPres, double PosYrobPres, double PosRotrobPres, double rayonCourbe, double angleCourbe, double &PosXrob, double &PosYrob, double &PosRotrob);
-
+void initialisation_coordonnees_objet();
 
 namespace Ui {
 class MainWindow;
